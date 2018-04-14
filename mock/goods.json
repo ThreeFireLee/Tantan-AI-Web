@@ -1,0 +1,25 @@
+{
+  "status": "0",
+  "msg":"",
+  "result":[
+    {
+      "productId":"100002",
+      "productName":"mi6",
+      "productPrice":2222,
+      "productImg":"1.jpg"
+    },
+    {
+      "productId":"100003",
+      "productName":"mi7",
+      "productPrice":2333,
+      "productImg":"2.jpg"
+    },
+    {
+      "productId":"100004",
+      "productName":"mi8",
+      "productPrice":2444,
+      "productImg":"3.jpg"
+    }
+
+  ]
+}
