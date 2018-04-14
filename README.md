@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue-project
 Side project support the data interaction of AI model and A/B testing with hbase
 
@@ -20,3 +21,7 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# tantan-AI-Web
+Side project support the data interaction of AI model and A/B testing with hbase
+>>>>>>> 733a1dea06d0a38d78168c9f0d7ffe6ca5e6e157
