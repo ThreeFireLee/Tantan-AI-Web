@@ -14,13 +14,14 @@
           <span class="navbar-link"></span>
           <a href="javascript:void(0)" class="navbar-link">Login</a>
           <a href="javascript:void(0)" class="navbar-link">Logout</a>
-          <div class="navbar-cart-container">
+
             <span class="navbar-cart-count"></span>
-            <a class="navbar-link navbar-cart-link" href="/#/cart">
-              <a href="/">
-                <img class="navbar-history-logo" src="/static/valve.jpg"></a>
+            <a class="navbar-link navbar-cart-link" href="/#/history">
+              <a href="/#/history">
+                <a class="navbar-link">History</a>
             </a>
-          </div>
+            </a>
+
         </div>
       </div>
     </div>

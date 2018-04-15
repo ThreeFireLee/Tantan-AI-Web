@@ -84,7 +84,7 @@
     import './../assets/css/product.css'
     import './../assets/css/login.css'
     import NavHeader from '@/components/NavHeader.vue'  // @ means src file
-    import NavFooter from '@/components/NavFooter.vue'
+    //import NavFooter from '@/components/NavFooter.vue'
     import NavBreadCrumb from '@/components/NavBread.vue'
     import axios from 'axios'
 
@@ -135,6 +135,8 @@
                 this.filterBy = false;
                 this.overLayFlag = false;
           }
+
+
       }
 
 

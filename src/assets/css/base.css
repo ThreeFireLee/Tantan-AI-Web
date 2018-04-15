@@ -2534,9 +2534,9 @@ html {
 }
 .model-panel {
   float: left;
-  width: 50%;
+  width: 70%;
   height: 100px;
-  background-color: #1edcff;
+  background-color: #999999;
 }
 .model-main{
   width: 100%;
@@ -2544,7 +2544,7 @@ html {
   position: absolute;
 }
 .model-quarter-div{
-  width: 50%;
+  width: 42%;
   height: 50%;
   float: left;
 }
