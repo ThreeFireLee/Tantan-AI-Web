@@ -2551,6 +2551,15 @@ html {
 .adjusted-size{
   margin-left: 65px;
 }
+.row-key-css{
+  margin-left: 42px;
+}
+.table-name-css{
+  margin-left: 22px;
+}
+.col-family-css{
+  margin-left: 5px;
+}
 
 .txt{
   width: 270px;
@@ -2564,6 +2573,7 @@ html {
   color: #ee7a23;
   background-color:transparent;  /* 背景色透明 */
   border:0px;       /* 边框取消 */
+  margin-left: 180px;
 }
 
 

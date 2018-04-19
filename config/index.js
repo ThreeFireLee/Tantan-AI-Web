@@ -13,7 +13,15 @@ module.exports = {
     proxyTable: {
       '/goods':{
           target:'http://localhost:3000'
+      },
+      '/parser/*':{
+          target:'http://localhost:3000',
+          changeOrigin: true,
+      },
+      '/users/*':{
+          target:'http://localhost:3000'
       }
+
     },
 
     // Various Dev Server settings
