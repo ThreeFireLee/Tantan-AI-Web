@@ -37,50 +37,47 @@
                 <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt col-family-css">
 
                <br><br>
-                <button type="primary" @click="onSubmit($event)" class="btn">Submit</button>
+                <button type="primary" @click="onSubmit($event)" class="btn only-for-button">Submit</button>
               </form>
               <br><br>
-              <div>
-              <form action="" method="post">
-                <lable for="inputJson" >Your Json/Text:</lable>
-                <br><br>
-                <textarea id="jsonInput" v-model="message" rows="30" cols="40" class="adjusted-size"></textarea>
-                <br><br>
-                <button type="primary" @click="onTextSubmit($event)" class="btn">Submit</button>
-              </form>
+            </div>
 
-                <form action="" method="post" id="myForm" enctype="multipart/form-data" class="the-submit">
-                  <!--<input type="file" name="fileField" id="fileField" size="28" onchange="document.getElementById('textfield').value=this.value" >-->
-                  <!--<input type="file" id="submitFile" @change="getFile($event)">-->
+            <div class="model-quarter-div">
+              <!--<form action="" method="post">-->
+                <!--<lable for="inputJson" >Your Json/Text:</lable>-->
+                <!--<br><br>-->
+                <!--<textarea id="jsonInput" v-model="message" rows="10" cols="40" class="adjusted-size"></textarea>-->
+                <!--<br><br>-->
+                <!--<button type="primary" @click="onTextSubmit($event)" class="btn">Submit</button>-->
+              <!--</form>-->
+
+              <form action="" method="post" id="myForm" enctype="multipart/form-data" class="the-submit">
                 <label>
-                  <input type="file" id="file" ref="file" v-on:change="handleFileUpload()">
+                  <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
                 </label>
                 <br><br>
-                  <button v-on:click="submitFile()">Submit</button>
-                  <!--<br><br>-->
-                  <!--<input type="submit" value="Submit" @click="onSubmit($event)">-->
-                </form>
+                <button v-on:click="submitFile($event)" class="btn">Submit</button>
+              </form>
+            </div>
 
 
+            <div class="model-quarter-div show-hbase-data">
+              <br>
+              <!--<iframe src="http://127.0.0.1:3000/parser/hbase" width="870" height="500" frameborder="0" id="key-presentation" class="model-panel"></iframe>-->
+              <div>
+                {{searchRst}}
               </div>
+
+              <br><br><br><br><br>
             </div>
 
-            <div class="model-quarter-div">
-              area for key presentation
-              <br><br>
-              <iframe id="key-presentation" class="model-panel"></iframe>
-              <br><br>
-            </div>
 
-            <!--not used -->
-            <div class="model-quarter-div">
-            </div>
-            <div class="model-quarter-div">
-              area for json submit presentation
-              <br><br>
-              <iframe id="hbase-submit-presentation" class="model-panel"></iframe>
-              <br><br>
-            </div>
+            <!--<div class="model-quarter-div">-->
+              <!--area for json submit presentation-->
+              <!--<br><br>-->
+              <!--<iframe id="hbase-submit-presentation" class="model-panel"></iframe>-->
+              <!--<br><br>-->
+            <!--</div>-->
           </div>
 
 
@@ -121,6 +118,7 @@
             hbaseTable:'',
             rowKey:'',
             colFamily:'',
+            searchRst:'',
             file:'',
             message:'',
             operationChose:'model',
@@ -135,7 +133,7 @@
         },
         mounted: function(){
             this.getGoodList();
-            //this.submitFile();
+            //this.onSubmit();
     },
         methods: {
           getGoodList(){
@@ -148,6 +146,7 @@
               }
             });
           },
+
           onSubmit(event) {
             event.preventDefault();
 
@@ -165,40 +164,24 @@
              //       'Content-Type': 'application/x-www-form-urlencoded'
              //     }
              //   }
-               ).then(function(res){
-              console.log(res);
-            })
-              .catch(function(err){
-                console.log(err);
-              });
-          },
-          onTextSubmit($event){
-            event.preventDefault();
-            axios.post("/parser/hbasePut",
-              {
-                hbaseTable:this.hbaseTable,
-                rowKey:this.rowKey,
-                colFamily:this.colFamily
-              },
-            ).then(function(res){
-              console.log(res);
-            })
-              .catch(function(err){
-                console.log(err);
-              });
+               ).then(rst =>{
+               var res = rst.data;
+               this.searchRst = res.result.hbaseRst;//都是parser内的参数，比如这里的result和habseRst
 
+             });
           },
-          // getFile(event) {
-          //   this.waterForm.file = event.target.files[0];
-          // },
 
-          submitFile(){
+
+          submitFile(event){
+                event.preventDefault();
+
                 let formData = new FormData();
                 formData.append('file', this.file);
                 let config = {
                   headers:{'Content-Type':'multipart/form-data'}
                 };
 
+                //axios.post("/parser/upload", formData, config
                 axios.post("/parser/upload", formData, config
                   ).then(function(){
                     console.log('SUCCESS!!');
@@ -207,7 +190,10 @@
                       console.log('FAILURE!!');
                     });
                 },
-            handleFileUpload(){
+
+            handleFileUpload(event){
+                   event.preventDefault();
+
                   this.file = this.$refs.file.files[0];
                 },
                 showFilterPop(){

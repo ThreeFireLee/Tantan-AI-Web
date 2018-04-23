@@ -11,22 +11,27 @@ var client = hbase({
 });
 
 router.get('/', function(req, res, next) {
-     res.send('this is our parser');
+    res.send('this is ouradf parser');
+
 });
 
-router.use(express.static(path.join(__dirname, 'public')));
+// router.use(express.static(path.join(__dirname, 'public')));
 
-router.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, 'views/index.html'));
-});
-
-
+// router.get('/', function(req, res){
+//   res.sendFile(path.join(__dirname, 'views/index.html'));
+// });
+//
+// router.get('/upload', function(req, res, next) {
+//   res.send('upload test');
+//
+// });
 
 router.post('/upload', function(req, res){
 
   var form = new formidable.IncomingForm();
   form.multiples = true;
   form.uploadDir = path.join(__dirname, '/upload');
+
   //改名
   form.on('file', function(field, file) {
     fs.rename(file.path, path.join(form.uploadDir, file.name));
@@ -69,60 +74,57 @@ router.post('/upload', function(req, res){
 /*
     Input parameters to hbase
  */
+router.get('/hbase', function(req, res, next) {
+  res.send('this is hbase parser');
+
+});
+
 router.post("/hbase", function (req,res,next) {
+  // res.send('this is our hbase');
   var param = {
     rowKey:req.body.rowKey,
     hbaseTable:req.body.hbaseTable,
     colFamily:req.body.colFamily
   }
-  console.log('success');
   console.log(req.body);
-  res.json({
-    status:'0',
-    msg:'',
-    result:{
-      rowKey:param.rowKey
+  // res.json({
+  //   status:'0',
+  //   msg:'',
+  //   result:{
+  //     rowKey:param.rowKey
+  //   }
+  // });
+
+//Get
+  var myRow = client.table(param.hbaseTable).row(param.rowKey);
+  myRow.exists(param.colFamily,function(err,exists){
+    if(exists){
+      this.get(param.colFamily,function(err,values){
+
+        console.log('get column family');
+        console.log(values);
+
+
+            res.json({
+              status:'0',
+              msg:'',
+              result:{
+                hbaseRst:values
+              }
+            });
+
+
+        //res.send(values);
+        //res.send('we won');
+      });
     }
   });
-  // Put
-// var table = client.table('emp');
-// table.create('personal info',function(err,success){
-//   this
-//     .row('3')
-//     .put('personal info:name','wang',function(err,success){
-//        console.log('insert one column');
-//        console.log(success);
-//      });
-//  });
-
-// Get
-//   var myRow = client.table(param.hbaseTable).row(param.rowKey);
-//   myRow.exists(param.colFamily,function(err,exists){
-//     if(exists){
-//       this.get(param.colFamily,function(err,values){
-//         console.log('get column family');
-//         console.log(values);
-//       });
-//     }
-//   });
 
 
 });
-/*
-    Put json to hbase directly
-*/
-router.post("/hbasePut", function (req,res,next) {
 
-  console.log('success');
-  console.log(req.body);
-  res.json({
-    status:'0',
-    msg:'',
-    result:{
-      rowKey:param.rowKey
-    }
-  });
-});
+
+
 
 
 

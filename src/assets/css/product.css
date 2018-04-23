@@ -248,7 +248,7 @@
 }
 
 .filter dd a:hover, .filter dd .cur {
-  color: #ee7a23;
+  color: #428bca;
 }
 
 .filter .filter-category ul {
@@ -302,7 +302,7 @@
 .filter .filter-price dd a:hover, .filter .filter-price dd .cur {
   -webkit-transition: padding-left .3s ease-out;
   transition: padding-left .3s ease-out;
-  border-left: 2px solid #ee7a23;
+  border-left: 2px solid #428bca;
   padding-left: 15px;
 }
 
