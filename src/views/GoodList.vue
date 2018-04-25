@@ -58,6 +58,9 @@
                 <br><br>
                 <button v-on:click="submitFile($event)" class="btn">Submit</button>
               </form>
+              <div class="upload-reminder">
+                {{fileUpRes}}
+              </div>
             </div>
 
 
@@ -120,6 +123,7 @@
             colFamily:'',
             searchRst:'',
             file:'',
+            fileUpRes:'',
             message:'',
             operationChose:'model',
             filterBy:false,
@@ -181,20 +185,20 @@
                   headers:{'Content-Type':'multipart/form-data'}
                 };
 
-                //axios.post("/parser/upload", formData, config
                 axios.post("/parser/upload", formData, config
-                  ).then(function(){
-                    console.log('SUCCESS!!');
-                  })
+                  ).then(rst =>{
+                    console.log('SUCCESS');
+                })
                     .catch(function(){
+                      this.fileUpRes = 'failed';
                       console.log('FAILURE!!');
                     });
-                },
+          },
 
             handleFileUpload(event){
-                   event.preventDefault();
-
+                  event.preventDefault();
                   this.file = this.$refs.file.files[0];
+
                 },
                 showFilterPop(){
                   this.filterBy = true;

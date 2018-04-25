@@ -2600,6 +2600,10 @@ html {
   margin-left: 140px;
 }
 
+.upload-reminder{
+  margin-left: 80px;
+}
+
 .show-hbase-data{
   background-color: #d7d8dd;
   color: #000000;
