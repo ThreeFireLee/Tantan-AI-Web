@@ -12,7 +12,7 @@ var client = hbase({
 });
 
 router.get('/', function(req, res, next) {
-    res.send('this is ouradf parser');
+    res.send('this is our parser');
 
 });
 

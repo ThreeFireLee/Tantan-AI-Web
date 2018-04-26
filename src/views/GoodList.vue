@@ -15,10 +15,12 @@
         <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
           <dl class="filter-price">
             <dt>Operations</dt>
-            <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-            <dd v-for="(ops,index) in operationFilter">
-              <a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>
-            </dd>
+            <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
+            <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+            <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>
+            <!--<dd v-for="(ops,index) in operationFilter">-->
+              <!--<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>-->
+            <!--</dd>-->
           </dl>
         </div>
 
@@ -28,45 +30,51 @@
             <div class="model-quarter-div">
               <form action="" method="post" enctype="multipart/form-data">
                 <lable for="hbaseTable">Table Name:  </lable>
-                <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt table-name-css">
+                <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">
                 <br>
                 <lable for="rowKey">Input Key: </lable>
-                <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt row-key-css">
+                <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
                 <br>
                 <lable for="ColFamily">Column Family:</lable>
-                <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt col-family-css">
+                <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt input-light col-family-css">
 
                <br><br>
-                <button type="primary" @click="onSubmit($event)" class="btn only-for-button">Submit</button>
+                <button type="primary" @click="onSubmit($event)" class="btn only-for-button">Retrieve</button>
               </form>
               <br><br>
             </div>
 
             <div class="model-quarter-div">
-              <!--<form action="" method="post">-->
+                <form action="" method="post" id="myForm" enctype="multipart/form-data">
                 <!--<lable for="inputJson" >Your Json/Text:</lable>-->
                 <!--<br><br>-->
                 <!--<textarea id="jsonInput" v-model="message" rows="10" cols="40" class="adjusted-size"></textarea>-->
-                <!--<br><br>-->
-                <!--<button type="primary" @click="onTextSubmit($event)" class="btn">Submit</button>-->
-              <!--</form>-->
+                <!--<br><br><br>-->
 
-              <form action="" method="post" id="myForm" enctype="multipart/form-data" class="the-submit">
-                <label>
+                <lable for="hbaseTablePut">Table Name:  </lable>
+                <input type="text" name="hbaseTablePut" id="hbaseTablePut" v-model="hbaseTablePut" placeholder="Table Name" class="txt input-light table-name-css">
+                <br>
+                <lable for="rowKeyPut">Input Key: </lable>
+                <input type="text" name="rowKeyPut" id="rowKeyPut" v-model="rowKeyPut" placeholder="Your Key" class="txt input-light row-key-css">
+                <br>
+                <lable for="colFamilyPut">Column Family:</lable>
+                <input type="text" name="colFamilyPut" id="colFamilyPut" v-model="colFamilyPut" placeholder="Col Family" class="txt input-light col-family-css">
+
+                <label  class="the-submit">
                   <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
                 </label>
                 <br><br>
-                <button v-on:click="submitFile($event)" class="btn">Submit</button>
+                <button v-on:click="submitFile($event)" class="btn the-submit">Provision</button>
               </form>
               <div class="upload-reminder">
                 {{fileUpRes}}
               </div>
             </div>
 
+            <br><br><br><br>
 
             <div class="model-quarter-div show-hbase-data">
-              <br>
-              <!--<iframe src="http://127.0.0.1:3000/parser/hbase" width="870" height="500" frameborder="0" id="key-presentation" class="model-panel"></iframe>-->
+
               <div>
                 {{searchRst}}
               </div>
@@ -74,13 +82,6 @@
               <br><br><br><br><br>
             </div>
 
-
-            <!--<div class="model-quarter-div">-->
-              <!--area for json submit presentation-->
-              <!--<br><br>-->
-              <!--<iframe id="hbase-submit-presentation" class="model-panel"></iframe>-->
-              <!--<br><br>-->
-            <!--</div>-->
           </div>
 
 
@@ -106,17 +107,17 @@
         data(){
           return{
             goodList:[],
-            operationFilter:[
-              {
-                operations:'Monitor'
-              },
-              {
-                operations:'Wait for test'
-              },
-              {
-                operations:'Wait for test'
-              }
-            ],
+            // operationFilter:[
+            //   {
+            //     operations:'Monitor'
+            //   },
+            //   {
+            //     operations:'Wait for test'
+            //   },
+            //   {
+            //     operations:'Wait for test'
+            //   }
+            // ],
 
             hbaseTable:'',
             rowKey:'',
@@ -137,7 +138,6 @@
         },
         mounted: function(){
             this.getGoodList();
-            //this.onSubmit();
     },
         methods: {
           getGoodList(){
@@ -187,6 +187,8 @@
 
                 axios.post("/parser/upload", formData, config
                   ).then(rst =>{
+                    var res = rst.data;
+                     this.fileUpRes = res;
                     console.log('SUCCESS');
                 })
                     .catch(function(){
@@ -207,29 +209,8 @@
                 closePop(){
                   this.filterBy = false;
                   this.overLayFlag = false;
-                },
+                }
 
-          // onSubmit(event) {
-          //   event.preventDefault();
-          //
-          //   //let formData = JSON.stringify(this.waterForm);
-          //   let param = new FormData();
-          //   param.append('this.waterForm.file', document.getElementById('submitFile').files[0]);
-          //   alert('simpletest:' + param.get('this.waterForm.file'));
-
-          //   let config = {
-          //     headers:{'Content-Type':'multipart/form-data'}
-          //   };
-          //   console.log(param);//这里的内容在下面
-          //
-          //   axios.post('/parser', param, config)
-          //     .then(response => {
-          //       if (response.data.code === 0) {
-          //         self.ImgUrl = response.data.data
-          //       }
-          //       console.log(response.data)
-          //     })
-          // }
 
 
       }
