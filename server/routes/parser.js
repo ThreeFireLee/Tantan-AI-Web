@@ -5,6 +5,7 @@ var formidable = require('formidable');
 var fs = require('fs');
 var assert = require('assert');
 var hbase = require('hbase');
+var multiparty = require('multiparty');
 
 var client = hbase({
   host:'localhost',
@@ -32,32 +33,33 @@ router.post('/upload', function(req, res){
   var form = new formidable.IncomingForm();
   form.uploadDir = path.join(__dirname, '/upload');
 
-  form.on('file', function(field, file) {
+  form.parse(req, function (err, fields, files) {
 
+    console.log(fields);//这里就是post的XXX 的数据
+    //console.dir(files)//这里就是上传的文件
     /*
-    *change the name to origin, it will be random name if not set here
-    *but the file.path is the random name , so we do not change name here
-    */
-    //fs.rename(file.path, path.join(form.uploadDir, file.name));
+      *change the name to origin, it will be random name if not set here
+      *but the file.path is the random name , so we do not change name here
+     */
+    //fs.rename(files.file.path, path.join(form.uploadDir, file.name));
 
-    //write to hbase
-    fs.readFile(file.path, 'utf8', (err, data) => {//file.path: file store path/file.json
-      if (err) {
+    //read file
+   //file.path: file store path/file.json
+    fs.readFile(files.file.path, 'utf8', (err, data) => {
+    if (err) {
         console.log(err);
       }
 
       var obj = JSON.parse(data);
       //console.log(obj.person.birth);
-      //console.log(obj.person.name);
       console.log(obj);
-
       //Put to hbase
-      client.table('test')
-        .create('model_info', function(err, success){
+      client.table(fields.hbaseTablePut)
+        .create(fields.colFamilyPut, function(err, success){
          this
-            .row(obj.model_id.toString())
-            .put('model_info:model_content', JSON.stringify(obj), function(err, success) {
-              this.get('model_info', function (err, cells) {
+           .row(fields.rowKeyPut)
+            .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {
+              this.get(fields.colFamilyPut, function (err, cells) {
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
@@ -65,10 +67,15 @@ router.post('/upload', function(req, res){
               });
            });
         });
-
-
     });
+
+
+
+
+
   });
+  //form.on('file', function(field, file) {
+  //});
 
   form.on('error', function(err) {
     console.log('An error has occured: \n' + err);
@@ -85,10 +92,53 @@ router.post('/upload', function(req, res){
   });
 
 });
+/*
+   Input from json typed on front end
+ */
+router.post('/uploadHbase', function(req, res){
+  var parameter = {
+    rowKeyPut2:req.body.rowKeyPut2,
+    hbaseTablePut2:req.body.hbaseTablePut2,
+    colFamilyPut2:req.body.colFamilyPut2,
+    inputJson:req.body.inputJson
+  }
+
+  console.log(req.body);
+
+
+    //   var obj = JSON.parse(data);
+    //   //console.log(obj.person.birth);
+    //   console.log(obj);
+    //
+    //   //Put to hbase
+    //   client.table('test')
+    //     .create('model_info', function(err, success){
+    //       this
+    //       // .row(obj.model_id.toString())
+    //         .row('mods_female_like_wo_weight_mlc0_123456')
+    //         .put('model_info:model_content', JSON.stringify(obj), function(err, success) {
+    //           this.get('model_info', function (err, cells) {
+    //             this.exists(function (err, exists) {
+    //               assert.ok(exists);
+    //               console.log(success);
+    //             });
+    //           });
+    //         });
+    //     });
+    //
+    //
+    // });
+
+});
+
+
+
+
+
 
 
 /*
-    Input parameters to hbase
+    Retrieve parameters to hbase
  */
 router.get('/hbase', function(req, res, next) {
   res.send('this is hbase parser');
