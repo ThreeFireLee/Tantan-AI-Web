@@ -26,72 +26,55 @@
 
         <!-- main operation panel -->
         <div class="accessory-list-wrap">
-          <div class="model-main">
+          <div >
             <div class="model-quarter-div">
 
               <!--retrieve data from hbase-->
               <form action="" method="post" enctype="multipart/form-data">
-                      <lable for="hbaseTable">Table Name:  </lable>
-                      <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">
-                      <br>
-                      <lable for="rowKey">Input Key: </lable>
-                      <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
-                      <br>
-                      <lable for="ColFamily">Column Family:</lable>
-                      <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt input-light col-family-css">
-
-                     <br><br>
-                      <button type="primary" @click="onSubmit($event)" class="btn only-for-button">Retrieve</button>
+                <lable for="hbaseTable">Table Name:  </lable>
+                <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">
+                <br>
+                <lable for="rowKey">Input Key: </lable>
+                <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
+                <br>
+                <lable for="ColFamily">Column Family:</lable>
+                <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt input-light col-family-css">
+                <br><br>
+                <button type="primary" @click="onSubmit($event)" class="btn only-for-button">Retrieve</button>
               </form>
               <br>
-              <div class="show-hbase-data">
-
-                <div>
-                  {{searchRst}}
-                </div>
-
-                <br><br><br><br><br>
-              </div>
-
-
-            </div>
-
-            <div class="model-quarter-div">
 
               <!--1. upload with json file 注意，此处如果用form的model，那么下面的v-model都要有model name加.参数才行-->
-                <form action="" :model="InputWithFile" ref="InputWithFile" method="post" id="myForm"  enctype="multipart/form-data">
-                  <lable for="hbaseTablePut">Table Name:  </lable>
-                  <input type="text" name="hbaseTablePut" id="hbaseTablePut" v-model="InputWithFile.hbaseTablePut" placeholder="Table Name" class="txt input-light table-name-css">
+              <form action="" :model="InputWithFile" ref="InputWithFile" method="post" id="myForm"  enctype="multipart/form-data">
+                <lable for="hbaseTablePut">Table Name:  </lable>
+                <input type="text" name="hbaseTablePut" id="hbaseTablePut" v-model="InputWithFile.hbaseTablePut" placeholder="Table Name" class="txt input-light table-name-css">
+                <br>
+                <lable for="rowKeyPut">Input Key: </lable>
+                <input type="text" name="rowKeyPut" id="rowKeyPut" v-model="InputWithFile.rowKeyPut" placeholder="Your Key" class="txt input-light row-key-css">
+                <br>
+                <lable for="colFamilyPut">Column Family:</lable>
+                <input type="text" name="colFamilyPut" id="colFamilyPut" v-model="InputWithFile.colFamilyPut" placeholder="Col Family" class="txt input-light col-family-css">
+                <br>
+                <label class="the-submit">
                   <br>
-                  <lable for="rowKeyPut">Input Key: </lable>
-                  <input type="text" name="rowKeyPut" id="rowKeyPut" v-model="InputWithFile.rowKeyPut" placeholder="Your Key" class="txt input-light row-key-css">
-                  <br>
-                  <lable for="colFamilyPut">Column Family:</lable>
-                  <input type="text" name="colFamilyPut" id="colFamilyPut" v-model="InputWithFile.colFamilyPut" placeholder="Col Family" class="txt input-light col-family-css">
-                  <label  class="the-submit">
-                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
-                  </label>
-                  <br><br>
-                  <button v-on:click="submitFile($event)" class="btn the-submit">Provision</button>
-                </form>
+                  <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
+                </label>
+                <br><br>
+                <button v-on:click="submitFile($event)" class="btn the-submit">Provision</button>
+              </form>
               <div class="upload-reminder">
                 {{fileUpRes}}
               </div>
             </div>
 
-
             <div class="model-quarter-div">
-            </div>
-
-            <div class="model-quarter-div">
-              <br><br><br>
+              <br>
               <!--2. upload with json input-->
               <form action="" :model="InputWithType" ref="InputWithType" method="post" id="myForm2" enctype="multipart/form-data">
                 <lable for="jsonInput" >Your Json/Text:</lable>
                 <br><br>
-                <!--<textarea type="text" id="jsonInput" name="jsonInput" v-model="InputWithType.jsonInput" rows="10" cols="40" class="adjusted-size"></textarea>-->
-                <input type="text" name="jsonInput" id="jsonInput" v-model="InputWithType.jsonInput" placeholder="Json" class="txt input-light json-input"><!--onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" -->
-                <br><br><br>
+                <textarea type="text" id="jsonInput" name="jsonInput" v-model="InputWithType.jsonInput" class="adjusted-textarea-size input-light"></textarea>
+                 <br><br>
 
                 <lable for="hbaseTablePut2">Table Name:  </lable>
                 <input type="text" name="hbaseTablePut2" id="hbaseTablePut2" v-model="InputWithType.hbaseTablePut2" placeholder="Table Name" class="txt input-light table-name-css">
@@ -104,6 +87,22 @@
                 <br><br>
                 <button v-on:click="submitJson($event)" class="btn the-submit">Provision</button>
               </form>
+            </div>
+
+
+            <div class="model-quarter-div">
+
+            </div>
+
+            <div class="model-quarter-div">
+              <div class="show-hbase-data">
+
+                <div>
+                  {{searchRst}}
+                </div>
+
+                <br><br><br><br><br>
+              </div>
             </div>
 
           </div>
@@ -139,16 +138,16 @@
 
             InputWithFile: {
               hbaseTablePut: 'test',
-              rowKeyPut: '2',
+              rowKeyPut: '1',
               colFamilyPut: 'col',
               file:''
              },
 
             InputWithType: {
-              hbaseTablePut2: 'test2',
+              hbaseTablePut2: 'test',
               rowKeyPut2: '1',
               colFamilyPut2: 'col',
-              jsonInput: '{"person":{"name": "wanger","birth": "1999"}}'
+              jsonInput: ''
             },
 
             searchRst:'',
@@ -178,7 +177,7 @@
               }
             });
           },
-
+          //retrieve data from hbase
           onSubmit(event) {
             event.preventDefault();
 
@@ -209,9 +208,6 @@
 
                 console.log(formData);
                 formData.append('file', this.file);
-                console.log(this.file);
-
-
 
                 let config = {
                   headers:{'Content-Type':'multipart/form-data'}
@@ -247,15 +243,13 @@
             formData.append('rowKeyPut2', this.InputWithType.rowKeyPut2);
             formData.append('colFamilyPut2', this.InputWithType.colFamilyPut2);
 
-            //a.replace(/\s+/g, '');
-            //let b = a.replace(/[\n\r]/gi,"") //替换回车符
-            //let b = a.replace(/^\n+|\n+$/g,"");
-            // var reg=new RegExp("\\","g");a
-            // let b = a.replace(reg,"");
-            //replace(/[ ]/g,"");     //替换空格符
-
-
             let jsonTest = this.InputWithType.jsonInput;
+            //get rid of break line symbols
+            jsonTest = jsonTest.replace(/\ +/g,"");
+            jsonTest = jsonTest.replace(/\t/g,"");
+            jsonTest = jsonTest.replace(/\r\n/g,"");
+            jsonTest = jsonTest.replace(/\n/g,"");
+
               //json format test
               try
               {
@@ -270,10 +264,9 @@
               }
 
 
-            //let jsonTest2 = JSON.parse(jsonTest);
-            //console.log(jsonTest2);
-
-            formData.append('jsonInput', this.InputWithType.jsonInput);
+            formData.append('jsonInput', jsonTest);
+            console.log(jsonTest);
+            //formData.append('jsonInput', this.InputWithType.jsonInput);
 
 
             let config = {

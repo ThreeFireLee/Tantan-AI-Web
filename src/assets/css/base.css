@@ -2532,7 +2532,7 @@ html {
   margin-top: 270px;
   width: 140px;
   height: 90px;
-  margin-left: 140px;
+  margin-left: 130px;
 
 }
 .model-panel {
@@ -2561,20 +2561,28 @@ html {
 }
 
 
-.adjusted-size{
-  margin-left: 65px;
+.adjusted-textarea-size{
+  margin-left: 0px;
+  width: 450px;
+  height: 200px;
   word-wrap: normal;
-  overflow: hidden;
 }
 .row-key-css{
-  margin-left: 38px;
+  width: 250px;
+  margin-left: 40px;
+  margin-top: 10px;
 }
 .table-name-css{
+  width: 250px;
   margin-left: 22px;
+  margin-top: 10px;
 }
 .col-family-css{
+  width:250px;
   margin-left: 5px;
+  margin-top: 10px;
 }
+
 
 .abtest-Name-css{
   margin-left: 115px;
@@ -2587,7 +2595,7 @@ html {
   width: 190px;
 }
 .abtest-right-move{
-  margin-left: 290px;
+  margin-left: 240px;
 }
 
 
@@ -2637,7 +2645,7 @@ html {
   font-size:105%
 }
 .only-for-button{
-  margin-left: 140px;
+  margin-left: 110px;
 }
 .only-create-button{
   margin-left: 40px;
@@ -2707,7 +2715,7 @@ html {
 .show-hbase-data{
   background-color: #d7d8dd;
   color: #000000;
-  width: 450px;
+  width: 900px;
   height: 500px;
   font-weight: 900;
   margin-bottom: 80px;

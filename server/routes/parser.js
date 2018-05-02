@@ -111,32 +111,17 @@ router.post('/uploadHbase', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    // fs.readFile(files.file.path, 'utf8', (err, data) => {
-    //   if (err) {
-    //     console.log(err);
-    //   }
-    //
-    //   var obj = JSON.parse(data);
-    //   //console.log(obj.person.birth);
-    //   console.log(obj);
+      //  //Insert to hbase
+      client.table(fields.hbaseTablePut2)
+        .create(fields.colFamilyPut2, function(err, success){
+          this
+            .row(fields.rowKeyPut2)
+            .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
+              console.log('insert with json columns');
+              console.log(success);
+            });
+        });
 
-      // //Put to hbase
-      // client.table(fields.hbaseTablePut2)
-      //   .create(fields.colFamilyPut2, function(err, success){
-      //     this
-      //       .row(fields.rowKeyPut2)
-      //       .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
-      //         this.get(fields.colFamilyPut, function (err, cells) {
-      //           this.exists(function (err, exists) {
-      //             assert.ok(exists);
-      //             console.log(success);
-      //           });
-      //         });
-      //       });
-      //   });
-
-
-    //});
 
   });
 
@@ -178,7 +163,10 @@ router.post("/hbase", function (req,res,next) {
       this.get(param.colFamily,function(err,values){
 
         console.log('get column family');
-        console.log(values);
+        //console.log(values);
+
+        values = JSON.stringify(values).replace(/[\\]/g,'');
+         //values = JSON.stringify(values).replace(reg,"");
 
 
             res.json({
