@@ -35,7 +35,7 @@ router.post('/upload', function(req, res){
 
   form.parse(req, function (err, fields, files) {
 
-    console.log(fields);//这里就是post的XXX 的数据
+    console.log(fields.hbaseTablePut);//这里就是post的XXX 的数据
     //console.dir(files)//这里就是上传的文件
     /*
       *change the name to origin, it will be random name if not set here
@@ -45,20 +45,22 @@ router.post('/upload', function(req, res){
 
     //read file
    //file.path: file store path/file.json
+
+
     fs.readFile(files.file.path, 'utf8', (err, data) => {
     if (err) {
         console.log(err);
       }
 
       var obj = JSON.parse(data);
-      //console.log(obj.person.birth);
-      console.log(obj);
+     console.log(obj);
+
       //Put to hbase
       client.table(fields.hbaseTablePut)
         .create(fields.colFamilyPut, function(err, success){
          this
            .row(fields.rowKeyPut)
-            .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {
+            .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
               this.get(fields.colFamilyPut, function (err, cells) {
                 this.exists(function (err, exists) {
                   assert.ok(exists);
@@ -81,7 +83,7 @@ router.post('/upload', function(req, res){
     console.log('An error has occured: \n' + err);
   });
 
-  form.parse(req);
+  //form.parse(req);
 
   form.on('end', (err, data) => {
     if(req.file == ""){
@@ -92,42 +94,57 @@ router.post('/upload', function(req, res){
   });
 
 });
+
+router.get('/uploadHbase', function(req, res, next) {
+  res.send('upload Json Hbase test');
+
+});
+
 /*
    Input from json typed on front end
+   一定要对req和res都做操作，不然会始终pending
  */
 router.post('/uploadHbase', function(req, res){
-  var parameter = {
-    rowKeyPut2:req.body.rowKeyPut2,
-    hbaseTablePut2:req.body.hbaseTablePut2,
-    colFamilyPut2:req.body.colFamilyPut2,
-    inputJson:req.body.inputJson
-  }
 
-  console.log(req.body);
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
 
+    console.log(fields);//这里就是post的XXX 的数据
 
+    // fs.readFile(files.file.path, 'utf8', (err, data) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    //
     //   var obj = JSON.parse(data);
     //   //console.log(obj.person.birth);
     //   console.log(obj);
-    //
-    //   //Put to hbase
-    //   client.table('test')
-    //     .create('model_info', function(err, success){
-    //       this
-    //       // .row(obj.model_id.toString())
-    //         .row('mods_female_like_wo_weight_mlc0_123456')
-    //         .put('model_info:model_content', JSON.stringify(obj), function(err, success) {
-    //           this.get('model_info', function (err, cells) {
-    //             this.exists(function (err, exists) {
-    //               assert.ok(exists);
-    //               console.log(success);
-    //             });
-    //           });
-    //         });
-    //     });
-    //
-    //
-    // });
+
+      // //Put to hbase
+      // client.table(fields.hbaseTablePut2)
+      //   .create(fields.colFamilyPut2, function(err, success){
+      //     this
+      //       .row(fields.rowKeyPut2)
+      //       .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
+      //         this.get(fields.colFamilyPut, function (err, cells) {
+      //           this.exists(function (err, exists) {
+      //             assert.ok(exists);
+      //             console.log(success);
+      //           });
+      //         });
+      //       });
+      //   });
+
+
+    //});
+
+  });
+
+  res.json({
+    status:'0',
+    msg:'',
+  });
+
 
 });
 

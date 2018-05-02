@@ -18,9 +18,6 @@
               <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
               <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='moniter'}" @click="operationChose='moniter'">A/B Testing</a></dd>
               <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>
-              <!--<dd v-for="(ops,index) in operationFilter">-->
-              <!--<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>-->
-              <!--</dd>-->
             </dl>
           </div>
 

@@ -2530,9 +2530,9 @@ html {
 
 .the-submit {
   margin-top: 270px;
-  width: 70px;
+  width: 140px;
   height: 90px;
-  margin-left: 180px;
+  margin-left: 140px;
 
 }
 .model-panel {
@@ -2563,6 +2563,8 @@ html {
 
 .adjusted-size{
   margin-left: 65px;
+  word-wrap: normal;
+  overflow: hidden;
 }
 .row-key-css{
   margin-left: 38px;
@@ -2574,8 +2576,24 @@ html {
   margin-left: 5px;
 }
 
+.abtest-Name-css{
+  margin-left: 115px;
+  margin-top: 0;
+  width: 110px;
+}
+.abtest-Hash-css{
+  margin-left: 105px;
+  margin-top: 0;
+  width: 190px;
+}
+.abtest-right-move{
+  margin-left: 290px;
+}
+
+
+
 .txt{
-  width: 270px;
+  /*width: 270px;*/
   color:#005aa7;
   border: 1px solid #ccc;
   padding: 7px 0px;
@@ -2602,7 +2620,7 @@ html {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
 }
 .btn{
-  width: 120px;
+  width: 170px;
   height: 30px;
   background-color: #428bca;
   border-color: #357ebd;
@@ -2669,6 +2687,21 @@ html {
   margin-left: 10px;
 }
 
+.json-input{
+  width: 450px;
+  height: 200px;
+}
+
+.abtest-seg{
+  margin-left: 20px;
+  width:420px;
+  margin-top: 20px;
+}
+.abtest-ramp{
+  margin-left: 20px;
+  width:220px;
+  margin-top: 20px;
+}
 
 
 .show-hbase-data{
