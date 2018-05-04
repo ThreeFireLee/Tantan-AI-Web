@@ -17,7 +17,7 @@
             <dt>Operations</dt>
             <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
             <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
-            <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>
+            <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>-->
             <!--<dd v-for="(ops,index) in operationFilter">-->
               <!--<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>-->
             <!--</dd>-->
@@ -62,9 +62,9 @@
                 <br><br>
                 <button v-on:click="submitFile($event)" class="btn the-submit">Provision</button>
               </form>
-              <div class="upload-reminder">
-                {{fileUpRes}}
-              </div>
+              <!--<div class="upload-reminder">-->
+                <!--{{fileUpRes}}-->
+              <!--</div>-->
             </div>
 
             <div class="model-quarter-div">
@@ -91,7 +91,7 @@
 
 
             <div class="model-quarter-div">
-
+                      <!--&nbsp-->
             </div>
 
             <div class="model-quarter-div">
@@ -144,9 +144,9 @@
              },
 
             InputWithType: {
-              hbaseTablePut2: 'test',
-              rowKeyPut2: '1',
-              colFamilyPut2: 'col',
+              hbaseTablePut2: '',
+              rowKeyPut2: '',
+              colFamilyPut2: '',
               jsonInput: ''
             },
 
@@ -255,12 +255,14 @@
               {
                 if (typeof JSON.parse(jsonTest) == "object") {
                   //alert('Valid json format submitted!')
+                  //formData.append('jsonInput', jsonTest);
                   console.log(jsonTest);
                 }
               }
               catch(err)
               {
                 alert('Wrong JSON format!\n' + err);
+                return false;//如果报错，则防止程序继续执行
               }
 
 

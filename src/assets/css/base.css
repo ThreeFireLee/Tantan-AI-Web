@@ -2533,6 +2533,7 @@ html {
   width: 140px;
   height: 90px;
   margin-left: 130px;
+  margin-bottom: 40px;
 
 }
 .model-panel {
@@ -2702,7 +2703,7 @@ html {
 
 .abtest-seg{
   margin-left: 20px;
-  width:420px;
+  width:320px;
   margin-top: 20px;
 }
 .abtest-ramp{
@@ -2710,7 +2711,9 @@ html {
   width:220px;
   margin-top: 20px;
 }
-
+.seg-name{
+  width: 140px;
+}
 
 .show-hbase-data{
   background-color: #d7d8dd;
@@ -2719,6 +2722,6 @@ html {
   height: 500px;
   font-weight: 900;
   margin-bottom: 80px;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 

@@ -14,14 +14,14 @@
         <div class="navbar-menu-container">
           <!--<a href="/" class="navbar-link">我的账户</a>-->
           <span class="navbar-link"></span>
-          <a href="javascript:;" class="navbar-link" @click="loginModalFlag=true">Login</a>
-          <a href="javascript:void(0)" class="navbar-link">Logout</a>
+          <!--<a href="javascript:;" class="navbar-link" @click="loginModalFlag=true">Login</a>-->
+          <!--<a href="javascript:void(0)" class="navbar-link">Logout</a>-->
 
             <span class="navbar-cart-count"></span>
             <a class="navbar-link navbar-cart-link" href="/#/history">
-              <a href="/#/history">
-                <a class="navbar-link">History</a>
-            </a>
+              <!--<a href="/#/history">-->
+                <!--<a class="navbar-link">History</a>-->
+            <!--</a>-->
             </a>
 
         </div>

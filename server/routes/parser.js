@@ -5,7 +5,7 @@ var formidable = require('formidable');
 var fs = require('fs');
 var assert = require('assert');
 var hbase = require('hbase');
-var multiparty = require('multiparty');
+// var multiparty = require('multiparty');
 
 var client = hbase({
   host:'localhost',
@@ -76,8 +76,6 @@ router.post('/upload', function(req, res){
 
 
   });
-  //form.on('file', function(field, file) {
-  //});
 
   form.on('error', function(err) {
     console.log('An error has occured: \n' + err);
@@ -111,7 +109,7 @@ router.post('/uploadHbase', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-      //  //Insert to hbase
+      //Insert to hbase
       client.table(fields.hbaseTablePut2)
         .create(fields.colFamilyPut2, function(err, success){
           this
@@ -132,12 +130,6 @@ router.post('/uploadHbase', function(req, res){
 
 
 });
-
-
-
-
-
-
 
 /*
     Retrieve parameters to hbase
@@ -180,9 +172,41 @@ router.post("/hbase", function (req,res,next) {
       });
     }
   });
+});
+
+/*
+* post abtest whitelist
+* */
+router.post('/uploadABtest', function(req, res){
+
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+
+    console.log(fields);//这里就是post的XXX 的数据
+
+    //Insert to hbase
+    // client.table(fields.hbaseTablePut2)
+    //   .create(fields.colFamilyPut2, function(err, success){
+    //     this
+    //       .row(fields.rowKeyPut2)
+    //       .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
+    //         console.log('insert with json columns');
+    //         console.log(success);
+    //       });
+    //   });
+
+
+  });
+
+  res.json({
+    status:'0',
+    msg:'',
+  });
 
 
 });
+
+
 
 
 
