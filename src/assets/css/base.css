@@ -2586,17 +2586,17 @@ html {
 
 
 .abtest-Name-css{
-  margin-left: 115px;
+  margin-left: 0px;
   margin-top: 0;
-  width: 110px;
+  width: 310px;
 }
 .abtest-Hash-css{
-  margin-left: 105px;
+  margin-left: 0px;
   margin-top: 0;
   width: 190px;
 }
 .abtest-right-move{
-  margin-left: 240px;
+  margin-left: 190px;
 }
 
 
@@ -2692,6 +2692,10 @@ html {
 .abtestCreate-select-gender-css{
   margin-left: 120px;
 }
+.abtest-notification-list{
+  width: 140px;
+  margin-left: 40px;
+}
 .abtestCreate-select-mlc-css{
   margin-left: 10px;
 }
@@ -2708,11 +2712,15 @@ html {
 }
 .abtest-ramp{
   margin-left: 20px;
-  width:220px;
+  width:70px;
   margin-top: 20px;
 }
+.abtest-ramp-name{
+  width:340px;
+  margin-left: 10px;
+}
 .seg-name{
-  width: 140px;
+  width: 180px;
 }
 
 .show-hbase-data{

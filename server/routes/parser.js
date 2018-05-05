@@ -161,6 +161,7 @@ router.post("/hbase", function (req,res,next) {
          //values = JSON.stringify(values).replace(reg,"");
 
 
+
             res.json({
               status:'0',
               msg:'',

@@ -34,7 +34,7 @@
                 <lable for="hbaseTable">Table Name:  </lable>
                 <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">
                 <br>
-                <lable for="rowKey">Input Key: </lable>
+                <lable for="rowKey">Model Id: </lable>
                 <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
                 <br>
                 <lable for="ColFamily">Column Family:</lable>
@@ -49,7 +49,7 @@
                 <lable for="hbaseTablePut">Table Name:  </lable>
                 <input type="text" name="hbaseTablePut" id="hbaseTablePut" v-model="InputWithFile.hbaseTablePut" placeholder="Table Name" class="txt input-light table-name-css">
                 <br>
-                <lable for="rowKeyPut">Input Key: </lable>
+                <lable for="rowKeyPut">Model Id: </lable>
                 <input type="text" name="rowKeyPut" id="rowKeyPut" v-model="InputWithFile.rowKeyPut" placeholder="Your Key" class="txt input-light row-key-css">
                 <br>
                 <lable for="colFamilyPut">Column Family:</lable>
@@ -79,7 +79,7 @@
                 <lable for="hbaseTablePut2">Table Name:  </lable>
                 <input type="text" name="hbaseTablePut2" id="hbaseTablePut2" v-model="InputWithType.hbaseTablePut2" placeholder="Table Name" class="txt input-light table-name-css">
                 <br>
-                <lable for="rowKeyPut2">Input Key: </lable>
+                <lable for="rowKeyPut2">Model Id: </lable>
                 <input type="text" name="rowKeyPut2" id="rowKeyPut2" v-model="InputWithType.rowKeyPut2" placeholder="Your Key" class="txt input-light row-key-css">
                 <br>
                 <lable for="colFamilyPut2">Column Family:</lable>
@@ -137,9 +137,9 @@
             colFamily:'',
 
             InputWithFile: {
-              hbaseTablePut: 'test',
-              rowKeyPut: '1',
-              colFamilyPut: 'col',
+              hbaseTablePut: '',
+              rowKeyPut: '',
+              colFamilyPut: '',
               file:''
              },
 
