@@ -71,89 +71,12 @@
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{_rampings}}
                 <br>
-                <!--<form action="" :model="rampings" ref="rampings" method="post" id="rampings"  enctype="multipart/form-data">-->
-                  <input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_1" id="ramp_model_1" v-model="_rampings.ramp_model_1" placeholder="Treat 1 name"class="input-light abtest-ramp-name">
+                <div v-for="l in abtest1.abtestCore.ramp">
                   <br>
-                  <input type="text" name="ramping_2" id="ramping_2" v-model="rampings.ramping_2" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_2" id="ramp_model_2" v-model="rampings.ramp_model_2" placeholder="Treat 2 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_3" id="ramping_3" v-model="rampings.ramping_3" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_3" id="ramp_model_3" v-model="rampings.ramp_model_3" placeholder="Treat 3 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_4" id="ramping_4" v-model="rampings.ramping_4" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_4" id="ramp_model_4" v-model="rampings.ramp_model_4" placeholder="Treat 4 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_5" id="ramping_5" v-model="rampings.ramping_5" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_5" id="ramp_model_5" v-model="rampings.ramp_model_5" placeholder="Treat 5 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_6" id="ramping_6" v-model="rampings.ramping_6" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_6" id="ramp_model_6" v-model="rampings.ramp_model_6" placeholder="Treat 6 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_7" id="ramping_7" v-model="rampings.ramping_7" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_7" id="ramp_model_7" v-model="rampings.ramp_model_7" placeholder="Treat 7 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_8" id="ramping_8" v-model="rampings.ramping_8" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_8" id="ramp_model_8" v-model="rampings.ramp_model_8" placeholder="Treat 8 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_9" id="ramping_9" v-model="rampings.ramping_9" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_9" id="ramp_model_9" v-model="rampings.ramp_model_9" placeholder="Treat 9 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_10" id="ramping_10" v-model="rampings.ramping_10" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_10" id="ramp_model_10" v-model="rampings.ramp_model_10" placeholder="Treat 10 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_11" id="ramping_11" v-model="rampings.ramping_11" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_11" id="ramp_model_11" v-model="rampings.ramp_model_11" placeholder="Treat 11 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_12" id="ramping_12" v-model="rampings.ramping_12" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_12" id="ramp_model_12" v-model="rampings.ramp_model_12" placeholder="Treat 12 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_13" id="ramping_13" v-model="rampings.ramping_13" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_13" id="ramp_model_13" v-model="rampings.ramp_model_13" placeholder="Treat 13 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_14" id="ramping_14" v-model="rampings.ramping_14" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_14" id="ramp_model_14" v-model="rampings.ramp_model_14" placeholder="Treat 14 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_15" id="ramping_15" v-model="rampings.ramping_15" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_15" id="ramp_model_15" v-model="rampings.ramp_model_15" placeholder="Treat 15 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_16" id="ramping_16" v-model="rampings.ramping_16" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_16" id="ramp_model_16" v-model="rampings.ramp_model_16" placeholder="Treat 16 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_17" id="ramping_17" v-model="rampings.ramping_17" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_17" id="ramp_model_17" v-model="rampings.ramp_model_17" placeholder="Treat 17 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_18" id="ramping_18" v-model="rampings.ramping_18" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_18" id="ramp_model_18" v-model="rampings.ramp_model_18" placeholder="Treat 18 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_19" id="ramping_19" v-model="rampings.ramping_19" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_19" id="ramp_model_19" v-model="rampings.ramp_model_19" placeholder="Treat 19 name"class="input-light abtest-ramp-name">
-                  <br>
-                  <input type="text" name="ramping_20" id="ramping_20" v-model="rampings.ramping_20" placeholder="" class="txt input-light abtest-ramp">
-                  %
-                  <input type="text" name="ramp_model_20" id="ramp_model_20" v-model="rampings.ramp_model_20" placeholder="Treat 20 name"class="input-light abtest-ramp-name">
-                  <br><br>
-                  <!--<button v-on:click="submitRamp($event)" class="btn the-submit">Provision</button>-->
-                <!--</form>-->
+                  <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
+                  <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
+                </div>
+
               </div>
               </form>
             </div>
@@ -182,14 +105,14 @@
         operationChose: 'abtest-1',
 
       abtest1:{
-        hbaseTablePut3:'',
-        colFamilyPut3:'',
+        hbaseTablePut3:'test-abtest',
+        colFamilyPut3:'col',
         ramping_1:'',
         abtestCore:{
-            experiment_name:'test1',
+            experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
             whitelists: [{
-              user_ids: '',
+              user_ids: '20,20,10,10',
               treatment:''
             },
               {
@@ -208,14 +131,57 @@
                 user_ids:'',
                 treatment:''
               }
-            ]
+            ],
+          ramp:[
+            {
+              treatment:'model_001_lr_like_mlc0',//"model_001_lr_like_mlc0",
+              percentage:50
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            }
+          ]
+
         },
-        operator_name:''
+        operator_name:'',
       },
 
         rampings:{
-          ramping_2:'',
-          ramping_3:'3'
+          ramping_6:'4',
+          ramping_7:'3'
         }
       }
     },
@@ -230,10 +196,10 @@
       //}
       _rampings: {
         set: function (value) {
-          this.rampings.ramping_2 = value;
+          this._rampings.ramping_6 = value;
         },
         get: function () {
-          return parseInt(this.rampings.ramping_3) + parseInt(this.rampings.ramping_2);
+          return parseInt(this.rampings.ramping_6) + parseInt(this.rampings.ramping_7);
         }
       }
     },
@@ -255,9 +221,11 @@
 
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
-        formData.append('ramping_1', this.abtest1.ramping_1);
+        formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
+        //formData.append('rampData',abtestRamp);
         formData.append('operator_name', this.abtest1.operator_name);
+
 
 
         let config = {
@@ -284,4 +252,83 @@
 
 </script>
 
-
+<!--<input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_1" id="ramp_model_1" v-model="abtest1.ramp_model_1" placeholder="Treat 1 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_2" id="ramping_2" v-model="abtest1.ramping_2" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_2" id="ramp_model_2" v-model="abtest1.ramp_model_2" placeholder="Treat 2 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_3" id="ramping_3" v-model="abtest1.ramping_3" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_3" id="ramp_model_3" v-model="abtest1.ramp_model_3" placeholder="Treat 3 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_4" id="ramping_4" v-model="abtest1.ramping_4" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_4" id="ramp_model_4" v-model="abtest1.ramp_model_4" placeholder="Treat 4 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_5" id="ramping_5" v-model="abtest1.ramping_5" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_5" id="ramp_model_5" v-model="abtest1.ramp_model_5" placeholder="Treat 5 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_6" id="ramping_6" v-model="_rampings.ramping_6" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_6" id="ramp_model_6" v-model="rampings.ramp_model_6" placeholder="Treat 6 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_7" id="ramping_7" v-model="_rampings.ramping_7" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_7" id="ramp_model_7" v-model="rampings.ramp_model_7" placeholder="Treat 7 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_8" id="ramping_8" v-model="rampings.ramping_8" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_8" id="ramp_model_8" v-model="rampings.ramp_model_8" placeholder="Treat 8 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_9" id="ramping_9" v-model="rampings.ramping_9" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_9" id="ramp_model_9" v-model="rampings.ramp_model_9" placeholder="Treat 9 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_10" id="ramping_10" v-model="rampings.ramping_10" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_10" id="ramp_model_10" v-model="rampings.ramp_model_10" placeholder="Treat 10 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_11" id="ramping_11" v-model="rampings.ramping_11" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_11" id="ramp_model_11" v-model="rampings.ramp_model_11" placeholder="Treat 11 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_12" id="ramping_12" v-model="rampings.ramping_12" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_12" id="ramp_model_12" v-model="rampings.ramp_model_12" placeholder="Treat 12 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_13" id="ramping_13" v-model="rampings.ramping_13" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_13" id="ramp_model_13" v-model="rampings.ramp_model_13" placeholder="Treat 13 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_14" id="ramping_14" v-model="rampings.ramping_14" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_14" id="ramp_model_14" v-model="rampings.ramp_model_14" placeholder="Treat 14 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_15" id="ramping_15" v-model="rampings.ramping_15" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_15" id="ramp_model_15" v-model="rampings.ramp_model_15" placeholder="Treat 15 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_16" id="ramping_16" v-model="rampings.ramping_16" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_16" id="ramp_model_16" v-model="rampings.ramp_model_16" placeholder="Treat 16 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_17" id="ramping_17" v-model="rampings.ramping_17" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_17" id="ramp_model_17" v-model="rampings.ramp_model_17" placeholder="Treat 17 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_18" id="ramping_18" v-model="rampings.ramping_18" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_18" id="ramp_model_18" v-model="rampings.ramp_model_18" placeholder="Treat 18 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_19" id="ramping_19" v-model="rampings.ramping_19" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_19" id="ramp_model_19" v-model="rampings.ramp_model_19" placeholder="Treat 19 name"class="input-light abtest-ramp-name">-->
+<!--<br>-->
+<!--<input type="text" name="ramping_20" id="ramping_20" v-model="rampings.ramping_20" placeholder="" class="txt input-light abtest-ramp">-->
+<!--%-->
+<!--<input type="text" name="ramp_model_20" id="ramp_model_20" v-model="rampings.ramp_model_20" placeholder="Treat 20 name"class="input-light abtest-ramp-name">-->
+<!--<br><br>-->

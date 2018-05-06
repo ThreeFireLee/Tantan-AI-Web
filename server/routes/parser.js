@@ -186,15 +186,15 @@ router.post('/uploadABtest', function(req, res){
     console.log(fields);//这里就是post的XXX 的数据
 
     //Insert to hbase
-    // client.table(fields.hbaseTablePut2)
-    //   .create(fields.colFamilyPut2, function(err, success){
-    //     this
-    //       .row(fields.rowKeyPut2)
-    //       .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
-    //         console.log('insert with json columns');
-    //         console.log(success);
-    //       });
-    //   });
+    client.table(fields.hbaseTablePut3)
+      .create(fields.colFamilyPut3, function(err, success){
+        this
+          .row(fields.experiment_name)
+          .put(fields.colFamilyPut3 + ':model_contents', fields.abtestData, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+          });
+      });
 
 
   });
