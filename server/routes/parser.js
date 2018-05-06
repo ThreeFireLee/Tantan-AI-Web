@@ -5,6 +5,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var assert = require('assert');
 var hbase = require('hbase');
+var sendEmail = require('./send-email.js');
+
 // var multiparty = require('multiparty');
 
 var client = hbase({
@@ -117,6 +119,7 @@ router.post('/uploadHbase', function(req, res){
             .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
+              sendEmail('muzihuohuohuo@126.com', 'New model online', fields.hbaseTablePut2);
             });
         });
 
@@ -182,19 +185,19 @@ router.post('/uploadABtest', function(req, res){
 
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-
+    //sendEmail('muzihuohuohuo@126.com', 'Test subject', 'Test message');
     console.log(fields);//这里就是post的XXX 的数据
 
     //Insert to hbase
-    client.table(fields.hbaseTablePut3)
-      .create(fields.colFamilyPut3, function(err, success){
-        this
-          .row(fields.experiment_name)
-          .put(fields.colFamilyPut3 + ':model_contents', fields.abtestData, function(err, success) {
-            console.log('insert abtest data');
-            console.log(success);
-          });
-      });
+    // client.table(fields.hbaseTablePut3)
+    //   .create(fields.colFamilyPut3, function(err, success){
+    //     this
+    //       .row(fields.experiment_name)
+    //       .put(fields.colFamilyPut3 + ':model_contents', fields.abtestData, function(err, success) {
+    //         console.log('insert abtest data');
+    //         console.log(success);
+    //       });
+    //   });
 
 
   });

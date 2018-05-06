@@ -50,7 +50,7 @@
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
-                  <!--<button v-on:click="submitForReview($event)" class="btn">Review</button>-->
+                  <button v-on:click="submitForReview($event)" class="btn">Review</button>
                   <button v-on:click="submitWhiteList($event)" class="btn the-submit">Provision</button>
 
                 <!--</form>-->
@@ -204,7 +204,11 @@
       }
     },
     methods: {
-
+      submitForReview(event){
+        event.preventDefault();
+        let abtestDataReview = JSON.stringify(this.abtest1.abtestCore);
+        alert("Your json: \n" + abtestDataReview);
+      },
       submitWhiteList(event){
         event.preventDefault();
         //parse user_ids to array
@@ -216,6 +220,10 @@
           user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x))
         }));
 
+        this.abtest1.abtestCore.ramp= this.abtest1.abtestCore.ramp.map(y =>({
+          treatment: y.treatment,
+          percentage: parseInt(y.percentage)
+        }));
         let formData = new FormData();
         let abtestData = JSON.stringify(this.abtest1.abtestCore);
 

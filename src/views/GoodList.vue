@@ -144,10 +144,15 @@
              },
 
             InputWithType: {
-              hbaseTablePut2: '',
-              rowKeyPut2: '',
-              colFamilyPut2: '',
-              jsonInput: ''
+              hbaseTablePut2: 'test',
+              rowKeyPut2: '1',
+              colFamilyPut2: 'col',
+              jsonInput: '{\n' +
+              '  "person": {\n' +
+              '    "name": "wanger",\n' +
+              '    "birth": "1999"\n' +
+              '  }\n' +
+              '}'
             },
 
             searchRst:'',
