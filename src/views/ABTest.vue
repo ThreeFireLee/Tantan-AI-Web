@@ -16,7 +16,7 @@
             <dl class="filter-price">
               <dt>Operations</dt>
               <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest-1'">A/B Testing</a></dd>
               <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>-->
             </dl>
           </div>
@@ -27,41 +27,34 @@
               <!--<div class="model-quarter-div">-->
                 <!--<button type="primary" class="btn only-create-button"><a href="/#/abtest/createExp">Create Experiment</a></button>-->
               <!--</div>-->
-
-              <div class="model-quarter-div">
-                <form action="" :model="abtest" ref="abtest" method="post" id="abtest"  enctype="multipart/form-data">
+              <form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">
+                <div class="model-quarter-div">
+                <!--<form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">-->
                   <lable for="hbaseTablePut3">Table Name:  </lable>
-                  <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest.hbaseTablePut3" placeholder="Table Name" class="txt input-light table-name-css">
+                  <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="Table Name" class="txt input-light table-name-css">
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
-                  <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtest.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
-                  <br><br>
+                  <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtest1.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
+                    <br><br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
-                  <input type="text" name="experiment_name" id="experiment_name" v-model="abtest.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
-                  <input type="text" name="hash_id" id="hash_id" v-model="abtest.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
-                  <br><br>
-                  <input type="text" name="seg1_name" v-model="abtest.seg1_name" placeholder="treatment1 name"class="input-light seg-name">
-                  <input type="text" name="seg1[]" v-model="abtest.seg1" placeholder="white list 1" class="txt input-light abtest-seg">
-                  <br>
-                  <input type="text" name="seg2_name" id="seg2_name" v-model="abtest.seg2_name" placeholder="treatment2 name"class="input-light seg-name">
-                  <input type="text" name="seg2" id="seg2" v-model="abtest.seg2" placeholder="white list 2" class="txt input-light abtest-seg">
-                  <br>
-                  <input type="text" name="seg3_name" id="seg3_name" v-model="abtest.seg3_name" placeholder="treatment3 name"class="input-light seg-name">
-                  <input type="text" name="seg3" id="seg3" v-model="abtest.seg3" placeholder="white list 3" class="txt input-light abtest-seg">
-                  <br>
-                  <input type="text" name="seg4_name" id="seg4_name" v-model="abtest.seg3_name" placeholder="treatment4 name"class="input-light seg-name">
-                  <input type="text" name="seg4" id="seg4" v-model="abtest.seg4" placeholder="white list 4" class="txt input-light abtest-seg">
-                  <br>
-                  <input type="text" name="seg5_name" id="seg5_name" v-model="abtest.seg5_name" placeholder="treatment5 name"class="input-light seg-name">
-                  <input type="text" name="seg5" id="seg5" v-model="abtest.seg5" placeholder="white list 5" class="txt input-light abtest-seg">
+                  <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
+                  <input type="text" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
+
+                  <div v-for="l in abtest1.abtestCore.whitelists">
+                    <br><br>
+                    <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">
+                    <input type="text" v-model="l.user_ids" placeholder="white list" class="txt input-light abtest-seg">
+                    </div>
                   <br><br>
                   <label>Operator: </label>
-                  <input type="text" name="op_name" id="op_name" v-model="abtest.op_name" placeholder="operator name"class="input-light seg-name">
+                  <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
-                  <button v-on:click="submitForReview($event)" class="btn">Review</button>
+                  <!--<button v-on:click="submitForReview($event)" class="btn">Review</button>-->
                   <button v-on:click="submitWhiteList($event)" class="btn the-submit">Provision</button>
-                </form>
+
+                <!--</form>-->
+                <br>
                 <label>Notification List: </label>
                 <select class="abtest-notification-list">
                   <option>p1</option>
@@ -76,12 +69,12 @@
 
 
               <div class="model-quarter-div">
-                <p2>Total Percent: </p2>
-                <input type="text"  value="" id="sum" v-on:click="cal">
-                <form action="" :model="rampings" ref="rampings" method="post" id="rampings"  enctype="multipart/form-data">
-                  <input type="text" name="ramping_1" id="ramping_1" v-model="rampings.ramping_1" placeholder="" class="txt input-light abtest-ramp">
+                <p2>Total Percent: </p2> {{_rampings}}
+                <br>
+                <!--<form action="" :model="rampings" ref="rampings" method="post" id="rampings"  enctype="multipart/form-data">-->
+                  <input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">
                   %
-                  <input type="text" name="ramp_model_1" id="ramp_model_1" v-model="rampings.ramp_model_1" placeholder="Treat 1 name"class="input-light abtest-ramp-name">
+                  <input type="text" name="ramp_model_1" id="ramp_model_1" v-model="_rampings.ramp_model_1" placeholder="Treat 1 name"class="input-light abtest-ramp-name">
                   <br>
                   <input type="text" name="ramping_2" id="ramping_2" v-model="rampings.ramping_2" placeholder="" class="txt input-light abtest-ramp">
                   %
@@ -158,12 +151,14 @@
                   <input type="text" name="ramping_20" id="ramping_20" v-model="rampings.ramping_20" placeholder="" class="txt input-light abtest-ramp">
                   %
                   <input type="text" name="ramp_model_20" id="ramp_model_20" v-model="rampings.ramp_model_20" placeholder="Treat 20 name"class="input-light abtest-ramp-name">
-                  <!--{{rampSum}}-->
                   <br><br>
-                  <button v-on:click="submitRamp($event)" class="btn the-submit">Provision</button>
-                </form>
+                  <!--<button v-on:click="submitRamp($event)" class="btn the-submit">Provision</button>-->
+                <!--</form>-->
               </div>
+              </form>
             </div>
+
+
           </div>
         </div>
       </div>
@@ -182,40 +177,45 @@
 
   export default {
     data(){
-      return{
-        message:'',
-        operationChose:'abtest',
+      return {
+        message: '',
+        operationChose: 'abtest-1',
 
-        // abtest:{
-        //   hbaseTablePut3:'',
-        //   colFamilyPut3:'3',
-        //   wlName:'4',
-        //   HashId:'5',
-        //   seg1_name:'6',
-        //   seg2_name:'7',
-        //   seg3_name:'8',
-        //   seg1:'11',
-        //   seg2:'11',
-        //   seg3:'11',
-        //   op_name:''
-        // },
-
-      abtest:{
-        experiment_name:'',
-        // "experiment_id":'1',
-         hash_id:'',
-      //   "whitelists":[
-      //   {
-      //     "seg1":'',
-      //     "seg1_name":''
-      //   }
-      // ]
+      abtest1:{
+        hbaseTablePut3:'',
+        colFamilyPut3:'',
+        ramping_1:'',
+        abtestCore:{
+            experiment_name:'test1',
+            hash_id:'111111',
+            whitelists: [{
+              user_ids: '',
+              treatment:''
+            },
+              {
+                user_ids: '',
+                treatment:''
+              },
+              {
+                user_ids: '',
+                treatment:''
+              },
+              {
+                user_ids: '',
+                treatment:''
+              },
+              {
+                user_ids:'',
+                treatment:''
+              }
+            ]
+        },
+        operator_name:''
       },
 
-
         rampings:{
-          ramping_1:'',
-          ramping_2:''
+          ramping_2:'',
+          ramping_3:'3'
         }
       }
     },
@@ -224,56 +224,40 @@
       // NavFooter:NavFooter,
       NavBreadCrumb:NavBreadCrumb
     },
+    computed:{
+      //RampSum: function() {
+          //return parseInt(this.rampings.ramping_3) + parseInt(this.rampings.ramping_2);
+      //}
+      _rampings: {
+        set: function (value) {
+          this.rampings.ramping_2 = value;
+        },
+        get: function () {
+          return parseInt(this.rampings.ramping_3) + parseInt(this.rampings.ramping_2);
+        }
+      }
+    },
     methods: {
-      cal(){
-        let ramp1 = document.getElementById("ramping_1").value;
-        let ramp2 = document.getElementById("ramping_2").value;
-        let ramp3 = document.getElementById("ramping_3").value;
-        let ramp4 = document.getElementById("ramping_4").value;
-        let ramp5 = document.getElementById("ramping_5").value;
-        let ramp6 = document.getElementById("ramping_6").value;
-        let ramp7 = document.getElementById("ramping_7").value;
-        let ramp8 = document.getElementById("ramping_8").value;
-        let ramp9 = document.getElementById("ramping_9").value;
-        let ramp10 = document.getElementById("ramping_10").value;
-        let ramp11 = document.getElementById("ramping_11").value;
-        let ramp12 = document.getElementById("ramping_12").value;
-        let ramp13 = document.getElementById("ramping_13").value;
-        let ramp14 = document.getElementById("ramping_14").value;
-        let ramp15 = document.getElementById("ramping_15").value;
-        let ramp16 = document.getElementById("ramping_16").value;
-        let ramp17 = document.getElementById("ramping_17").value;
-        let ramp18 = document.getElementById("ramping_18").value;
-        let ramp19 = document.getElementById("ramping_19").value;
-        let ramp20 = document.getElementById("ramping_20").value;
 
-        document.getElementById("sum").value=(parseInt(ramp1)+parseInt(ramp2)+parseInt(ramp3)+parseInt(ramp4)+
-        parseInt(ramp5)+parseInt(ramp6)+parseInt(ramp7)+parseInt(ramp8)+parseInt(ramp9)+parseInt(ramp10)+parseInt(ramp11)
-          +parseInt(ramp12)+parseInt(ramp13)+parseInt(ramp14)+parseInt(ramp15)+parseInt(ramp16)+parseInt(ramp17)+parseInt(ramp18)
-          +parseInt(ramp19)+parseInt(ramp20));
-      },
-      // rampSum:function () {
-      //   return parseInt(this.rampings.ramping_1) + parseInt(this.rampings.ramping_2);
-      // },
       submitWhiteList(event){
         event.preventDefault();
-        // let formData = JSON.stringify(this.InputWithType);
-        //let a =  qs.stringify(this.hbaseTablePut);
+        //parse user_ids to array
+        this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
+          treatment: x.treatment,
+          // 先分割 ， 字符串 然后 过滤掉空字符串。
+          // 因为如果本身是空字符串 的话 会生成一个长度是1的空字符串列表
+          //user_ids: x.user_ids.split('，').filter(x => x.trim())
+          user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x))
+        }));
 
         let formData = new FormData();
-        // formData.append('hbaseTablePut3', this.abtest.hbaseTablePut3);
-        // formData.append('colFamilyPut3', this.abtest.colFamilyPut3);
-        // formData.append('wlName', this.abtest.wlName);
-        // formData.append('HashId', this.abtest.HashId);
-        // formData.append('seg1_name', this.abtest.seg1_name);
-        // formData.append('seg2_name', this.abtest.seg2_name);
-        // formData.append('seg3_name', this.abtest.seg3_name);
-        // formData.append('seg1', this.abtest.seg1);
-        // formData.append('seg2', this.abtest.seg2);
-        // formData.append('seg3', this.abtest.seg3);
-        // formData.append('op_name', this.abtest.op_name);
-        let aatest = JSON.stringify(this.abtest);
-        formData.append('abtestData', aatest);
+        let abtestData = JSON.stringify(this.abtest1.abtestCore);
+
+        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+        formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
+        formData.append('ramping_1', this.abtest1.ramping_1);
+        formData.append('abtestData', abtestData);
+        formData.append('operator_name', this.abtest1.operator_name);
 
 
         let config = {
