@@ -1,16 +1,14 @@
 const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
-  service: 'zimbra',
+  service: 'Mailjet',
   auth: {
-    // user: 'muzihuohuohuo@126.com',
-    // pass: '19931117',
-    user: 'your email address',
-    pass: 'your password',
+    user: '',
+    pass: '',
   },
 });
 module.exports = function sendEmail(to, subject, message) {
   const mailOptions = {
-    from: 'liyan@p1.com',
+    from: '',
     to,
     subject,
     html: message,

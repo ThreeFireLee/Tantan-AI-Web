@@ -30,12 +30,22 @@
               <form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div">
                 <!--<form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">-->
+
+                  <label>Operator: </label>
+                  <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
+                  <br><br>
+                  <lable for="experiment_id">experiment id:</lable>
+                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3..." class="txt input-light table-name-css">
+                  <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
                   <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="Table Name" class="txt input-light table-name-css">
                   <br>
+                  <lable for="rowKeyPut3">Row Key:</lable>
+                  <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtest1.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
+                    <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtest1.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
-                    <br><br>
+                  <br><br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
@@ -44,12 +54,9 @@
                   <div v-for="l in abtest1.abtestCore.whitelists">
                     <br><br>
                     <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">
-                    <input type="text" v-model="l.user_ids" placeholder="white list" class="txt input-light abtest-seg">
+                    <input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">
                     </div>
-                  <br><br>
-                  <label>Operator: </label>
-                  <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
-                  <br><br>
+                   <br><br>
                   <button v-on:click="submitForReview($event)" class="btn">Review</button>
                   <button v-on:click="submitWhiteList($event)" class="btn the-submit">Provision</button>
 
@@ -57,12 +64,23 @@
                 <br>
                 <label>Notification List: </label>
                 <select class="abtest-notification-list">
-                  <option>p1</option>
-                  <option>p2</option>
-                  <option>p3</option>
-                  <option>p4</option>
-                  <option>p5</option>
-                  <option>p6</option>
+                  <option>AI推荐事业部</option>
+                  <option>wuxianren@p1.com</option>
+                  <option>hubo@p1.com</option>
+                  <option>zhoushan@p1.com</option>
+                  <option>tanyunzhi@p1.com</option>
+                  <option>liumeng@p1.com</option>
+                  <option>gaomochi@p1.com</option>
+                  <option>huanghaihun@p1.com</option>
+                  <option>liao@p1.com</option>
+                  <option>lihuili@p1.com</option>
+                  <option>yangzeyu@p1.com</option>
+                  <option>chencangxiong@p1.com</option>
+                  <option>pengdesheng@p1.com</option>
+                  <option>liyan@p1.com</option>
+                  <option>wuzuxiang@p1.com</option>
+
+
                 </select>
 
               </div>
@@ -76,7 +94,7 @@
                   <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
                   <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
                 </div>
-
+                <br><br>
               </div>
               </form>
             </div>
@@ -107,13 +125,14 @@
       abtest1:{
         hbaseTablePut3:'test-abtest',
         colFamilyPut3:'col',
+        rowKeyPut3:'',
         ramping_1:'',
         abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
             whitelists: [{
               user_ids: '20,20,10,10',
-              treatment:''
+              treatment:'test1'
             },
               {
                 user_ids: '',
@@ -146,6 +165,30 @@
               percentage:''
             },
             {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {//10
               treatment:'',
               percentage:''
             },
@@ -206,18 +249,45 @@
     methods: {
       submitForReview(event){
         event.preventDefault();
-        let abtestDataReview = JSON.stringify(this.abtest1.abtestCore);
+        let abtestDataReviewOri = JSON.stringify(this.abtest1.abtestCore);
+        let abtestDataReview =  abtestDataReviewOri
+          .replace('{"user_ids":"","treatment":""},','')
+          .replace('{"user_ids":"","treatment":""},','')
+          .replace('{"user_ids":"","treatment":""},','')
+          .replace('{"user_ids":"","treatment":""},','')
+          .replace('{"user_ids":"","treatment":""},','')
+
+
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+
+
         alert("Your json: \n" + abtestDataReview);
       },
       submitWhiteList(event){
         event.preventDefault();
         //parse user_ids to array
         this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
-          treatment: x.treatment,
+          user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),
+          treatment: x.treatment
           // 先分割 ， 字符串 然后 过滤掉空字符串。
           // 因为如果本身是空字符串 的话 会生成一个长度是1的空字符串列表
           //user_ids: x.user_ids.split('，').filter(x => x.trim())
-          user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x))
+
         }));
 
         this.abtest1.abtestCore.ramp= this.abtest1.abtestCore.ramp.map(y =>({
@@ -225,13 +295,50 @@
           percentage: parseInt(y.percentage)
         }));
         let formData = new FormData();
-        let abtestData = JSON.stringify(this.abtest1.abtestCore);
+        let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
+        let abtestData =  abtestDataOri
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+
+
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+
+        //let a = this.abtest1.abtestCore.whitelists;
+        //this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.filter(x => !x.treatment.trim() && !x.user_ids.trim());
+
+        // if (!this.abtest1.abtestCore.whitelists[1].user_ids.trim() && !this.abtest1.abtestCore.whitelists[1].treatment.trim()) {
+        //   this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.slice(0,1)
+        // }
+
 
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
+        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
-        //formData.append('rampData',abtestRamp);
         formData.append('operator_name', this.abtest1.operator_name);
 
 
@@ -261,82 +368,3 @@
 </script>
 
 <!--<input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_1" id="ramp_model_1" v-model="abtest1.ramp_model_1" placeholder="Treat 1 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_2" id="ramping_2" v-model="abtest1.ramping_2" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_2" id="ramp_model_2" v-model="abtest1.ramp_model_2" placeholder="Treat 2 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_3" id="ramping_3" v-model="abtest1.ramping_3" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_3" id="ramp_model_3" v-model="abtest1.ramp_model_3" placeholder="Treat 3 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_4" id="ramping_4" v-model="abtest1.ramping_4" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_4" id="ramp_model_4" v-model="abtest1.ramp_model_4" placeholder="Treat 4 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_5" id="ramping_5" v-model="abtest1.ramping_5" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_5" id="ramp_model_5" v-model="abtest1.ramp_model_5" placeholder="Treat 5 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_6" id="ramping_6" v-model="_rampings.ramping_6" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_6" id="ramp_model_6" v-model="rampings.ramp_model_6" placeholder="Treat 6 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_7" id="ramping_7" v-model="_rampings.ramping_7" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_7" id="ramp_model_7" v-model="rampings.ramp_model_7" placeholder="Treat 7 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_8" id="ramping_8" v-model="rampings.ramping_8" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_8" id="ramp_model_8" v-model="rampings.ramp_model_8" placeholder="Treat 8 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_9" id="ramping_9" v-model="rampings.ramping_9" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_9" id="ramp_model_9" v-model="rampings.ramp_model_9" placeholder="Treat 9 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_10" id="ramping_10" v-model="rampings.ramping_10" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_10" id="ramp_model_10" v-model="rampings.ramp_model_10" placeholder="Treat 10 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_11" id="ramping_11" v-model="rampings.ramping_11" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_11" id="ramp_model_11" v-model="rampings.ramp_model_11" placeholder="Treat 11 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_12" id="ramping_12" v-model="rampings.ramping_12" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_12" id="ramp_model_12" v-model="rampings.ramp_model_12" placeholder="Treat 12 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_13" id="ramping_13" v-model="rampings.ramping_13" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_13" id="ramp_model_13" v-model="rampings.ramp_model_13" placeholder="Treat 13 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_14" id="ramping_14" v-model="rampings.ramping_14" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_14" id="ramp_model_14" v-model="rampings.ramp_model_14" placeholder="Treat 14 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_15" id="ramping_15" v-model="rampings.ramping_15" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_15" id="ramp_model_15" v-model="rampings.ramp_model_15" placeholder="Treat 15 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_16" id="ramping_16" v-model="rampings.ramping_16" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_16" id="ramp_model_16" v-model="rampings.ramp_model_16" placeholder="Treat 16 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_17" id="ramping_17" v-model="rampings.ramping_17" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_17" id="ramp_model_17" v-model="rampings.ramp_model_17" placeholder="Treat 17 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_18" id="ramping_18" v-model="rampings.ramping_18" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_18" id="ramp_model_18" v-model="rampings.ramp_model_18" placeholder="Treat 18 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_19" id="ramping_19" v-model="rampings.ramping_19" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_19" id="ramp_model_19" v-model="rampings.ramp_model_19" placeholder="Treat 19 name"class="input-light abtest-ramp-name">-->
-<!--<br>-->
-<!--<input type="text" name="ramping_20" id="ramping_20" v-model="rampings.ramping_20" placeholder="" class="txt input-light abtest-ramp">-->
-<!--%-->
-<!--<input type="text" name="ramp_model_20" id="ramp_model_20" v-model="rampings.ramp_model_20" placeholder="Treat 20 name"class="input-light abtest-ramp-name">-->
-<!--<br><br>-->

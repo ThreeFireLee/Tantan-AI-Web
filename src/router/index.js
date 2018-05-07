@@ -24,11 +24,11 @@ export default new Router({
       path:'/abtest',
       name:'ABTest',
       component: ABTest
-    },
-    {
-      path:'/abtest/createExp',
-      name:'CreateExp',
-      component: CreateExp
     }
+    // {
+    //   path:'/abtest/createExp',
+    //   name:'CreateExp',
+    //   component: CreateExp
+    // }
   ]
 })

@@ -137,16 +137,16 @@
             colFamily:'',
 
             InputWithFile: {
-              hbaseTablePut: '',
-              rowKeyPut: '',
-              colFamilyPut: '',
+              hbaseTablePut: 'test',
+              rowKeyPut: '1',
+              colFamilyPut: 'col',
               file:''
              },
 
             InputWithType: {
-              hbaseTablePut2: 'test',
-              rowKeyPut2: '1',
-              colFamilyPut2: 'col',
+              hbaseTablePut2: 'default cannot be written',
+              rowKeyPut2: '',
+              colFamilyPut2: 'default cannot be written',
               jsonInput: '{\n' +
               '  "person": {\n' +
               '    "name": "wanger",\n' +
@@ -213,6 +213,7 @@
 
                 console.log(formData);
                 formData.append('file', this.file);
+
 
                 let config = {
                   headers:{'Content-Type':'multipart/form-data'}

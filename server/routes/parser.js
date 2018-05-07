@@ -192,7 +192,7 @@ router.post('/uploadABtest', function(req, res){
     // client.table(fields.hbaseTablePut3)
     //   .create(fields.colFamilyPut3, function(err, success){
     //     this
-    //       .row(fields.experiment_name)
+    //       .row(fields.rowKeyPut3)
     //       .put(fields.colFamilyPut3 + ':model_contents', fields.abtestData, function(err, success) {
     //         console.log('insert abtest data');
     //         console.log(success);
