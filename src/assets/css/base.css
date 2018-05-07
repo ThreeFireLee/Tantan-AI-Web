@@ -2529,10 +2529,10 @@ html {
 }
 
 .the-submit {
-  margin-top: 270px;
-  width: 140px;
+  /*margin-top: 270px;*/
+  width: 160px;
   height: 90px;
-  margin-left: 130px;
+  margin-left: 100px;
   margin-bottom: 40px;
 
 }
@@ -2645,9 +2645,7 @@ html {
   font-weight:900;
   font-size:105%
 }
-.only-for-button{
-  margin-left: 110px;
-}
+
 .only-create-button{
   margin-left: 40px;
   width: 300px;
@@ -2734,6 +2732,6 @@ html {
   height: 500px;
   font-weight: 900;
   margin-bottom: 80px;
-  margin-top: 50px;
+  margin-top: 10px;
 }
 
