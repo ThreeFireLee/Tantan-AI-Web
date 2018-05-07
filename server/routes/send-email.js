@@ -4,8 +4,8 @@ const transport = nodemailer.createTransport({
   auth: {
     // user: 'muzihuohuohuo@126.com',
     // pass: '19931117',
-    user: 'liyan@p1.com',
-    pass: '19931117Li',
+    user: 'your email address',
+    pass: 'your password',
   },
 });
 module.exports = function sendEmail(to, subject, message) {
