@@ -26,6 +26,7 @@
 
         <!-- main operation panel -->
         <div class="accessory-list-wrap">
+
           <div >
             <div class="model-quarter-div">
 
@@ -71,6 +72,9 @@
               <br>
               <!--2. upload with json input-->
               <form action="" :model="InputWithType" ref="InputWithType" method="post" id="myForm2" enctype="multipart/form-data">
+                <label>Operator: </label>
+                <input type="text" name="operator_name" id="operator_name" v-model="InputWithType.operator_name" placeholder="operator name"class="input-light operator-name">
+                <br><br>
                 <lable for="jsonInput" >Your Json/Text:</lable>
                 <br><br>
                 <textarea type="text" id="jsonInput" name="jsonInput" v-model="InputWithType.jsonInput" class="adjusted-textarea-size input-light"></textarea>
@@ -144,9 +148,10 @@
              },
 
             InputWithType: {
-              hbaseTablePut2: 'default cannot be written',
-              rowKeyPut2: '',
-              colFamilyPut2: 'default cannot be written',
+              hbaseTablePut2: 'test',
+              rowKeyPut2: '1',
+              colFamilyPut2: 'col',
+              operator_name:'',
               jsonInput: '{\n' +
               '  "person": {\n' +
               '    "name": "wanger",\n' +
@@ -248,6 +253,7 @@
             formData.append('hbaseTablePut2', this.InputWithType.hbaseTablePut2);
             formData.append('rowKeyPut2', this.InputWithType.rowKeyPut2);
             formData.append('colFamilyPut2', this.InputWithType.colFamilyPut2);
+            formData.append('operator_name', this.InputWithType.operator_name);
 
             let jsonTest = this.InputWithType.jsonInput;
             //get rid of break line symbols

@@ -2722,6 +2722,10 @@ html {
 .seg-name{
   width: 180px;
 }
+.operator-name{
+  width: 180px;
+  margin-left: 50px;
+}
 
 .show-hbase-data{
   background-color: #d7d8dd;

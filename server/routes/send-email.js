@@ -1,15 +1,18 @@
 const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
-  service: 'Mailjet',
+   service: '126',
+  // host: 'smtp.abc.cu',
+  // port: 25,
+  // secure: false, // use TLS
   auth: {
     user: '',
     pass: '',
   },
 });
-module.exports = function sendEmail(to, subject, message) {
+module.exports = function sendEmail(subject, message) {
   const mailOptions = {
-    from: '',
-    to,
+    from: 'liyan@p1.com',
+    to:'liyan@p1.com',
     subject,
     html: message,
   };

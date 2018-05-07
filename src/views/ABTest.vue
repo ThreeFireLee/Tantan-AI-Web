@@ -27,7 +27,8 @@
               <!--<div class="model-quarter-div">-->
                 <!--<button type="primary" class="btn only-create-button"><a href="/#/abtest/createExp">Create Experiment</a></button>-->
               <!--</div>-->
-              <form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">
+              <form action=""  method="post" enctype="multipart/form-data">
+                <!--:model="abtest1" id="abtest1"-->
                 <div class="model-quarter-div">
                 <!--<form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">-->
 
@@ -82,7 +83,8 @@
 
 
                 </select>
-
+                  <br>
+                  <button v-on:click="submitRollBack($event)" class="btn">Roll Back</button>
               </div>
 
 
@@ -93,6 +95,7 @@
                   <br>
                   <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
                   <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
+                  <br>
                 </div>
                 <br><br>
               </div>
@@ -154,7 +157,7 @@
           ramp:[
             {
               treatment:'model_001_lr_like_mlc0',//"model_001_lr_like_mlc0",
-              percentage:50
+              percentage:'',
             },
             {
               treatment:'',

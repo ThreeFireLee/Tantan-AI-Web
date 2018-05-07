@@ -119,7 +119,7 @@ router.post('/uploadHbase', function(req, res){
             .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
-              sendEmail('muzihuohuohuo@126.com', 'New model online', fields.hbaseTablePut2);
+              //sendEmail('New model online', 'Model Id: ' + fields.rowKeyPut2 + '  has been uploaded by  ' + fields.operator_name);
             });
         });
 
