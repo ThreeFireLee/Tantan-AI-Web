@@ -2536,6 +2536,13 @@ html {
   margin-bottom: 40px;
 
 }
+.model-submit{
+  /*width: 160px;*/
+  /*height: 90px;*/
+  /*margin-left: 100px;*/
+  /*margin-bottom: 40px;*/
+
+}
 .model-panel {
   /*float: left;*/
   /*width: 70%;*/
@@ -2554,6 +2561,7 @@ html {
   height: 50%;
   float: left;
 }
+
 .model-abtest-create-div{
   margin: 10px 0 30px 0;  /*顺序为：上  右  下  左*/
   width: 100%;
@@ -2710,7 +2718,6 @@ html {
   margin-top: 20px;
 }
 .abtest-ramp{
-  margin-left: 20px;
   width:70px;
   margin-top: 20px;
 }
@@ -2724,6 +2731,65 @@ html {
   width: 180px;
   margin-left: 50px;
 }
+.stage-production-place{
+  margin-left: 200px;
+  font-weight:900;
+}
+.button-2{
+  color: #666;
+  background-color: #EEE;
+  border-color: #EEE;
+  font-weight: 300;
+  font-size: 16px;
+  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  text-decoration: none;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  padding: 0 20px;
+  display: inline-block;
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: .3s;
+  transition-duration: .3s;
+
+}
+.button-primary,
+.button-primary-flat {
+  background-color: #1B9AF7;
+  border-color: #1B9AF7;
+  color: #FFF; }
+.button-primary:visited,
+.button-primary-flat:visited {
+  color: #FFF; }
+.button-primary:hover, .button-primary:focus,
+.button-primary-flat:hover,
+.button-primary-flat:focus {
+  background-color: #4cb0f9;
+  border-color: #4cb0f9;
+  color: #FFF; }
+.button-primary:active, .button-primary.active, .button-primary.is-active,
+.button-primary-flat:active,
+.button-primary-flat.active,
+.button-primary-flat.is-active {
+  background-color: #2798eb;
+  border-color: #2798eb;
+  color: #0880d7;
+}
+
+.button-rounded {
+  border-radius: 4px;
+}
+.button-circle.button-small,
+.button-box.button-small,
+.button-square.button-small {
+  width: 30px; }
 
 .show-hbase-data{
   background-color: #d7d8dd;

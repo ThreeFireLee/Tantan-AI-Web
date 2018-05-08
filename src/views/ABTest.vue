@@ -2,13 +2,11 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>Operations</span>
+      <span>Stage</span>
     </nav-bread-crumb>
     <div class="accessory-result-page accessory-page">
       <div class="container">
         <div class="filter-nav">
-          <!--&lt;!&ndash;响应式侧栏，浏览器缩小时点一下使用&ndash;&gt;-->
-          <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Operations</a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
@@ -30,8 +28,6 @@
               <form action=""  method="post" enctype="multipart/form-data">
                 <!--:model="abtest1" id="abtest1"-->
                 <div class="model-quarter-div">
-                <!--<form action="" :model="abtest1" id="abtest1" method="post" enctype="multipart/form-data">-->
-
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
@@ -39,7 +35,7 @@
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3..." class="txt input-light table-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
-                  <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="Table Name" class="txt input-light table-name-css">
+                  <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtest1.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
@@ -60,42 +56,43 @@
                    <br><br>
                   <button v-on:click="submitForReview($event)" class="btn">Review</button>
                   <button v-on:click="submitWhiteList($event)" class="btn the-submit">Provision</button>
-
-                <!--</form>-->
                 <br>
                 <label>Notification List: </label>
-                <select class="abtest-notification-list">
-                  <option>AI推荐事业部</option>
-                  <option>wuxianren@p1.com</option>
-                  <option>hubo@p1.com</option>
-                  <option>zhoushan@p1.com</option>
-                  <option>tanyunzhi@p1.com</option>
-                  <option>liumeng@p1.com</option>
-                  <option>gaomochi@p1.com</option>
-                  <option>huanghaihun@p1.com</option>
-                  <option>liao@p1.com</option>
-                  <option>lihuili@p1.com</option>
-                  <option>yangzeyu@p1.com</option>
-                  <option>chencangxiong@p1.com</option>
-                  <option>pengdesheng@p1.com</option>
-                  <option>liyan@p1.com</option>
-                  <option>wuzuxiang@p1.com</option>
+                  <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
+                  <input list="emailList">
 
-
-                </select>
-                  <br>
+                  <datalist id="emailList">
+                    <option>AI推荐事业部</option>
+                    <option>wuxianren@p1.com</option>
+                    <option>hubo@p1.com</option>
+                    <option>zhoushan@p1.com</option>
+                    <option>tanyunzhi@p1.com</option>
+                    <option>liumeng@p1.com</option>
+                    <option>gaomochi@p1.com</option>
+                    <option>huanghaihun@p1.com</option>
+                    <option>liao@p1.com</option>
+                    <option>lihuili@p1.com</option>
+                    <option>yangzeyu@p1.com</option>
+                    <option>chencangxiong@p1.com</option>
+                    <option>pengdesheng@p1.com</option>
+                    <option>liyan@p1.com</option>
+                    <option>wuzuxiang@p1.com</option>
+                  </datalist>
+                  <br><br><br><br>
                   <button v-on:click="submitRollBack($event)" class="btn">Roll Back</button>
               </div>
 
 
               <div class="model-quarter-div">
-                <p2>Total Percent: </p2> {{_rampings}}
+                <p2>Total Percent: </p2> {{sumValue}} %
+                <a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">Production</a>
                 <br>
-                <div v-for="l in abtest1.abtestCore.ramp">
+                <div v-for="(l,index) in abtest1.abtestCore.ramp">
                   <br>
                   <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
                   <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
                   <br>
+                  <span>{{format(index)}}</span>
                 </div>
                 <br><br>
               </div>
@@ -126,7 +123,7 @@
         operationChose: 'abtest-1',
 
       abtest1:{
-        hbaseTablePut3:'test-abtest',
+        hbaseTablePut3:'',
         colFamilyPut3:'col',
         rowKeyPut3:'',
         ramping_1:'',
@@ -218,38 +215,74 @@
             {
               treatment:'',
               percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
+            },
+            {
+              treatment:'',
+              percentage:''
             }
+
           ]
 
         },
         operator_name:'',
+        email_person:''
       },
 
-        rampings:{
-          ramping_6:'4',
-          ramping_7:'3'
-        }
+
       }
     },
     components: {
       NavHeader:NavHeader,
-      // NavFooter:NavFooter,
       NavBreadCrumb:NavBreadCrumb
     },
-    computed:{
-      //RampSum: function() {
-          //return parseInt(this.rampings.ramping_3) + parseInt(this.rampings.ramping_2);
-      //}
-      _rampings: {
-        set: function (value) {
-          this._rampings.ramping_6 = value;
-        },
-        get: function () {
-          return parseInt(this.rampings.ramping_6) + parseInt(this.rampings.ramping_7);
-        }
+    computed: {
+      sumValue() {
+        return  this.abtest1.abtestCore.ramp.reduce((total,value) => {
+          return Number.isNaN(parseFloat(value.percentage)) ?
+            total :
+            total + parseFloat(value.percentage)
+        },0);
       }
+
     },
     methods: {
+      sumV: function() {
+        return  this.abtest1.abtestCore.ramp.reduce((total,value) => {
+          return Number.isNaN(parseFloat(value.percentage)) ?
+            total :
+            total + parseFloat(value.percentage)
+        },0);
+      },
+      //show percentage section
+      format (index) {
+        let p = 0;
+        let val =  this.abtest1.abtestCore.ramp;
+        for (let i = 0; i < index; i++) {
+          let cur = val[i].percentage;
+          if (!Number.isNaN(parseFloat(cur))) {
+            p += parseFloat(cur)
+          }
+        }
+        let a = p;
+        let cur = val[index].percentage;
+        if (!Number.isNaN(parseFloat(cur))) {
+          a += parseFloat(cur)
+        }
+        return `[${p}%~${a}%)`
+      },
+      //review your json input
       submitForReview(event){
         event.preventDefault();
         let abtestDataReviewOri = JSON.stringify(this.abtest1.abtestCore);
@@ -277,7 +310,10 @@
           .replace(/{"treatment":"","percentage":""},/,'')
           .replace(',{"treatment":"","percentage":""}','')
           .replace(/{"treatment":"","percentage":""},/,'')
-
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
+          .replace(',{"treatment":"","percentage":""}','')
+          .replace(/{"treatment":"","percentage":""},/,'')
 
         alert("Your json: \n" + abtestDataReview);
       },
@@ -290,12 +326,11 @@
           // 先分割 ， 字符串 然后 过滤掉空字符串。
           // 因为如果本身是空字符串 的话 会生成一个长度是1的空字符串列表
           //user_ids: x.user_ids.split('，').filter(x => x.trim())
-
         }));
 
         this.abtest1.abtestCore.ramp= this.abtest1.abtestCore.ramp.map(y =>({
           treatment: y.treatment,
-          percentage: parseInt(y.percentage)
+          percentage: parseFloat(y.percentage)
         }));
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
@@ -328,6 +363,11 @@
           .replace(/{"treatment":"","percentage":null},/,'')
           .replace(',{"treatment":"","percentage":null}','')
           .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+
 
         //let a = this.abtest1.abtestCore.whitelists;
         //this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.filter(x => !x.treatment.trim() && !x.user_ids.trim());
@@ -343,7 +383,10 @@
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('email_person', this.abtest1.email_person);
 
+        let result = this.$options.methods.sumV();
+        console.log(result);
 
 
         let config = {
@@ -355,6 +398,19 @@
           ,config
         ).then(rst =>{
           console.log(rst.data);
+          console.log('Success! From node.js');
+        })
+          .catch(function(){
+            this.fileUpRes = 'failed';
+            console.log('FAILURE!!');
+          });
+      },
+      submitRollBack(event){
+        event.preventDefault();
+        let formData = new FormData();
+        formData.append('param', 'start to rollback');
+        axios.post("/parser/uploadRollBack", formData
+        ).then(rst =>{
           console.log('Success! From node.js');
         })
           .catch(function(){

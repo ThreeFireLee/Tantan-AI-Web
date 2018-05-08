@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.use(express.static(path.join(__dirname, 'public')));
+router.use(express.static(path.join(__dirname, 'public')));//部署需要相对路径，即：__dirname
 
 router.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'views/index.html'));
@@ -119,7 +119,16 @@ router.post('/uploadHbase', function(req, res){
             .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
-              //sendEmail('New model online', 'Model Id: ' + fields.rowKeyPut2 + '  has been uploaded by  ' + fields.operator_name);
+              var time = new Date();   // 程序计时的月从0开始取值后+1
+              var m = time.getMonth() + 1;
+              var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              var emailContent =  "Time: " + t + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                     " Model Id:\t" + fields.rowKeyPut2 +
+                                    "  has been uploaded by  " + fields.operator_name +
+                                     "  Model Content:  " + fields.jsonInput;
+              sendEmail('New model online updated',emailContent);
             });
         });
 
@@ -187,6 +196,14 @@ router.post('/uploadABtest', function(req, res){
   form.parse(req, function (err, fields, files) {
     //sendEmail('muzihuohuohuo@126.com', 'Test subject', 'Test message');
     console.log(fields);//这里就是post的XXX 的数据
+    // fs.writeFile(path.join(__dirname, "./upload/onlyTest.json"), fields.abtestData, function (err) {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log('ok! Well done!');
+    //   }
+    // });
+
 
     //Insert to hbase
     // client.table(fields.hbaseTablePut3)
@@ -210,7 +227,48 @@ router.post('/uploadABtest', function(req, res){
 
 });
 
+/*
+* Roll back (get old ver directly and save)
+* */
+router.post('/uploadRollBack', function(req, res){
 
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+
+    console.log(fields);//这里就是post的XXX 的数据
+    fs.readFile(path.join(__dirname, "./upload/onlyTest.json"), 'utf8', (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+
+      var obj = JSON.parse(data);
+      console.log(obj);
+
+      //Put to hbase
+      // client.table(fields.hbaseTablePut)
+      //   .create(fields.colFamilyPut, function(err, success){
+      //     this
+      //       .row(fields.rowKeyPut)
+      //       .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
+      //         this.get(fields.colFamilyPut, function (err, cells) {
+      //           this.exists(function (err, exists) {
+      //             assert.ok(exists);
+      //             console.log(success);
+      //           });
+      //         });
+      //       });
+      //   });
+    });
+
+  });
+
+  res.json({
+    status:'0',
+    msg:'',
+  });
+
+
+});
 
 
 

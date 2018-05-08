@@ -2,13 +2,11 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>Operations</span>
+      <span>Stage</span>
     </nav-bread-crumb>
   <div class="accessory-result-page accessory-page">
     <div class="container">
       <div class="filter-nav">
-         <!--&lt;!&ndash;响应式侧栏，浏览器缩小时点一下使用&ndash;&gt;-->
-        <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Operations</a>
       </div>
       <div class="accessory-result">
         <!-- filter -->
@@ -25,10 +23,11 @@
         </div>
 
         <!-- main operation panel -->
-        <div class="accessory-list-wrap">
+        <!--<div class="accessory-list-wrap">-->
+        <div>
 
-          <div>
-            <form action="" method="post" enctype="multipart/form-data">
+          <form action="" method="post" enctype="multipart/form-data">
+
             <div class="model-quarter-div">
 
               <!--retrieve data from hbase-->
@@ -51,7 +50,7 @@
               </label>
 
               <!--</form>-->
-              <!--1. upload with json file 注意，此处如果用form的model，那么下面的v-model都要有model name加.参数才行-->
+              <!--1. upload with json file -->
                 <br><br>
             </div>
 
@@ -64,19 +63,17 @@
                 <textarea type="text" id="jsonInput" name="jsonInput" v-model="jsonInput" class="adjusted-textarea-size input-light"></textarea>
                  <br><br>
             </div>
-           <div class="model-quarter-div">
-             &nbsp
-           </div>
+
 
             <div>
                       <!--&nbsp-->
-              <button type="primary" @click="onSubmit($event)" class="btn the-submit">Retrieve</button>
-              <button v-on:click="submitFile($event)" class="btn the-submit">Provision-File</button>
-              <button v-on:click="submitJson($event)" class="btn the-submit">Provision</button>
+              <button type="primary" @click="onSubmit($event)" class="btn model-submit">Retrieve</button>
+              <button v-on:click="submitFile($event)" class="btn model-submit">Provision-File</button>
+              <button v-on:click="submitJson($event)" class="btn model-submit">Provision</button>
             </div>
             </form>
 
-            <div class="model-quarter-div">
+            <div>
               <div class="show-hbase-data">
 
                 <div>
@@ -85,11 +82,15 @@
 
                 <br><br><br><br><br>
               </div>
+
             </div>
 
-          </div>
 
 
+
+        </div>
+        <div>
+          <a href="/#/modelproduct"  class="button-2 button-primary button-rounded button-small">Production</a>
         </div>
       </div>
     </div>
@@ -107,7 +108,6 @@
     //import NavFooter from '@/components/NavFooter.vue'
     import NavBreadCrumb from '@/components/NavBread.vue'
     import axios from 'axios'
-    import qs from 'qs'
 
     export default {
         data(){
@@ -177,6 +177,7 @@
                 event.preventDefault();
 
                 let formData = new FormData();
+                formData.append('operator_name', this.operator_name);
                 formData.append('hbaseTablePut', this.hbaseTable);
                 formData.append('rowKeyPut', this.rowKey);
                 formData.append('colFamilyPut', this.colFamily);
