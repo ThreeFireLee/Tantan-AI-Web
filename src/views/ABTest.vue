@@ -32,7 +32,7 @@
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
-                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3..." class="txt input-light table-name-css">
+                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
                   <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">
@@ -54,8 +54,8 @@
                     <input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">
                     </div>
                    <br><br>
-                  <button v-on:click="submitForReview($event)" class="btn">Review</button>
-                  <button v-on:click="submitWhiteList($event)" class="btn the-submit">Provision</button>
+                  <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
+                  <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
                 <br>
                 <label>Notification List: </label>
                   <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
@@ -79,12 +79,12 @@
                     <option>wuzuxiang@p1.com</option>
                   </datalist>
                   <br><br><br><br>
-                  <button v-on:click="submitRollBack($event)" class="btn">Roll Back</button>
+                  <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
               </div>
 
 
               <div class="model-quarter-div">
-                <p2>Total Percent: </p2> {{sumValue}} %
+                <p2>Total Percent: </p2> {{sumValue()}} %
                 <a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">Production</a>
                 <br>
                 <div v-for="(l,index) in abtest1.abtestCore.ramp">
@@ -123,10 +123,9 @@
         operationChose: 'abtest-1',
 
       abtest1:{
-        hbaseTablePut3:'',
+        hbaseTablePut3:'test',
         colFamilyPut3:'col',
         rowKeyPut3:'',
-        ramping_1:'',
         abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
@@ -154,7 +153,7 @@
           ramp:[
             {
               treatment:'model_001_lr_like_mlc0',//"model_001_lr_like_mlc0",
-              percentage:'',
+              percentage:'100',
             },
             {
               treatment:'',
@@ -247,18 +246,9 @@
       NavHeader:NavHeader,
       NavBreadCrumb:NavBreadCrumb
     },
-    computed: {
-      sumValue() {
-        return  this.abtest1.abtestCore.ramp.reduce((total,value) => {
-          return Number.isNaN(parseFloat(value.percentage)) ?
-            total :
-            total + parseFloat(value.percentage)
-        },0);
-      }
 
-    },
     methods: {
-      sumV: function() {
+      sumValue() {
         return  this.abtest1.abtestCore.ramp.reduce((total,value) => {
           return Number.isNaN(parseFloat(value.percentage)) ?
             total :
@@ -291,7 +281,7 @@
           .replace('{"user_ids":"","treatment":""},','')
           .replace('{"user_ids":"","treatment":""},','')
           .replace('{"user_ids":"","treatment":""},','')
-          .replace('{"user_ids":"","treatment":""},','')
+          .replace(',{"user_ids":"","treatment":""}','')
 
 
           .replace(',{"treatment":"","percentage":""}','')
@@ -330,7 +320,8 @@
 
         this.abtest1.abtestCore.ramp= this.abtest1.abtestCore.ramp.map(y =>({
           treatment: y.treatment,
-          percentage: parseFloat(y.percentage)
+          percentage: Number.isNaN(parseFloat(y.percentage)) ? null:parseFloat(y.percentage)
+
         }));
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
@@ -384,9 +375,14 @@
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
         formData.append('email_person', this.abtest1.email_person);
-
-        let result = this.$options.methods.sumV();
-        console.log(result);
+        //100% validation
+        let result = this.sumValue();
+        if (result !== 100){
+          alert("Wrong! Sum of allocation percentage should be exactly 100%");
+          return false;
+        } else {
+          alert("Your allocation percentage is correct");
+        }
 
 
         let config = {

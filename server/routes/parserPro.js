@@ -3,8 +3,6 @@
 * Node.js Router for stage.
 *
 * */
-
-
 var express = require('express');
 var router = express.Router();
 var path = require('path');
@@ -22,7 +20,7 @@ var client = hbase({
 });
 
 router.get('/', function(req, res, next) {
-    res.send('this is our parser');
+  res.send('this is our parser');
 
 });
 
@@ -40,11 +38,11 @@ router.get('/upload', function(req, res, next) {
 router.post('/upload', function(req, res){
 
   var form = new formidable.IncomingForm();
-  form.uploadDir = path.join(__dirname, './../models/ModelUpload');
+  form.uploadDir = path.join(__dirname, './../models/ModelUploadPro');
 
   form.parse(req, function (err, fields, files) {
 
-    console.log(fields.hbaseTablePut);//这里就是post的XXX 的数据
+    console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
     //console.dir(files)//这里就是上传的文件
     /*
       *change the name to origin, it will be random name if not set here
@@ -53,30 +51,30 @@ router.post('/upload', function(req, res){
     //fs.rename(files.file.path, path.join(form.uploadDir, file.name));
 
     //read file
-   //file.path: file store path/file.json
+    //file.path: file store path/file.json
 
 
     fs.readFile(files.file.path, 'utf8', (err, data) => {
-    if (err) {
+      if (err) {
         console.log(err);
       }
 
       var obj = JSON.parse(data);
-     console.log(obj);
+      console.log(obj);
 
       //Put to hbase
-      client.table(fields.hbaseTablePut)
-        .create(fields.colFamilyPut, function(err, success){
-         this
-           .row(fields.rowKeyPut)
-            .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
-              this.get(fields.colFamilyPut, function (err, cells) {
+      client.table(fields.hbaseTablePutPro)
+        .create(fields.colFamilyPutPro, function(err, success){
+          this
+            .row(fields.rowKeyPutPro)
+            .put(fields.colFamilyPutPro + ':model_contents', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
+              this.get(fields.colFamilyPutPro, function (err, cells) {
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
                 });
               });
-           });
+            });
         });
     });
 
@@ -118,26 +116,26 @@ router.post('/uploadHbase', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-      //Insert to hbase
-      client.table(fields.hbaseTablePut2)
-        .create(fields.colFamilyPut2, function(err, success){
-          this
-            .row(fields.rowKeyPut2)
-            .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
-              console.log('insert with json columns');
-              console.log(success);
-              var time = new Date();   // 程序计时的月从0开始取值后+1
-              var m = time.getMonth() + 1;
-              var t = time.getFullYear() + "-" + m + "-"
-                + time.getDate() + " " + time.getHours() + ":"
-                + time.getMinutes() + ":" + time.getSeconds();
-              var emailContent =  "Time: \r\n" + t + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                     " Model Id:\r\n" + fields.rowKeyPut2 +
-                                    "  has been uploaded by  " + fields.operator_name +
-                                     "  Model Content:  " + fields.jsonInput;
-              sendEmail('New model online updated',emailContent);
-            });
-        });
+    //Insert to hbase
+    client.table(fields.hbaseTablePutPro2)
+      .create(fields.colFamilyPutPro2, function(err, success){
+        this
+          .row(fields.rowKeyPutPro2)
+          .put(fields.colFamilyPutPro2 + ':model_contents', fields.jsonInputPro, function(err, success) {
+            console.log('insert with json columns');
+            console.log(success);
+            // var time = new Date();   // 程序计时的月从0开始取值后+1
+            // var m = time.getMonth() + 1;
+            // var t = time.getFullYear() + "-" + m + "-"
+            //   + time.getDate() + " " + time.getHours() + ":"
+            //   + time.getMinutes() + ":" + time.getSeconds();
+            // var emailContent =  "Time: \r\n" + t + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+            //   " Model Id:\r\n" + fields.rowKeyPutPro2 +
+            //   "  has been uploaded by  " + fields.operator_namePro +
+            //   "  Model Content:  " + fields.jsonInputPro;
+            // sendEmail('New model online updated',emailContent);
+          });
+      });
 
 
   });
@@ -161,31 +159,31 @@ router.get('/hbase', function(req, res, next) {
 router.post("/hbase", function (req,res,next) {
   // res.send('this is our hbase');
   var param = {
-    rowKey:req.body.rowKey,
-    hbaseTable:req.body.hbaseTable,
-    colFamily:req.body.colFamily
+    rowKeyPro:req.body.rowKeyPro,
+    hbaseTablePro:req.body.hbaseTablePro,
+    colFamilyPro:req.body.colFamilyPro
   }
   console.log(req.body);
 
 //Get from hbase
-  var myRow = client.table(param.hbaseTable).row(param.rowKey);
-  myRow.exists(param.colFamily,function(err,exists){
+  var myRow = client.table(param.hbaseTablePro).row(param.rowKeyPro);
+  myRow.exists(param.colFamilyPro,function(err,exists){
     if(exists){
-      this.get(param.colFamily,function(err,values){
+      this.get(param.colFamilyPro,function(err,values){
 
-        console.log('get column family');
+        console.log('Get column family');
         //console.log(values);
 
         values = JSON.stringify(values).replace(/[\\]/g,'');
-         //values = JSON.stringify(values).replace(reg,"");
+        //values = JSON.stringify(values).replace(reg,"");
 
-            res.json({
-              status:'0',
-              msg:'',
-              result:{
-                hbaseRst:values
-              }
-            });
+        res.json({
+          status:'0',
+          msg:'',
+          result:{
+            hbaseRst:values
+          }
+        });
 
       });
     }
@@ -267,7 +265,7 @@ router.post('/uploadRollBack', function(req, res){
       console.log(data);
       let arr = data.split(/[\s]*\n[\s]*/);
 
-     //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
+      //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
       var last2 = arr[arr.length - 3];
       console.log(last2);
       fs.readFile(path.join(__dirname, "./../models/ABTestUpload",last2), 'utf8', (err, data) => {
@@ -278,20 +276,20 @@ router.post('/uploadRollBack', function(req, res){
         var obj = JSON.parse(data);
         console.log(obj.abtestData);
 
-      //Put to hbase
-      // client.table(obj.hbaseTablePut3)
-      //   .create(obj.colFamilyPut3, function(err, success){
-      //     this
-      //       .row(obj.rowKeyPut3)
-      //       .put(obj.colFamilyPut3 + ':model_contents', obj.abtestData, function(err, success) {//JSON.stringify(obj)
-      //         this.get(obj.colFamilyPut3, function (err, cells) {
-      //           this.exists(function (err, exists) {
-      //             assert.ok(exists);
-      //             console.log(success);
-      //           });
-      //         });
-      //       });
-      //   });
+        //Put to hbase
+        // client.table(obj.hbaseTablePut3)
+        //   .create(obj.colFamilyPut3, function(err, success){
+        //     this
+        //       .row(obj.rowKeyPut3)
+        //       .put(obj.colFamilyPut3 + ':model_contents', obj.abtestData, function(err, success) {//JSON.stringify(obj)
+        //         this.get(obj.colFamilyPut3, function (err, cells) {
+        //           this.exists(function (err, exists) {
+        //             assert.ok(exists);
+        //             console.log(success);
+        //           });
+        //         });
+        //       });
+        //   });
       });
 
     });

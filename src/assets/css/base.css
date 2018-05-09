@@ -2536,13 +2536,6 @@ html {
   margin-bottom: 40px;
 
 }
-.model-submit{
-  /*width: 160px;*/
-  /*height: 90px;*/
-  /*margin-left: 100px;*/
-  /*margin-bottom: 40px;*/
-
-}
 .model-panel {
   /*float: left;*/
   /*width: 70%;*/
@@ -2578,7 +2571,7 @@ html {
 }
 .row-key-css{
   width: 250px;
-  margin-left: 40px;
+  margin-left: 46px;
   margin-top: 10px;
 }
 .table-name-css{
@@ -2591,7 +2584,11 @@ html {
   margin-left: 5px;
   margin-top: 10px;
 }
-
+.ex-name-css{
+  width: 250px;
+  margin-left: 14px;
+  margin-top: 10px;
+}
 
 .abtest-Name-css{
   margin-left: 0px;
@@ -2606,7 +2603,6 @@ html {
 .abtest-right-move{
   margin-left: 190px;
 }
-
 
 
 .txt{
@@ -2650,6 +2646,37 @@ html {
   /*vertical-align: middle;*/
   line-height: normal;
   /*border: 1px solid transparent;*/
+  font-weight:900;
+  font-size:105%
+}
+.btn-2{
+  width: 150px;
+  height: 30px;
+  background-color: #428bca;
+  border-color: #357ebd;
+  color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px; /* future proofing */
+  -khtml-border-radius: 10px; /* for old Konqueror browsers */
+  /*text-align: center;*/
+  /*vertical-align: middle;*/
+  line-height: normal;
+  /*border: 1px solid transparent;*/
+  font-weight:900;
+  font-size:105%
+}
+.btn-3{
+  width: 180px;
+  height: 30px;
+  background-color: #428bca;
+  border-color: #357ebd;
+  color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px; /* future proofing */
+  -khtml-border-radius: 10px; /* for old Konqueror browsers */
+  line-height: normal;
   font-weight:900;
   font-size:105%
 }
@@ -2786,10 +2813,6 @@ html {
 .button-rounded {
   border-radius: 4px;
 }
-.button-circle.button-small,
-.button-box.button-small,
-.button-square.button-small {
-  width: 30px; }
 
 .show-hbase-data{
   background-color: #d7d8dd;

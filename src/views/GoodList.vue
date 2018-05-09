@@ -67,9 +67,9 @@
 
             <div>
                       <!--&nbsp-->
-              <button type="primary" @click="onSubmit($event)" class="btn model-submit">Retrieve</button>
-              <button v-on:click="submitFile($event)" class="btn model-submit">Provision-File</button>
-              <button v-on:click="submitJson($event)" class="btn model-submit">Provision</button>
+              <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
+              <button v-on:click="submitFile($event)" class="btn-3 button-primary">Provision File</button>
+              <button v-on:click="submitJson($event)" class="btn button-primary">Provision</button>
             </div>
             </form>
 
@@ -90,7 +90,7 @@
 
         </div>
         <div>
-          <a href="/#/modelproduct"  class="button-2 button-primary button-rounded button-small">Production</a>
+          <a href="/#/modelproduct"  class="button-2 button-primary button-rounded ">Production</a>
         </div>
       </div>
     </div>
