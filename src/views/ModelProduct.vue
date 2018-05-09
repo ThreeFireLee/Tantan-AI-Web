@@ -30,13 +30,13 @@
                 <input type="text" name="operator_namePro" id="operator_namePro" v-model="operator_namePro" placeholder="operator name"class="input-light operator-name">
                 <br><br>
                 <lable for="hbaseTablePro">Table Name:  </lable>
-                <input type="text" name="hbaseTablePro" id="hbaseTablePro" v-model="hbaseTablePro" placeholder="Table Name" class="txt input-light table-name-css">
+                <input type="text" name="hbaseTablePro" id="hbaseTablePro" v-model="hbaseTablePro" placeholder="Production Default here" class="txt input-light table-name-css">
                 <br>
                 <lable for="rowKeyPro">Model Id: </lable>
                 <input type="text" name="rowKeyPro" id="rowKeyPro" v-model="rowKeyPro" placeholder="Your Key" class="txt input-light row-key-css">
                 <br>
                 <lable for="colFamilyPro">Column Family:</lable>
-                <input type="text" name="colFamilyPro" id="colFamilyPro" v-model="colFamilyPro" placeholder="Production Col Family" class="txt input-light col-family-css">
+                <input type="text" name="colFamilyPro" id="colFamilyPro" v-model="colFamilyPro" placeholder="Production Default here" class="txt input-light col-family-css">
                 <br>
                 <label class="the-submit">
                   <br>
