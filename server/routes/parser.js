@@ -123,7 +123,7 @@ router.post('/uploadHbase', function(req, res){
         .create(fields.colFamilyPut2, function(err, success){
           this
             .row(fields.rowKeyPut2)
-            .put(fields.colFamilyPut2 + ':model_contents', fields.jsonInput, function(err, success) {
+            .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
               var time = new Date();   // 程序计时的月从0开始取值后+1
@@ -131,11 +131,11 @@ router.post('/uploadHbase', function(req, res){
               var t = time.getFullYear() + "-" + m + "-"
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
-              var emailContent =  "Time: \r\n" + t + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                     " Model Id:\r\n" + fields.rowKeyPut2 +
-                                    "  has been uploaded by  " + fields.operator_name +
-                                     "  Model Content:  " + fields.jsonInput;
-              sendEmail('New model online updated',emailContent);
+              // let emailContent = `<p>Provision Time:${t}</p>
+              //                     <p>Model Id:${fields.rowKeyPut2}</p>
+              //                     <p>has been uploaded by ${fields.operator_name}</p>
+              //                     <p>Model Content:${fields.jsonInput}</p>`
+              // sendEmail('New model online updated',emailContent);
             });
         });
 
@@ -178,7 +178,11 @@ router.post("/hbase", function (req,res,next) {
 
         values = JSON.stringify(values).replace(/[\\]/g,'');
          //values = JSON.stringify(values).replace(reg,"");
+        values = values.replace('"$":"{','"$":{');
+        values = values.replace('}"}]','}}');
+        values = values.replace('[{"column":"','{"column":"');
 
+        // var v = values.$;
             res.json({
               status:'0',
               msg:'',
@@ -229,15 +233,15 @@ router.post('/uploadABtest', function(req, res){
 
 
     //Insert to hbase
-    // client.table(fields.hbaseTablePut3)
-    //   .create(fields.colFamilyPut3, function(err, success){
-    //     this
-    //       .row(fields.rowKeyPut3)
-    //       .put(fields.colFamilyPut3 + ':model_contents', fields.abtestData, function(err, success) {
-    //         console.log('insert abtest data');
-    //         console.log(success);
-    //       });
-    //   });
+    client.table(fields.hbaseTablePut3)
+      .create(fields.colFamilyPut3, function(err, success){
+        this
+          .row(fields.rowKeyPut3)
+          .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+          });
+      });
 
 
   });

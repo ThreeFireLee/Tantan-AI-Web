@@ -78,6 +78,7 @@
           </div>
           <div>
             <a href="/"  class="button-2 button-primary button-rounded">>>>Stage</a>
+            {{alertFor}}
           </div>
         </div>
       </div>
@@ -116,6 +117,7 @@
 
         searchRst:'',
         fileUpRes:'',
+        alertFor:'',
 
         operationChose:'model',
         filterBy:false,
@@ -230,9 +232,8 @@
 
 
         formData.append('jsonInputPro', jsonTest);
-        console.log(jsonTest);
+        //console.log(jsonTest);
         //formData.append('jsonInput', this.InputWithType.jsonInput);
-
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -242,7 +243,16 @@
         axios.post("/parserPro/uploadHbase", formData
           ,config
         ).then(rst =>{
-          console.log(rst.data);
+          var res = rst.data;
+          if(res.status==0){
+
+            alert('alert');
+          }else{
+           this.alertFor = res.msg;
+          }
+
+
+          //console.log(rst.data);
           console.log('Success! From node.js');
         })
           .catch(function(){

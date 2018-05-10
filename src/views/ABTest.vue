@@ -32,7 +32,7 @@
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
-                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
+                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="not sure " class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
                   <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">
@@ -126,6 +126,7 @@
         hbaseTablePut3:'test',
         colFamilyPut3:'col',
         rowKeyPut3:'',
+        //experiment_id:'',
         abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',

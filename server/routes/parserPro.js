@@ -1,6 +1,6 @@
 /*
 *
-* Node.js Router for stage.
+* Node.js Router for Production.
 *
 * */
 var express = require('express');
@@ -43,18 +43,7 @@ router.post('/upload', function(req, res){
   form.parse(req, function (err, fields, files) {
 
     console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
-    //console.dir(files)//这里就是上传的文件
-    /*
-      *change the name to origin, it will be random name if not set here
-      *but the file.path is the random name , so we do not change name here
-     */
-    //fs.rename(files.file.path, path.join(form.uploadDir, file.name));
-
-    //read file
-    //file.path: file store path/file.json
-
-
-    fs.readFile(files.file.path, 'utf8', (err, data) => {
+ fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
@@ -116,34 +105,45 @@ router.post('/uploadHbase', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    //Insert to hbase
-    client.table(fields.hbaseTablePutPro2)
-      .create(fields.colFamilyPutPro2, function(err, success){
-        this
-          .row(fields.rowKeyPutPro2)
-          .put(fields.colFamilyPutPro2 + ':model_contents', fields.jsonInputPro, function(err, success) {
-            console.log('insert with json columns');
-            console.log(success);
-            // var time = new Date();   // 程序计时的月从0开始取值后+1
-            // var m = time.getMonth() + 1;
-            // var t = time.getFullYear() + "-" + m + "-"
-            //   + time.getDate() + " " + time.getHours() + ":"
-            //   + time.getMinutes() + ":" + time.getSeconds();
-            // var emailContent =  "Time: \r\n" + t + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            //   " Model Id:\r\n" + fields.rowKeyPutPro2 +
-            //   "  has been uploaded by  " + fields.operator_namePro +
-            //   "  Model Content:  " + fields.jsonInputPro;
-            // sendEmail('New model online updated',emailContent);
+    //test whether already exist
+    var myCol = client.table(fields.hbaseTablePutPro2).row(fields.rowKeyPutPro2);
+    myCol.exists(fields.colFamilyPutPro2,function(err,exists){
+      if(exists){
+        console.log('Already exist');
+        res.json({
+          status:'0',
+          msg:'Cannot write! Model already exist',
+        });
+      }else{  //Insert to hbase
+        client.table(fields.hbaseTablePutPro2)
+          .create(fields.colFamilyPutPro2, function(err, success){
+            this
+              .row(fields.rowKeyPutPro2)
+              .put(fields.colFamilyPutPro2 + ':model_contents', fields.jsonInputPro, function(err, success) {
+                console.log(success);
+                var time = new Date();   // 程序计时的月从0开始取值后+1
+                var m = time.getMonth() + 1;
+                var t = time.getFullYear() + "-" + m + "-"
+                  + time.getDate() + " " + time.getHours() + ":"
+                  + time.getMinutes() + ":" + time.getSeconds();
+                // let emailContent = `<p>Provision Time:${t}</p>
+                //                     <p>Model Id:${fields.rowKeyPut2}</p>
+                //                     <p>has been uploaded by ${fields.operator_name}</p>
+                //                     <p>Model Content:${fields.jsonInput}</p>`
+                // sendEmail('New model online updated',emailContent);
+              });
           });
-      });
+        res.json({
+          status:'1',
+          msg:'Great !',
+        });
+      }
+    });
 
 
   });
+  //
 
-  res.json({
-    status:'0',
-    msg:'',
-  });
 
 
 });
@@ -208,7 +208,7 @@ router.post('/uploadABtest', function(req, res){
     // console.log(fieldF.abtestData);
 
     //maintain experiment files
-    fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+    fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -217,7 +217,7 @@ router.post('/uploadABtest', function(req, res){
     });
 
     //maintain name list
-    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/experiment_list"), t1.toString() + '\n', function (err) {
+    fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/experiment_list"), t1.toString() + '\n', function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -258,7 +258,7 @@ router.post('/uploadRollBack', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    fs.readFile(path.join(__dirname, "./../models/ABTestUpload/experiment_list"), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro/experiment_list"), 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
@@ -268,7 +268,7 @@ router.post('/uploadRollBack', function(req, res){
       //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
       var last2 = arr[arr.length - 3];
       console.log(last2);
-      fs.readFile(path.join(__dirname, "./../models/ABTestUpload",last2), 'utf8', (err, data) => {
+      fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",last2), 'utf8', (err, data) => {
         if (err) {
           console.log(err);
         }

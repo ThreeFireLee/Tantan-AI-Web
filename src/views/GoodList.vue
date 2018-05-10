@@ -68,8 +68,8 @@
             <div>
                       <!--&nbsp-->
               <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
-              <button v-on:click="submitFile($event)" class="btn-3 button-primary">Provision File</button>
-              <button v-on:click="submitJson($event)" class="btn button-primary">Provision</button>
+              <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
+              <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision/Overwrite</button>
             </div>
             </form>
 
@@ -115,9 +115,9 @@
             goodList:[],
 
             operator_name:'',
-            hbaseTable:'',
-            rowKey:'',
-            colFamily:'',
+            hbaseTable:'test',
+            rowKey:'1',
+            colFamily:'col',
             file:'',
             jsonInput: '{\n' +
               '  "person": {\n' +
@@ -166,6 +166,7 @@
               },
 
                ).then(rst =>{
+
                var res = rst.data;
                this.searchRst = res.result.hbaseRst;//都是parser内的参数，比如这里的result和habseRst
 
@@ -222,6 +223,7 @@
             formData.append('operator_name', this.operator_name);
 
             let jsonTest = this.jsonInput;
+
             //get rid of break line symbols
             jsonTest = jsonTest.replace(/\ +/g,"");
             jsonTest = jsonTest.replace(/\t/g,"");
