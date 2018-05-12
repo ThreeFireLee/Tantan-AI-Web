@@ -2810,6 +2810,10 @@ html {
 .button-rounded {
   border-radius: 4px;
 }
+.rollback{
+  width: 300px;
+  margin-right: 50px;
+}
 
 .show-hbase-data{
   background-color: #d7d8dd;

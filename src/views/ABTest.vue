@@ -22,9 +22,6 @@
           <!-- main operation panel-->
           <div class="accessory-list-wrap">
             <div class="model-main">
-              <!--<div class="model-quarter-div">-->
-                <!--<button type="primary" class="btn only-create-button"><a href="/#/abtest/createExp">Create Experiment</a></button>-->
-              <!--</div>-->
               <form action=""  method="post" enctype="multipart/form-data">
                 <!--:model="abtest1" id="abtest1"-->
                 <div class="model-quarter-div">
@@ -60,7 +57,6 @@
                 <label>Notification List: </label>
                   <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
                   <input list="emailList">
-
                   <datalist id="emailList">
                     <option>AI推荐事业部</option>
                     <option>wuxianren@p1.com</option>
@@ -79,13 +75,13 @@
                     <option>wuzuxiang@p1.com</option>
                   </datalist>
                   <br><br><br><br>
-                  <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
+                  <input type="text" name="rowKeyPut4" id="rowKeyPut4" v-model="abtest1.rowKeyPut4" placeholder="rollback row key" class="txt input-light rollback">
+                    <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
+
               </div>
-
-
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{sumValue()}} %
-                <a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">Production</a>
+                <a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">>>Production</a>
                 <br>
                 <div v-for="(l,index) in abtest1.abtestCore.ramp">
                   <br>
@@ -97,6 +93,7 @@
                 <br><br>
               </div>
               </form>
+
             </div>
 
 
@@ -122,11 +119,13 @@
         message: '',
         operationChose: 'abtest-1',
 
+
       abtest1:{
         hbaseTablePut3:'test',
         colFamilyPut3:'col',
         rowKeyPut3:'',
         //experiment_id:'',
+        rowKeyPut4:'',
         abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
@@ -405,7 +404,7 @@
       submitRollBack(event){
         event.preventDefault();
         let formData = new FormData();
-        formData.append('param', 'start to rollback');
+        formData.append('rowKeyPut4', this.abtest1.rowKeyPut4);
         axios.post("/parser/uploadRollBack", formData
         ).then(rst =>{
           console.log('Success! From node.js');

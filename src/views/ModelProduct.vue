@@ -246,7 +246,7 @@
           var res = rst.data;
           if(res.status==0){
 
-            alert('alert');
+            alert('Wrong! Duplicate model id!');
           }else{
            this.alertFor = res.msg;
           }

@@ -75,6 +75,7 @@
                     <option>wuzuxiang@p1.com</option>
                   </datalist>
                   <br><br><br><br>
+                  <input type="text" name="rowKeyPut4" id="rowKeyPut4" v-model="abtestPro.rowKeyPut4" placeholder="rollback row key" class="txt input-light rollback">
                   <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
                 </div>
 
@@ -122,6 +123,7 @@
           hbaseTablePut3:'test',
           colFamilyPut3:'col',
           rowKeyPut3:'',
+          rowKeyPut4:'',
           abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
@@ -392,7 +394,7 @@
       submitRollBack(event){
         event.preventDefault();
         let formData = new FormData();
-        formData.append('param', 'start to rollback');
+        formData.append('rowKeyPut4', this.abtestPro.rowKeyPut4);
         axios.post("/parserPro/uploadRollBack", formData
         ).then(rst =>{
           console.log('Success! From node.js');
