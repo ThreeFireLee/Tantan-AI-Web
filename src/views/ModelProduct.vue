@@ -78,7 +78,6 @@
           </div>
           <div>
             <a href="/"  class="button-2 button-primary button-rounded">>>>Stage</a>
-            {{alertFor}}
           </div>
         </div>
       </div>
@@ -117,7 +116,7 @@
 
         searchRst:'',
         fileUpRes:'',
-        alertFor:'',
+
 
         operationChose:'model',
         filterBy:false,
@@ -248,7 +247,8 @@
 
             alert('Wrong! Duplicate model id!');
           }else{
-           this.alertFor = res.msg;
+          
+            console.log('done');
           }
 
 
