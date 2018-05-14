@@ -59,25 +59,44 @@ router.post('/upload', function(req, res){
     if (err) {
         console.log(err);
       }
-
+      try
+      {
+        if (typeof JSON.parse(data) == "object") {
+          console.log('correct json format');
+        }
+      }
+      catch(err)
+      {
+        console.log('wrong json format');
+        res.json({
+          status:'1',
+          msg:'',
+        });
+        return false;//如果报错，则防止程序继续执行
+      }
       var obj = JSON.parse(data);
-     console.log(obj);
+     // console.log(obj);
 
       //Put to hbase
       client.table(fields.hbaseTablePut)
         .create(fields.colFamilyPut, function(err, success){
          this
            .row(fields.rowKeyPut)
-            .put(fields.colFamilyPut + ':model_contents', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
+            .put(fields.colFamilyPut + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
               this.get(fields.colFamilyPut, function (err, cells) {
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
-                  var time = new Date();   // 程序计时的月从0开始取值后+1
-                  var m = time.getMonth() + 1;
-                  var t = time.getFullYear() + "-" + m + "-"
-                    + time.getDate() + " " + time.getHours() + ":"
-                    + time.getMinutes() + ":" + time.getSeconds();
+
+                  res.json({
+                    status:'0',
+                    msg:'',
+                  });
+                  // var time = new Date();   // 程序计时的月从0开始取值后+1
+                  // var m = time.getMonth() + 1;
+                  // var t = time.getFullYear() + "-" + m + "-"
+                  //   + time.getDate() + " " + time.getHours() + ":"
+                  //   + time.getMinutes() + ":" + time.getSeconds();
                   // let emailContent = `<p>Provision Time:${t}</p>
                   //                     <p>Model Id:${fields.rowKeyPut2}</p>
                   //                     <p>has been uploaded by ${fields.operator_name}</p>
@@ -93,20 +112,6 @@ router.post('/upload', function(req, res){
 
 
 
-  });
-
-  form.on('error', function(err) {
-    console.log('An error has occured: \n' + err);
-  });
-
-  //form.parse(req);
-
-  form.on('end', (err, data) => {
-    if(req.file == ""){
-      res.end('upload failed!');
-    }else{
-      res.end('Upload successfully!');
-    }
   });
 
 });
@@ -160,7 +165,7 @@ router.post('/uploadHbase', function(req, res){
 });
 
 /*
-    Retrieve parameters to hbase
+    Retrieve parameters from hbase
  */
 router.get('/hbase', function(req, res, next) {
   res.send('this is hbase parser');
@@ -188,7 +193,7 @@ router.post("/hbase", function (req,res,next) {
         values = JSON.stringify(values).replace(/[\\]/g,'');
          //values = JSON.stringify(values).replace(reg,"");
         values = values.replace('"$":"{','"$":{');
-        //values = values.replace('}"}]','}}');
+        values = values.replace('}"}]','}}');
         values = values.replace('}"}"}]','}}}');
         values = values.replace('modelContent": "{"','modelContent": {"');
         values = values.replace('[{"column":"','{"column":"');
@@ -207,7 +212,12 @@ router.post("/hbase", function (req,res,next) {
   });
 });
 
+
+
+
 /*
+[=============================================AB TEST PART================================================]
+
 * post abtest whitelist
 * */
 router.post('/uploadABtest', function(req, res){
@@ -271,6 +281,49 @@ router.post('/uploadABtest', function(req, res){
   });
 
 
+});
+
+/*
+*
+* retrieve abtest data from database
+* */
+router.post("/hbaseABRetrieve", function (req,res,next) {
+  // res.send('this is our hbase');
+  var param = {
+    rowKey:req.body.rowKey,
+    hbaseTable:req.body.hbaseTable,
+  }
+  console.log(req.body);
+
+//Get from hbase
+  var myRow = client.table('test').row(param.rowKey);
+  myRow.exists('col',function(err,exists){
+    if(exists){
+      this.get('col',function(err,values){
+
+        console.log('get column family');
+        //console.log(values);
+
+        values = JSON.stringify(values).replace(/[\\]/g,'');
+        //values = JSON.stringify(values).replace(reg,"");
+        values = values.replace('"$":"{','"$":{');
+        values = values.replace('}"}]','}}');
+        values = values.replace('}"}"}]','}}}');
+        values = values.replace('modelContent": "{"','modelContent": {"');
+        values = values.replace('[{"column":"','{"column":"');
+
+        // var v = values.$;
+        res.json({
+          status:'0',
+          msg:'',
+          result:{
+            ABRst:values
+          }
+        });
+
+      });
+    }
+  });
 });
 
 /*

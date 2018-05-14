@@ -36,7 +36,8 @@
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtest1.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
-                    <br>
+                  <button type="primary" @click="onRetrieve($event)" class="btn-2 button-primary">Retrieve</button>
+                  <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtest1.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
                   <br><br>
@@ -73,11 +74,11 @@
                     <option>pengdesheng@p1.com</option>
                     <option>liyan@p1.com</option>
                     <option>wuzuxiang@p1.com</option>
-                  </datalist>
+                  </datalist>v-on:
                   <br><br><br><br>
                   <input type="text" name="rowKeyPut4" id="rowKeyPut4" v-model="abtest1.rowKeyPut4" placeholder="rollback row key" class="txt input-light rollback">
                     <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
-
+                  <confirm :m="msg"></confirm>
               </div>
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{sumValue()}} %
@@ -108,8 +109,10 @@
   import './../assets/css/base.css'
   import './../assets/css/product.css'
   import './../assets/css/login.css'
+
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
+  //import confirm from '@/components/ConfirmPart.vue'
   import axios from 'axios'
   //import NavFooter from '@/components/NavFooter.vue'
 
@@ -239,6 +242,7 @@
         email_person:''
       },
 
+        abExperimentRst:''
 
       }
     },
@@ -272,6 +276,23 @@
         }
         return `[${p}%~${a}%)`
       },
+
+      //retrieve ABTEST data from hbase
+      onRetrieve(event) {
+        event.preventDefault();
+
+        axios.post("/parser/hbaseABRetrieve",
+          {
+            rowKey:this.abtest1.rowKeyPut3
+          },
+
+        ).then(rst =>{
+          var res = rst.data;
+          this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
+          alert('A/B Test Experiment Data\n' + this.abExperimentRst);
+        });
+      },
+
       //review your json input
       submitForReview(event){
         event.preventDefault();
@@ -375,6 +396,7 @@
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
         formData.append('email_person', this.abtest1.email_person);
+
         //100% validation
         let result = this.sumValue();
         if (result !== 100){

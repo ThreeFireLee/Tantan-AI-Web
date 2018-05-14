@@ -128,7 +128,6 @@
 
 
             searchRst:'',
-            fileUpRes:'',
 
             operationChose:'model',
             filterBy:false,
@@ -154,6 +153,8 @@
               }
             });
           },
+
+
           //retrieve data from hbase
           onSubmit(event) {
             event.preventDefault();
@@ -194,12 +195,14 @@
 
                 axios.post("/parser/upload", formData, config
                   ).then(rst =>{
-                    var res = rst.data;
-                     this.fileUpRes = res;
+                  var res = rst.data;
+                  if(res.status==1){
+                    alert('Wrong! Json file format not correct');
+                  }else{
                     console.log('SUCCESS');
+                  }
                 })
                     .catch(function(){
-                      this.fileUpRes = 'failed';
                       console.log('FAILURE!!');
                     });
           },
@@ -259,11 +262,10 @@
             axios.post("/parser/uploadHbase", formData
               ,config
             ).then(rst =>{
-             console.log(rst.data);
+              console.log(rst.data);
               console.log('Success! From node.js');
             })
               .catch(function(){
-                this.fileUpRes = 'failed';
                 console.log('FAILURE!!');
               });
           },

@@ -34,6 +34,7 @@ router.get('/upload', function(req, res, next) {
   res.send('upload test');
 
 });
+
 //upload with file
 router.post('/upload', function(req, res){
 
@@ -41,15 +42,30 @@ router.post('/upload', function(req, res){
   form.uploadDir = path.join(__dirname, './../models/ModelUploadPro');
 
   form.parse(req, function (err, fields, files) {
-
     console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
  fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
+      console.log(data);
+   try
+   {
+     if (typeof JSON.parse(data) == "object") {
+       console.log('correct json format');
+     }
+   }
+   catch(err)
+   {
+     console.log('wrong json format');
+     res.json({
+       status:'1',
+       msg:'',
+     });
+     return false;//如果报错，则防止程序继续执行
+   }
 
       var obj = JSON.parse(data);
-      console.log(obj);
+      //console.log(obj);
 
       //Put to hbase
       client.table(fields.hbaseTablePutPro)
@@ -61,15 +77,20 @@ router.post('/upload', function(req, res){
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
-                  var m = time.getMonth() + 1;
-                  var t = time.getFullYear() + "-" + m + "-"
-                    + time.getDate() + " " + time.getHours() + ":"
-                    + time.getMinutes() + ":" + time.getSeconds();
+                  res.json({
+                    status:'0',
+                    msg:'',
+                  });
+                  // var m = time.getMonth() + 1;
+                  // var t = time.getFullYear() + "-" + m + "-"
+                  //   + time.getDate() + " " + time.getHours() + ":"
+                  //   + time.getMinutes() + ":" + time.getSeconds();
                   // let emailContent = `<p>Provision Time:${t}</p>
                   //                     <p>Model Id:${fields.rowKeyPutPro}</p>
                   //                     <p>has been uploaded with file by ${fields.operator_namePro}</p>
                   //                     <p>Model Content:${JSON.stringify(obj)}</p>`
                   // sendEmail('Production New model online updated',emailContent);
+
                 });
               });
             });
@@ -80,20 +101,6 @@ router.post('/upload', function(req, res){
 
 
 
-  });
-
-  form.on('error', function(err) {
-    console.log('An error has occured: \n' + err);
-  });
-
-  //form.parse(req);
-
-  form.on('end', (err, data) => {
-    if(req.file == ""){
-      res.end('upload failed!');
-    }else{
-      res.end('Upload successfully!');
-    }
   });
 
 });
@@ -186,7 +193,7 @@ router.post("/hbase", function (req,res,next) {
         values = JSON.stringify(values).replace(/[\\]/g,'');
         //values = JSON.stringify(values).replace(reg,"");
         values = values.replace('"$":"{','"$":{');
-        //values = values.replace('}"}]','}}');
+        values = values.replace('}"}]','}}');
         values = values.replace('}"}"}]','}}}');
         values = values.replace('modelContent": "{"','modelContent": {"');
         values = values.replace('[{"column":"','{"column":"');

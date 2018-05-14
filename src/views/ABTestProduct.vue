@@ -35,6 +35,7 @@
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtestPro.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
+                  <!--<button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>-->
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">

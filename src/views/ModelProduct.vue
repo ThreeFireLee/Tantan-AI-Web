@@ -113,10 +113,7 @@
         '  }\n' +
         '}',
 
-
         searchRst:'',
-        fileUpRes:'',
-
 
         operationChose:'model',
         filterBy:false,
@@ -182,11 +179,13 @@
         axios.post("/parserPro/upload", formData, config
         ).then(rst =>{
           var res = rst.data;
-          this.fileUpRes = res;
-          console.log('SUCCESS');
-        })
-          .catch(function(){
-            this.fileUpRes = 'failed';
+          if(res.status==1){
+            alert('Wrong! Json file format not correct');
+          }else{
+            console.log('SUCCESS');
+          }
+        }).catch(function(){
+
             console.log('FAILURE!!');
           });
       },
@@ -247,7 +246,7 @@
 
             alert('Wrong! Duplicate model id!');
           }else{
-          
+
             console.log('done');
           }
 

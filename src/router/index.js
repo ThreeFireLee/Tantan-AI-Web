@@ -6,7 +6,6 @@ import GoodList from './../views/GoodList.vue'
 import ABTest from './../views/ABTest.vue'
 import ABTestProduct from './../views/ABTestProduct.vue'
 import ModelProduct from './../views/ModelProduct.vue'
-import CreateExp from './../views/ABTestCreate.vue'
 
 Vue.use(Router)
 
