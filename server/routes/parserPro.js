@@ -165,7 +165,7 @@ router.post('/uploadHbase', function(req, res){
 });
 
 /*
-    Retrieve parameters to hbase
+    Retrieve parameters from hbase
  */
 router.get('/hbase', function(req, res, next) {
   res.send('this is hbase parser');
@@ -190,13 +190,10 @@ router.post("/hbase", function (req,res,next) {
         console.log('Get column family');
         //console.log(values);
 
-        values = JSON.stringify(values).replace(/[\\]/g,'');
+        values = values[0].$;
+        // values = JSON.stringify(values).replace(/[\\]/g,'');
         //values = JSON.stringify(values).replace(reg,"");
-        values = values.replace('"$":"{','"$":{');
-        values = values.replace('}"}]','}}');
-        values = values.replace('}"}"}]','}}}');
-        values = values.replace('modelContent": "{"','modelContent": {"');
-        values = values.replace('[{"column":"','{"column":"');
+
 
         res.json({
           status:'0',
@@ -212,13 +209,13 @@ router.post("/hbase", function (req,res,next) {
 });
 
 /*
+[=============================================AB TEST PART================================================]
 * post abtest whitelist
 * */
 router.post('/uploadABtest', function(req, res){
 
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    //sendEmail('muzihuohuohuo@126.com', 'Test subject', 'Test message');
     console.log(fields);//这里就是post的XXX 的数据
     var t1 = new Date().getTime();//timestamp
     console.log(t1);
@@ -276,6 +273,52 @@ router.post('/uploadABtest', function(req, res){
   });
 
 
+});
+
+/*
+*
+* retrieve abtest data from database
+* */
+router.post("/hbaseABRetrieve", function (req,res,next) {
+  // res.send('this is our hbase');
+  var param = {
+    rowKey:req.body.rowKey,
+    hbaseTable:req.body.hbaseTable,
+  }
+  console.log(req.body);
+
+//Get from hbase
+  var myRow = client.table('test').row(param.rowKey);
+  myRow.exists('col',function(err,exists){
+    if(exists){
+      this.get('col',function(err,values){
+
+        console.log('get column family');
+        //console.log(values);
+
+        values = values[0].$;
+        values = JSON.stringify(values).replace(/[\\]/g,'');
+        //values = JSON.stringify(values).replace(reg,"");
+        // values = values.replace('"$":"{','"$":{');
+        // values = values.replace('}"}]','}}');
+        // values = values.replace('}"}"}]','}}}');
+        // values = values.replace('modelContent": "{"','modelContent": {"');
+        // values = values.replace('[{"column":"','{"column":"');
+
+
+
+        // var v = values.$;
+        res.json({
+          status:'0',
+          msg:'',
+          result:{
+            ABRst:values
+          }
+        });
+
+      });
+    }
+  });
 });
 
 /*

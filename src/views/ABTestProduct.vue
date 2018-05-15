@@ -35,7 +35,7 @@
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtestPro.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
-                  <!--<button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>-->
+                  <button type="primary" @click="onRetrieve($event)" class="btn-4 button-primary">Retrieve</button>
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
@@ -271,6 +271,23 @@
         }
         return `[${p}%~${a}%)`
       },
+
+      //retrieve ABTEST data from hbase
+      onRetrieve(event) {
+        event.preventDefault();
+
+        axios.post("/parserPro/hbaseABRetrieve",
+          {
+            rowKey:this.abtestPro.rowKeyPut3
+          },
+
+        ).then(rst =>{
+          var res = rst.data;
+          this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
+          alert('A/B Test Experiment Data: \n' + this.abExperimentRst);
+        });
+      },
+
       //review your json input
       submitForReview(event){
         event.preventDefault();

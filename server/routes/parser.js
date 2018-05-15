@@ -59,6 +59,7 @@ router.post('/upload', function(req, res){
     if (err) {
         console.log(err);
       }
+
       try
       {
         if (typeof JSON.parse(data) == "object") {
@@ -189,14 +190,9 @@ router.post("/hbase", function (req,res,next) {
 
         console.log('get column family');
         //console.log(values);
-
-        values = JSON.stringify(values).replace(/[\\]/g,'');
+        values = values[0].$;
+        // values = JSON.stringify(values).replace(/[\\]/g,'');
          //values = JSON.stringify(values).replace(reg,"");
-        values = values.replace('"$":"{','"$":{');
-        values = values.replace('}"}]','}}');
-        values = values.replace('}"}"}]','}}}');
-        values = values.replace('modelContent": "{"','modelContent": {"');
-        values = values.replace('[{"column":"','{"column":"');
 
         // var v = values.$;
             res.json({
@@ -296,7 +292,7 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
   console.log(req.body);
 
 //Get from hbase
-  var myRow = client.table('test').row(param.rowKey);
+  var myRow = client.table(param.hbaseTable).row(param.rowKey);
   myRow.exists('col',function(err,exists){
     if(exists){
       this.get('col',function(err,values){
@@ -304,13 +300,15 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
         console.log('get column family');
         //console.log(values);
 
-        values = JSON.stringify(values).replace(/[\\]/g,'');
+        values = values[0].$;
+
+        //values = JSON.stringify(values).replace(/[\\]/g,'');
         //values = JSON.stringify(values).replace(reg,"");
-        values = values.replace('"$":"{','"$":{');
-        values = values.replace('}"}]','}}');
-        values = values.replace('}"}"}]','}}}');
-        values = values.replace('modelContent": "{"','modelContent": {"');
-        values = values.replace('[{"column":"','{"column":"');
+        // values = values.replace('"$":"{','"$":{');
+        // values = values.replace('}"}]','}}');
+        // values = values.replace('}"}"}]','}}}');
+        // values = values.replace('modelContent": "{"','modelContent": {"');
+        // values = values.replace('[{"column":"','{"column":"');
 
         // var v = values.$;
         res.json({
@@ -336,7 +334,7 @@ router.post('/uploadRollBack', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    fs.readFile(path.join(__dirname, "./../models/ABTestUpload",fields.rowKeyPut4 + '_namelist'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, "./../models/ABTestUpload",fields.rowKeyPut3 + '_namelist'), 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }

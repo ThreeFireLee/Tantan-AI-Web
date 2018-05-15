@@ -2677,6 +2677,20 @@ html {
   font-weight:900;
   font-size:105%
 }
+.btn-4{
+  width: 80px;
+  height: 30px;
+  background-color: #428bca;
+  border-color: #357ebd;
+  color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px; /* future proofing */
+  -khtml-border-radius: 10px; /* for old Konqueror browsers */
+  line-height: normal;
+  font-weight:900;
+  font-size:105%
+}
 
 .only-create-button{
   margin-left: 40px;

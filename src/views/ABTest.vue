@@ -36,7 +36,8 @@
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtest1.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
-                  <button type="primary" @click="onRetrieve($event)" class="btn-2 button-primary">Retrieve</button>
+                  <button type="primary" @click="onRetrieve($event)" class="btn-4 button-primary">Retrieve</button>
+                  <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtest1.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
@@ -74,10 +75,8 @@
                     <option>pengdesheng@p1.com</option>
                     <option>liyan@p1.com</option>
                     <option>wuzuxiang@p1.com</option>
-                  </datalist>v-on:
+                  </datalist>
                   <br><br><br><br>
-                  <input type="text" name="rowKeyPut4" id="rowKeyPut4" v-model="abtest1.rowKeyPut4" placeholder="rollback row key" class="txt input-light rollback">
-                    <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
                   <confirm :m="msg"></confirm>
               </div>
               <div class="model-quarter-div">
@@ -124,17 +123,16 @@
 
 
       abtest1:{
-        hbaseTablePut3:'test',
+        hbaseTablePut3:'test-abtest',
         colFamilyPut3:'col',
-        rowKeyPut3:'',
+        rowKeyPut3:'1',
         //experiment_id:'',
-        rowKeyPut4:'',
         abtestCore:{
-            experiment_name:'tantan-rec-male-mlc0',
-            hash_id:'111111',
+            experiment_name:'',
+            hash_id:'',
             whitelists: [{
-              user_ids: '20,20,10,10',
-              treatment:'test1'
+              user_ids: '',
+              treatment:''
             },
               {
                 user_ids: '',
@@ -242,7 +240,7 @@
         email_person:''
       },
 
-        abExperimentRst:''
+        //abExperimentRst:''
 
       }
     },
@@ -283,13 +281,20 @@
 
         axios.post("/parser/hbaseABRetrieve",
           {
-            rowKey:this.abtest1.rowKeyPut3
+            rowKey:this.abtest1.rowKeyPut3,
+            hbaseTable: this.abtest1.hbaseTablePut3
           },
 
         ).then(rst =>{
           var res = rst.data;
           this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
-          alert('A/B Test Experiment Data\n' + this.abExperimentRst);
+
+          //we need parse so that we can take value from JSON form
+         let dataAfterParse = JSON.parse(this.abExperimentRst);
+         this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
+         this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
+         this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
+          this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
         });
       },
 
@@ -426,7 +431,8 @@
       submitRollBack(event){
         event.preventDefault();
         let formData = new FormData();
-        formData.append('rowKeyPut4', this.abtest1.rowKeyPut4);
+        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         axios.post("/parser/uploadRollBack", formData
         ).then(rst =>{
           console.log('Success! From node.js');

@@ -132,6 +132,7 @@
             operationChose:'model',
             filterBy:false,
             overLayFlag:false
+
           }
         },
         components: {
@@ -185,7 +186,7 @@
                 formData.append('colFamilyPut', this.colFamily);
 
                 console.log(formData);
-                formData.append('file', this.file);
+                // formData.append('file', this.file);
 
 
                 let config = {
