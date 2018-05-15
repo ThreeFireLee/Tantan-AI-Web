@@ -179,11 +179,16 @@
         axios.post("/parserPro/upload", formData, config
         ).then(rst =>{
           var res = rst.data;
+          if(res.status==0){
+            alert('Wrong! Duplicate model id!');
+          }
+
           if(res.status==1){
             alert('Wrong! Json file format not correct');
           }else{
-            console.log('SUCCESS');
+            console.log('Well done');
           }
+
         }).catch(function(){
 
             console.log('FAILURE!!');

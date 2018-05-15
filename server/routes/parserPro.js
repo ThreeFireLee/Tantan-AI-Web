@@ -65,37 +65,48 @@ router.post('/upload', function(req, res){
    }
 
       var obj = JSON.parse(data);
-      //console.log(obj);
 
-      //Put to hbase
-      client.table(fields.hbaseTablePutPro)
-        .create(fields.colFamilyPutPro, function(err, success){
-          this
-            .row(fields.rowKeyPutPro)
-            .put(fields.colFamilyPutPro + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
-              this.get(fields.colFamilyPutPro, function (err, cells) {
-                this.exists(function (err, exists) {
-                  assert.ok(exists);
-                  console.log(success);
-                  res.json({
-                    status:'0',
-                    msg:'',
-                  });
-                  // var m = time.getMonth() + 1;
-                  // var t = time.getFullYear() + "-" + m + "-"
-                  //   + time.getDate() + " " + time.getHours() + ":"
-                  //   + time.getMinutes() + ":" + time.getSeconds();
-                  // let emailContent = `<p>Provision Time:${t}</p>
-                  //                     <p>Model Id:${fields.rowKeyPutPro}</p>
-                  //                     <p>has been uploaded with file by ${fields.operator_namePro}</p>
-                  //                     <p>Model Content:${JSON.stringify(obj)}</p>`
-                  // sendEmail('Production New model online updated',emailContent);
+   var myCol = client.table(fields.hbaseTablePutPro).row(fields.rowKeyPutPro);
+   myCol.exists(fields.colFamilyPutPro,function(err,exists){
+     if(exists){
+       console.log('Already exist');
+       res.json({
+         status:'0',
+         msg:'Cannot write! Model already exist',
+       });
+     }else{
+       //Put to hbase
+       client.table(fields.hbaseTablePutPro)
+         .create(fields.colFamilyPutPro, function(err, success){
+           this
+             .row(fields.rowKeyPutPro)
+             .put(fields.colFamilyPutPro + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
+               this.get(fields.colFamilyPutPro, function (err, cells) {
+                 this.exists(function (err, exists) {
+                   assert.ok(exists);
+                   console.log(success);
+                   // var m = time.getMonth() + 1;
+                   // var t = time.getFullYear() + "-" + m + "-"
+                   //   + time.getDate() + " " + time.getHours() + ":"
+                   //   + time.getMinutes() + ":" + time.getSeconds();
+                   // let emailContent = `<p>Provision Time:${t}</p>
+                   //                     <p>Model Id:${fields.rowKeyPutPro}</p>
+                   //                     <p>has been uploaded with file by ${fields.operator_namePro}</p>
+                   //                     <p>Model Content:${JSON.stringify(obj)}</p>`
+                   // sendEmail('Production New model online updated',emailContent);
 
-                });
-              });
-            });
-        });
-    });
+                 });
+               });
+             });
+         });
+
+       res.json({
+         status:'2',
+         msg:'Great !',
+       });
+     }
+   });
+ });
 
 
 
@@ -158,9 +169,6 @@ router.post('/uploadHbase', function(req, res){
 
 
   });
-  //
-
-
 
 });
 
