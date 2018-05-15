@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>Stage</span>
+      <span>Model Stage</span>
     </nav-bread-crumb>
   <div class="accessory-result-page accessory-page">
     <div class="container">

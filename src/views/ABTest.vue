@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>Stage</span>
+      <span>A/B Testing Stage</span>
     </nav-bread-crumb>
     <div class="accessory-result-page accessory-page">
       <div class="container">
@@ -123,9 +123,9 @@
 
 
       abtest1:{
-        hbaseTablePut3:'test-abtest',
-        colFamilyPut3:'col',
-        rowKeyPut3:'1',
+        hbaseTablePut3:'',
+        colFamilyPut3:'',
+        rowKeyPut3:'',
         //experiment_id:'',
         abtestCore:{
             experiment_name:'',
@@ -240,7 +240,7 @@
         email_person:''
       },
 
-        //abExperimentRst:''
+        abExperimentRst:''
 
       }
     },
@@ -282,7 +282,8 @@
         axios.post("/parser/hbaseABRetrieve",
           {
             rowKey:this.abtest1.rowKeyPut3,
-            hbaseTable: this.abtest1.hbaseTablePut3
+            hbaseTable: this.abtest1.hbaseTablePut3,
+            colFamily: this.abtest1.colFamilyPut3
           },
 
         ).then(rst =>{

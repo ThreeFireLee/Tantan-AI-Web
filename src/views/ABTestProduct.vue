@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>Production</span>
+      <span>A/B Testing Production</span>
     </nav-bread-crumb>
     <div class="accessory-result-page accessory-page">
       <div class="container">
@@ -36,6 +36,7 @@
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtestPro.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
                   <button type="primary" @click="onRetrieve($event)" class="btn-4 button-primary">Retrieve</button>
+                  <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
                   <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
@@ -76,8 +77,6 @@
                     <option>wuzuxiang@p1.com</option>
                   </datalist>
                   <br><br><br><br>
-                  <input type="text" name="rowKeyPut4" id="rowKeyPut4" v-model="abtestPro.rowKeyPut4" placeholder="rollback row key" class="txt input-light rollback">
-                  <button v-on:click="submitRollBack($event)" class="btn button-primary">Roll Back</button>
                 </div>
 
 
@@ -121,10 +120,9 @@
         operationChose: 'abtest-1',
 
         abtestPro:{
-          hbaseTablePut3:'test',
+          hbaseTablePut3:'test-abtest',
           colFamilyPut3:'col',
-          rowKeyPut3:'',
-          rowKeyPut4:'',
+          rowKeyPut3:'1',
           abtestCore:{
             experiment_name:'tantan-rec-male-mlc0',
             hash_id:'111111',
@@ -278,13 +276,19 @@
 
         axios.post("/parserPro/hbaseABRetrieve",
           {
-            rowKey:this.abtestPro.rowKeyPut3
+            rowKey:this.abtestPro.rowKeyPut3,
+            hbaseTable: this.abtestPro.hbaseTablePut3,
+            colFamily: this.abtestPro.colFamilyPut3
           },
 
         ).then(rst =>{
           var res = rst.data;
           this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
-          alert('A/B Test Experiment Data: \n' + this.abExperimentRst);
+          let dataAfterParse = JSON.parse(this.abExperimentRst);
+          this.abtestPro.abtestCore.experiment_name = dataAfterParse.experiment_name;
+          this.abtestPro.abtestCore.hash_id = dataAfterParse.hash_id;
+          this.abtestPro.abtestCore.whitelists = dataAfterParse.whitelists;
+          this.abtestPro.abtestCore.ramp = dataAfterParse.ramp;
         });
       },
 
@@ -412,7 +416,8 @@
       submitRollBack(event){
         event.preventDefault();
         let formData = new FormData();
-        formData.append('rowKeyPut4', this.abtestPro.rowKeyPut4);
+        formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
+        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
         axios.post("/parserPro/uploadRollBack", formData
         ).then(rst =>{
           console.log('Success! From node.js');

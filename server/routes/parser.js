@@ -238,7 +238,7 @@ router.post('/uploadABtest', function(req, res){
     });
 
     //maintain name list
-    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload",fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -288,14 +288,15 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
   var param = {
     rowKey:req.body.rowKey,
     hbaseTable:req.body.hbaseTable,
+    colFamily:req.body.colFamily
   }
   console.log(req.body);
 
 //Get from hbase
   var myRow = client.table(param.hbaseTable).row(param.rowKey);
-  myRow.exists('col',function(err,exists){
+  myRow.exists(param.colFamily ,function(err,exists){
     if(exists){
-      this.get('col',function(err,values){
+      this.get(param.colFamily,function(err,values){
 
         console.log('get column family');
         //console.log(values);
@@ -334,7 +335,7 @@ router.post('/uploadRollBack', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    fs.readFile(path.join(__dirname, "./../models/ABTestUpload",fields.rowKeyPut3 + '_namelist'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 + '_' + fields.rowKeyPut3 + '_namelist'), 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }

@@ -235,7 +235,7 @@ router.post('/uploadABtest', function(req, res){
     });
 
     //maintain name list
-    fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro", fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+    fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -245,24 +245,24 @@ router.post('/uploadABtest', function(req, res){
 
 
     //Insert to hbase
-    // client.table(fields.hbaseTablePut3)
-    //   .create(fields.colFamilyPut3, function(err, success){
-    //     this
-    //       .row(fields.rowKeyPut3)
-    //       .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
-    //         console.log('insert abtest data');
-    //         console.log(success);
-    //         // var m = time.getMonth() + 1;
-    //         //   var t = time.getFullYear() + "-" + m + "-"
-    //         //   + time.getDate() + " " + time.getHours() + ":"
-    //         //   + time.getMinutes() + ":" + time.getSeconds();
-    //         //    let emailContent = `<p>Provision Time:${t}</p>
-    //         //                        <p>Test Id:${fields.rowKeyPutPro}</p>
-    //         //                        <p>has been uploaded by ${fields.operator_name}</p>
-    //         //                        <p>A/B Test Content:${fields.abtestData}</p>`
-    //         //   sendEmail('Roll back done!',emailContent);
-    //       });
-    //   });
+    client.table(fields.hbaseTablePut3)
+      .create(fields.colFamilyPut3, function(err, success){
+        this
+          .row(fields.rowKeyPut3)
+          .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+            // var m = time.getMonth() + 1;
+            //   var t = time.getFullYear() + "-" + m + "-"
+            //   + time.getDate() + " " + time.getHours() + ":"
+            //   + time.getMinutes() + ":" + time.getSeconds();
+            //    let emailContent = `<p>Provision Time:${t}</p>
+            //                        <p>Test Id:${fields.rowKeyPutPro}</p>
+            //                        <p>has been uploaded by ${fields.operator_name}</p>
+            //                        <p>A/B Test Content:${fields.abtestData}</p>`
+            //   sendEmail('Roll back done!',emailContent);
+          });
+      });
 
 
   });
@@ -284,30 +284,21 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
   var param = {
     rowKey:req.body.rowKey,
     hbaseTable:req.body.hbaseTable,
+    colFamily:req.body.colFamily
   }
   console.log(req.body);
 
 //Get from hbase
-  var myRow = client.table('test').row(param.rowKey);
-  myRow.exists('col',function(err,exists){
+  var myRow = client.table(param.hbaseTable).row(param.rowKey);
+  myRow.exists(param.colFamily, function(err,exists){
     if(exists){
-      this.get('col',function(err,values){
+      this.get(param.colFamily,function(err,values){
 
         console.log('get column family');
         //console.log(values);
 
         values = values[0].$;
-        values = JSON.stringify(values).replace(/[\\]/g,'');
-        //values = JSON.stringify(values).replace(reg,"");
-        // values = values.replace('"$":"{','"$":{');
-        // values = values.replace('}"}]','}}');
-        // values = values.replace('}"}"}]','}}}');
-        // values = values.replace('modelContent": "{"','modelContent": {"');
-        // values = values.replace('[{"column":"','{"column":"');
 
-
-
-        // var v = values.$;
         res.json({
           status:'0',
           msg:'',
@@ -331,7 +322,7 @@ router.post('/uploadRollBack', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",fields.rowKeyPut4 + "_namelist"), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + fields.rowKeyPut3 + "_namelist"), 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
@@ -350,19 +341,19 @@ router.post('/uploadRollBack', function(req, res){
         console.log(obj.abtestData);
 
         //Put to hbase
-        // client.table(obj.hbaseTablePut3)
-        //   .create(obj.colFamilyPut3, function(err, success){
-        //     this
-        //       .row(obj.rowKeyPut3)
-        //       .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
-        //         this.get(obj.colFamilyPut3, function (err, cells) {
-        //           this.exists(function (err, exists) {
-        //             assert.ok(exists);
-        //             console.log(success);
-        //           });
-        //         });
-        //       });
-        //   });
+        client.table(obj.hbaseTablePut3)
+          .create(obj.colFamilyPut3, function(err, success){
+            this
+              .row(obj.rowKeyPut3)
+              .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
+                this.get(obj.colFamilyPut3, function (err, cells) {
+                  this.exists(function (err, exists) {
+                    assert.ok(exists);
+                    console.log(success);
+                  });
+                });
+              });
+          });
       });
 
     });
