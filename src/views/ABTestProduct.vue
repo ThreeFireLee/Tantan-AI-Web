@@ -31,7 +31,14 @@
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
-                  <input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtestPro.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">
+                  <!--<input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtestPro.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">-->
+                  <el-input
+                    placeholder="Default value here"
+                    v-model="abtestPro.hbaseTablePut3"
+                    :disabled="true"
+                    style="width:250px"
+                    class="table-name-css">
+                  </el-input>
                   <br>
                   <lable for="rowKeyPut3">Row Key:</lable>
                   <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtestPro.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
@@ -39,11 +46,18 @@
                   <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
-                  <input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">
+                  <!--<input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">-->
+                  <el-input
+                    placeholder="Default value here"
+                    v-model="abtestPro.colFamilyPut3"
+                    :disabled="true"
+                    style="width:250px"
+                    class="col-family-css">
+                  </el-input>
                   <br><br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
-                  <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
+                  <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
 
                   <div v-for="l in abtestPro.abtestCore.whitelists">
@@ -120,12 +134,12 @@
         operationChose: 'abtest-1',
 
         abtestPro:{
-          hbaseTablePut3:'test-abtest',
-          colFamilyPut3:'col',
-          rowKeyPut3:'1',
+          hbaseTablePut3:'treatment_store',
+          colFamilyPut3:'f',
+          rowKeyPut3:'',
           abtestCore:{
-            experiment_name:'tantan-rec-male-mlc0',
-            hash_id:'111111',
+            experiment_name:'',
+            hash_id:'',
             whitelists: [{
               user_ids: '20,20,10,10',
               treatment:'test1'
@@ -325,7 +339,13 @@
           .replace(',{"treatment":"","percentage":""}','')
           .replace(/{"treatment":"","percentage":""},/,'')
 
-        alert("Your json: \n" + abtestDataReview);
+        const h = this.$createElement;
+        this.$msgbox({
+          title: 'Your Json',
+          message: h('p', null, [
+            h('span', null, abtestDataReview),
+          ]),
+        })
       },
       submitWhiteList(event){
         event.preventDefault();
@@ -390,10 +410,13 @@
         //100% validation
         let result = this.sumValue();
         if (result !== 100){
-          alert("Wrong! Sum of allocation percentage should be exactly 100%");
+          this.$message.error('错误，Allocation percentage not 100%');
           return false;
         } else {
-          alert("Your allocation percentage is correct");
+          this.$message({
+            message: 'Allocation percentage is correct!',
+            type: 'success'
+          });
         }
 
 

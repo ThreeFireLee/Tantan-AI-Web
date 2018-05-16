@@ -141,25 +141,33 @@ router.post('/uploadHbase', function(req, res){
             .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
-              var time = new Date();   // 程序计时的月从0开始取值后+1
-              var m = time.getMonth() + 1;
-              var t = time.getFullYear() + "-" + m + "-"
-                + time.getDate() + " " + time.getHours() + ":"
-                + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p>Provision Time:${t}</p>
-                                  <p>Model Id:${fields.rowKeyPut2}</p>
-                                  <p>has been uploaded by ${fields.operator_name}</p>
-                                  <p>Model Content:${fields.jsonInput}</p>`
-               sendEmail('(Stage) New model online updated',emailContent);
+              // var time = new Date();   // 程序计时的月从0开始取值后+1
+              // var m = time.getMonth() + 1;
+              // var t = time.getFullYear() + "-" + m + "-"
+              //   + time.getDate() + " " + time.getHours() + ":"
+              //   + time.getMinutes() + ":" + time.getSeconds();
+              // let emailContent = `<p>Provision Time:${t}</p>
+              //                     <p>Model Id:${fields.rowKeyPut2}</p>
+              //                     <p>has been uploaded by ${fields.operator_name}</p>
+              //                     <p>Model Content:${fields.jsonInput}</p>`
+              //  sendEmail('(Stage) New model online updated',emailContent);
+            if(success == true) {
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+
+
             });
         });
 
 
-  });
-
-  res.json({
-    status:'0',
-    msg:'',
   });
 
 

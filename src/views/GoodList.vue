@@ -42,7 +42,14 @@
               <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
               <br>
               <lable for="colFamily">Column Family:</lable>
-              <input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt input-light col-family-css">
+              <!--<input type="text" name="colFamily" id="colFamily" v-model="colFamily" placeholder="Col Family" class="txt input-light col-family-css">-->
+              <el-input
+                placeholder="Default value here"
+                v-model="colFamily"
+                :disabled="true"
+                style="width:250px"
+                class="col-family-css">
+              </el-input>
               <br>
               <label class="the-submit">
                 <br>
@@ -116,8 +123,8 @@
 
             operator_name:'',
             hbaseTable:'test',
-            rowKey:'1',
-            colFamily:'col',
+            rowKey:'',
+            colFamily:'f',
             file:'',
             jsonInput: '{\n' +
               '  "person": {\n' +
@@ -198,7 +205,7 @@
                   ).then(rst =>{
                   var res = rst.data;
                   if(res.status==1){
-                    alert('Wrong! Json file format not correct');
+                    this.$message.error('错误，非正确json格式！');
                   }else{
                     console.log('SUCCESS');
                   }
@@ -238,14 +245,13 @@
               try
               {
                 if (typeof JSON.parse(jsonTest) == "object") {
-                  //alert('Valid json format submitted!')
                   //formData.append('jsonInput', jsonTest);
                   console.log(jsonTest);
                 }
               }
               catch(err)
               {
-                alert('Wrong JSON format!\n' + err);
+                this.$message.error('错误，非正确json格式！' + err);
                 return false;//如果报错，则防止程序继续执行
               }
 
@@ -263,7 +269,15 @@
             axios.post("/parser/uploadHbase", formData
               ,config
             ).then(rst =>{
-              console.log(rst.data);
+              var res = rst.data;
+              if(res.status == 0){
+                this.$notify({
+                  title: '提交成功',
+                  message: '数据已写入',
+                  type: 'success'
+                });
+              }
+              console.log(res);
               console.log('Success! From node.js');
             })
               .catch(function(){
