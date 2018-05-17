@@ -370,7 +370,8 @@ router.post('/uploadRollBack', function(req, res){
         }
 
         var obj = JSON.parse(data);
-        console.log(obj.abtestData);
+        //console.log(obj.abtestData);
+        console.log(obj);
 
       //Put to hbase
       client.table(obj.hbaseTablePut3)
@@ -378,11 +379,27 @@ router.post('/uploadRollBack', function(req, res){
           this
             .row(obj.rowKeyPut3)
             .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
-              this.get(obj.colFamilyPut3, function (err, cells) {
-                this.exists(function (err, exists) {
-                  assert.ok(exists);
                   console.log(success);
                   if(success == true) {
+                    var t1 = new Date().getTime();//timestamp
+                    //maintain experiment files
+                    fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), JSON.stringify(obj), function (err) {
+                      if (err) {
+                        console.log(err);
+                      } else {
+                        console.log('ABtest experiment backup file done!');
+                      }
+                    });
+
+                    //maintain name list
+                    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",obj.hbaseTablePut3 +'_' + obj.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                      if (err) {
+                        console.log(err);
+                      } else {
+                        console.log('Name list done!');
+                      }
+                    });
+
                     res.json({
                       status: '0',
                       msg: '',
@@ -405,8 +422,7 @@ router.post('/uploadRollBack', function(req, res){
                                 <p>A/B Testing Content:${obj.abtestData}</p>`
                   sendEmail('(Stage) Roll Back',emailContent);
 
-                });
-              });
+
             });
         });
 
