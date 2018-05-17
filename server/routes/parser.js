@@ -109,7 +109,7 @@ router.post('/upload', function(req, res){
                                       <p>Operator: ${fields.operator_name}</p>
                                       <p>Submission: File</p>
                                       <p>Model Id:${fields.rowKeyPut}</p>
-                                      <p>Model Content:${fields.jsonInput}</p>`
+                                      <p>Model Content:${JSON.stringify(obj)}</p>`
                   sendEmail('(Stage) New model online updated', emailContent);
                 });
               });
@@ -289,7 +289,7 @@ router.post('/uploadABtest', function(req, res){
                                 <p>Operator: ${fields.operator_name}</p>
                                 <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
                                 <p>Row Key:${fields.experiment_name}</p>                         
-                                <p>A/B Testing Content:${fields.jsonInput}</p>`
+                                <p>A/B Testing Content:${fields.abtestData}</p>`
             sendEmail('(Stage) New A/B Test online updated',emailContent);
           });
       });
@@ -402,7 +402,7 @@ router.post('/uploadRollBack', function(req, res){
                                 <p>Operator: ${fields.operator_name}</p>
                                 <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
                                 <p>Row Key:${fields.experiment_name}</p>                         
-                                <p>A/B Testing Content:${fields.jsonInput}</p>`
+                                <p>A/B Testing Content:${obj.abtestData}</p>`
                   sendEmail('(Stage) New A/B Test online updated',emailContent);
 
                 });
