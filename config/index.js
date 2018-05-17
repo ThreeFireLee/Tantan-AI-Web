@@ -15,8 +15,7 @@ module.exports = {
           target:'http://localhost:3000'
       },
       '/parser/*':{
-          target:'http://localhost:3000',
-          changeOrigin: true
+          target:'http://localhost:3000'
       },
       '/parserpro/*':{
         target:'http://localhost:3000'

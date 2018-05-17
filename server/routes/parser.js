@@ -88,21 +88,29 @@ router.post('/upload', function(req, res){
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
+                  if(success == true) {
+                    res.json({
+                      status: '0',
+                      msg: '',
+                    });
+                  }else{
+                    res.json({
+                      status:'2',
+                      msg:'',
+                    });
+                  }
 
-                  res.json({
-                    status:'0',
-                    msg:'',
-                  });
-                  // var time = new Date();   // 程序计时的月从0开始取值后+1
-                  // var m = time.getMonth() + 1;
-                  // var t = time.getFullYear() + "-" + m + "-"
-                  //   + time.getDate() + " " + time.getHours() + ":"
-                  //   + time.getMinutes() + ":" + time.getSeconds();
-                  // let emailContent = `<p>Provision Time:${t}</p>
-                  //                     <p>Model Id:${fields.rowKeyPut2}</p>
-                  //                     <p>has been uploaded by ${fields.operator_name}</p>
-                  //                     <p>Model Content:${fields.jsonInput}</p>`
-                  // sendEmail('New model online updated',emailContent);
+                  var time = new Date();   // 程序计时的月从0开始取值后+1
+                  var m = time.getMonth() + 1;
+                  var t = time.getFullYear() + "-" + m + "-"
+                    + time.getDate() + " " + time.getHours() + ":"
+                    + time.getMinutes() + ":" + time.getSeconds();
+                  let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_name}</p>
+                                      <p>Submission: File</p>
+                                      <p>Model Id:${fields.rowKeyPut}</p>
+                                      <p>Model Content:${fields.jsonInput}</p>`
+                  sendEmail('(Stage) New model online updated', emailContent);
                 });
               });
            });
@@ -141,16 +149,17 @@ router.post('/uploadHbase', function(req, res){
             .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
               console.log(success);
-              // var time = new Date();   // 程序计时的月从0开始取值后+1
-              // var m = time.getMonth() + 1;
-              // var t = time.getFullYear() + "-" + m + "-"
-              //   + time.getDate() + " " + time.getHours() + ":"
-              //   + time.getMinutes() + ":" + time.getSeconds();
-              // let emailContent = `<p>Provision Time:${t}</p>
-              //                     <p>Model Id:${fields.rowKeyPut2}</p>
-              //                     <p>has been uploaded by ${fields.operator_name}</p>
-              //                     <p>Model Content:${fields.jsonInput}</p>`
-              //  sendEmail('(Stage) New model online updated',emailContent);
+              var time = new Date();   // 程序计时的月从0开始取值后+1
+              var m = time.getMonth() + 1;
+              var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p>Provision Time:${t}</p>
+                                  <p>Operator: ${fields.operator_name}</p>
+                                  <p>Submission: front-end entered</p>
+                                  <p>Model Id:${fields.rowKeyPut2}</p>
+                                  <p>Model Content:${fields.jsonInput}</p>`
+               sendEmail('(Stage) New model online updated',emailContent);
             if(success == true) {
               res.json({
                 status: '0',
@@ -220,7 +229,7 @@ router.post("/hbase", function (req,res,next) {
 
 
 /*
-[=============================================AB TEST PART================================================]
+[=============================================A/B TEST PART================================================]
 
 * post abtest whitelist
 * */
@@ -228,11 +237,8 @@ router.post('/uploadABtest', function(req, res){
 
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    //sendEmail('muzihuohuohuo@126.com', 'Test subject', 'Test message');
     console.log(fields);//这里就是post的XXX 的数据
     var t1 = new Date().getTime();//timestamp
-    // console.log(t1);
-
     let fieldJ = JSON.stringify(fields);
     //t1.toString()
 
@@ -263,28 +269,33 @@ router.post('/uploadABtest', function(req, res){
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
             console.log(success);
-            // var time = new Date();   // 程序计时的月从0开始取值后+1
-            // var m = time.getMonth() + 1;
-            // var t = time.getFullYear() + "-" + m + "-"
-            //   + time.getDate() + " " + time.getHours() + ":"
-            //   + time.getMinutes() + ":" + time.getSeconds();
-            // let emailContent = `<p>Provision Time:${t}</p>
-            //                     <p>Model Id:${fields.rowKeyPut2}</p>
-            //                     <p>has been uploaded by ${fields.operator_name}</p>
-            //                     <p>Model Content:${fields.jsonInput}</p>`
-            // sendEmail('New model online updated',emailContent);
+            if(success == true) {
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+            var time = new Date();   // 程序计时的月从0开始取值后+1
+            var m = time.getMonth() + 1;
+            var t = time.getFullYear() + "-" + m + "-"
+              + time.getDate() + " " + time.getHours() + ":"
+              + time.getMinutes() + ":" + time.getSeconds();
+            let emailContent = `<p>Provision Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>A/B Testing Content:${fields.jsonInput}</p>`
+            sendEmail('(Stage) New A/B Test online updated',emailContent);
           });
       });
 
 
   });
-
-  res.json({
-    status:'0',
-    msg:'',
-  });
-
-
 });
 
 /*
@@ -371,6 +382,29 @@ router.post('/uploadRollBack', function(req, res){
                 this.exists(function (err, exists) {
                   assert.ok(exists);
                   console.log(success);
+                  if(success == true) {
+                    res.json({
+                      status: '0',
+                      msg: '',
+                    });
+                  }else{
+                    res.json({
+                      status:'1',
+                      msg:'',
+                    });
+                  }
+                  var time = new Date();   // 程序计时的月从0开始取值后+1
+                  var m = time.getMonth() + 1;
+                  var t = time.getFullYear() + "-" + m + "-"
+                    + time.getDate() + " " + time.getHours() + ":"
+                    + time.getMinutes() + ":" + time.getSeconds();
+                  let emailContent = `<p>Roll Back Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>A/B Testing Content:${fields.jsonInput}</p>`
+                  sendEmail('(Stage) New A/B Test online updated',emailContent);
+
                 });
               });
             });
@@ -380,14 +414,7 @@ router.post('/uploadRollBack', function(req, res){
 
     });
 
-
   });
-
-  res.json({
-    status:'0',
-    msg:'',
-  });
-
 
 });
 

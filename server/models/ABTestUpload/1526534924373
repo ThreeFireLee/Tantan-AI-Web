@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"treatment_store","colFamilyPut3":"f","rowKeyPut3":"1","experiment_name":"1","abtestData":"{\"experiment_name\":\"1\",\"hash_id\":\"\",\"whitelists\":[{\"user_ids\":[],\"treatment\":\"\"}],\"ramp\":[{\"treatment\":\"model_001_lr_like_mlc0\",\"percentage\":100}]}","operator_name":"1","email_person":""}

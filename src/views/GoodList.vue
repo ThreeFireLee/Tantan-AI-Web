@@ -166,14 +166,20 @@
           //retrieve data from hbase
           onSubmit(event) {
             event.preventDefault();
-
+            if(this.rowKey == ""){
+              this.$message({
+                showClose: true,
+                message: '警告,row key 不能为空！',
+                type: 'warning'
+              });
+              return false;
+            }
              axios.post("/parser/hbase",
                {
                  hbaseTable:this.hbaseTable,
                  rowKey:this.rowKey,
                  colFamily:this.colFamily
               },
-
                ).then(rst =>{
 
                var res = rst.data;
@@ -185,6 +191,23 @@
           //submit from the file
           submitFile(event){
                 event.preventDefault();
+            if(this.rowKey == ""){
+              this.$message({
+                showClose: true,
+                message: '警告,row key 不能为空！',
+                type: 'warning'
+              });
+              return false;
+            }
+            if(this.file == ""){
+              this.$message({
+                showClose: true,
+                message: '警告, 请选择提交文件！',
+                type: 'warning'
+              });
+              return false;
+            }
+
 
                 let formData = new FormData();
                 formData.append('operator_name', this.operator_name);
@@ -193,7 +216,7 @@
                 formData.append('colFamilyPut', this.colFamily);
 
                 console.log(formData);
-                // formData.append('file', this.file);
+                formData.append('file', this.file);
 
 
                 let config = {
@@ -206,8 +229,17 @@
                   var res = rst.data;
                   if(res.status==1){
                     this.$message.error('错误，非正确json格式！');
-                  }else{
-                    console.log('SUCCESS');
+                  }else if(res.status == 0){
+                    this.$notify({
+                      title: '提交成功',
+                      message: '数据已写入',
+                      type: 'success'
+                    });
+                  }else if(res.status == 2){
+                    this.$notify.error({
+                      title: '提交失败',
+                      message: '数据未写入'
+                    });
                   }
                 })
                     .catch(function(){
@@ -224,6 +256,30 @@
           //submit from typing
           submitJson(event){
             event.preventDefault();
+            if(this.rowKey == ""){
+              this.$message({
+                showClose: true,
+                message: '警告,row key 不能为空！',
+                type: 'warning'
+              });
+              return false;
+            }
+            if(this.operator_name == ""){
+              this.$message({
+                showClose: true,
+                message: '警告, 请填写操作人',
+                type: 'warning'
+              });
+              return false;
+            }
+            if(this.jsonInput == ""){
+              this.$message({
+                showClose: true,
+                message: '警告, 提交json内容不能为空！',
+                type: 'warning'
+              });
+              return false;
+            }
             // let formData = JSON.stringify(this.InputWithType);
             //let a =  qs.stringify(this.hbaseTablePut);
 
@@ -275,6 +331,11 @@
                   title: '提交成功',
                   message: '数据已写入',
                   type: 'success'
+                });
+              }else if(res.status == 1){
+                this.$notify.error({
+                  title: '提交失败',
+                  message: '数据未写入'
                 });
               }
               console.log(res);

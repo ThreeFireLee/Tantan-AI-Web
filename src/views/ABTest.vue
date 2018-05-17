@@ -294,6 +294,14 @@
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
+        if(this.abtest1.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
 
         axios.post("/parser/hbaseABRetrieve",
           {
@@ -360,6 +368,38 @@
       },
       submitWhiteList(event){
         event.preventDefault();
+        if(this.abtest1.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，请填写操作人！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.abtestCore.experiment_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment name未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.abtestCore.hash_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
         //parse user_ids to array
         this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
           user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),
@@ -430,7 +470,7 @@
         //100% validation
         let result = this.sumValue();
         if (result !== 100){
-          this.$message.error('错误，Allocation percentage not 100%');
+          this.$message.error('错误，Allocation percentage not 100%. 再次提交需刷新页面');
           return false;
         } else {
           this.$message({
@@ -448,25 +488,57 @@
         axios.post("/parser/uploadABtest", formData
           ,config
         ).then(rst =>{
-          console.log(rst.data);
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
+          console.log(res);
           console.log('Success! From node.js');
         })
           .catch(function(){
-            this.fileUpRes = 'failed';
             console.log('FAILURE!!');
           });
       },
       submitRollBack(event){
         event.preventDefault();
+        if(this.abtest1.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
         let formData = new FormData();
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         axios.post("/parser/uploadRollBack", formData
         ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已覆盖',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未覆盖'
+            });
+          }
           console.log('Success! From node.js');
         })
           .catch(function(){
-            this.fileUpRes = 'failed';
             console.log('FAILURE!!');
           });
       }
