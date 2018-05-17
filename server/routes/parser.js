@@ -400,10 +400,10 @@ router.post('/uploadRollBack', function(req, res){
                     + time.getMinutes() + ":" + time.getSeconds();
                   let emailContent = `<p>Roll Back Time:${t}</p>
                                 <p>Operator: ${fields.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
+                                <p>Row Key:${fields.rowKeyPut3}</p>                         
                                 <p>A/B Testing Content:${obj.abtestData}</p>`
-                  sendEmail('(Stage) New A/B Test online updated',emailContent);
+                  sendEmail('(Stage) Roll Back',emailContent);
 
                 });
               });

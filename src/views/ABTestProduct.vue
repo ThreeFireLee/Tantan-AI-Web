@@ -134,15 +134,15 @@
         operationChose: 'abtest-1',
 
         abtestPro:{
-          hbaseTablePut3:'treatment_store',
+          hbaseTablePut3:'test-abtest',
           colFamilyPut3:'f',
           rowKeyPut3:'',
           abtestCore:{
             experiment_name:'',
             hash_id:'',
             whitelists: [{
-              user_ids: '20,20,10,10',
-              treatment:'test1'
+              user_ids: '',
+              treatment:''
             },
               {
                 user_ids: '',
@@ -287,6 +287,14 @@
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
+        if(this.abtestPro.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
 
         axios.post("/parserPro/hbaseABRetrieve",
           {
@@ -349,6 +357,38 @@
       },
       submitWhiteList(event){
         event.preventDefault();
+        if(this.abtestPro.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，请填写操作人！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.experiment_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment name未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.hash_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
         //parse user_ids to array
         this.abtestPro.abtestCore.whitelists = this.abtestPro.abtestCore.whitelists.map(x =>({
           user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),
@@ -428,25 +468,65 @@
         axios.post("/parserPro/uploadABtest", formData
           ,config
         ).then(rst =>{
-          console.log(rst.data);
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
           console.log('Success! From node.js');
         })
           .catch(function(){
-            this.fileUpRes = 'failed';
             console.log('FAILURE!!');
           });
       },
       submitRollBack(event){
         event.preventDefault();
+        if(this.abtestPro.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，请填写操作人！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
         let formData = new FormData();
+        formData.append('operator_name', this.abtestPro.operator_name);
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
         axios.post("/parserPro/uploadRollBack", formData
         ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已覆盖',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未覆盖'
+            });
+          }
           console.log('Success! From node.js');
         })
           .catch(function(){
-            this.fileUpRes = 'failed';
             console.log('FAILURE!!');
           });
       }

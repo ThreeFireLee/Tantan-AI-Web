@@ -36,7 +36,14 @@
               <input type="text" name="operator_name" id="operator_name" v-model="operator_name" placeholder="operator name"class="input-light operator-name">
               <br><br>
               <lable for="hbaseTable">Table Name:  </lable>
-              <input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">
+              <!--<input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">-->
+              <el-input
+                placeholder="Default value here"
+                v-model="hbaseTable"
+                :disabled="true"
+                style="width:250px; height:41px"
+                class="table-name-css">
+              </el-input>
               <br>
               <lable for="rowKey">Model Id: </lable>
               <input type="text" name="rowKey" id="rowKey" v-model="rowKey" placeholder="Your Key" class="txt input-light row-key-css">
@@ -122,7 +129,7 @@
             goodList:[],
 
             operator_name:'',
-            hbaseTable:'test',
+            hbaseTable:'mods_model_storage',
             rowKey:'',
             colFamily:'f',
             file:'',
@@ -191,6 +198,14 @@
           //submit from the file
           submitFile(event){
                 event.preventDefault();
+            if(this.operator_name == ""){
+              this.$message({
+                showClose: true,
+                message: '警告, 请填写操作人',
+                type: 'warning'
+              });
+              return false;
+            }
             if(this.rowKey == ""){
               this.$message({
                 showClose: true,
@@ -229,7 +244,8 @@
                   var res = rst.data;
                   if(res.status==1){
                     this.$message.error('错误，非正确json格式！');
-                  }else if(res.status == 0){
+                  }
+                  if(res.status == 0){
                     this.$notify({
                       title: '提交成功',
                       message: '数据已写入',

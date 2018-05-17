@@ -71,7 +71,7 @@ router.post('/upload', function(req, res){
      if(exists){
        console.log('Already exist');
        res.json({
-         status:'0',
+         status:'2',
          msg:'Cannot write! Model already exist',
        });
      }else{
@@ -85,25 +85,33 @@ router.post('/upload', function(req, res){
                  this.exists(function (err, exists) {
                    assert.ok(exists);
                    console.log(success);
-                   // var m = time.getMonth() + 1;
-                   // var t = time.getFullYear() + "-" + m + "-"
-                   //   + time.getDate() + " " + time.getHours() + ":"
-                   //   + time.getMinutes() + ":" + time.getSeconds();
-                   // let emailContent = `<p>Provision Time:${t}</p>
-                   //                     <p>Model Id:${fields.rowKeyPutPro}</p>
-                   //                     <p>has been uploaded with file by ${fields.operator_namePro}</p>
-                   //                     <p>Model Content:${JSON.stringify(obj)}</p>`
-                   // sendEmail('(Production) New model online updated',emailContent);
+                   if(success == true) {
+                     res.json({
+                       status: '0',
+                       msg: '',
+                     });
+                   }else{
+                     res.json({
+                       status:'3',
+                       msg:'',
+                     });
+                   }
+                   var time = new Date();   // 程序计时的月从0开始取值后+1
+                   var m = time.getMonth() + 1;
+                   var t = time.getFullYear() + "-" + m + "-"
+                     + time.getDate() + " " + time.getHours() + ":"
+                     + time.getMinutes() + ":" + time.getSeconds();
+                   let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_namePro}</p>
+                                      <p>Submission: File</p>
+                                      <p>Model Id:${fields.rowKeyPutPro}</p>
+                                      <p>Model Content:${JSON.stringify(obj)}</p>`
+                   sendEmail('(Production) New model online updated', emailContent);
 
                  });
                });
              });
          });
-
-       res.json({
-         status:'2',
-         msg:'Great !',
-       });
      }
    });
  });
@@ -138,7 +146,7 @@ router.post('/uploadHbase', function(req, res){
       if(exists){
         console.log('Already exist');
         res.json({
-          status:'0',
+          status:'2',
           msg:'Cannot write! Model already exist',
         });
       }else{  //Insert to hbase
@@ -153,17 +161,29 @@ router.post('/uploadHbase', function(req, res){
                 var t = time.getFullYear() + "-" + m + "-"
                   + time.getDate() + " " + time.getHours() + ":"
                   + time.getMinutes() + ":" + time.getSeconds();
-                // let emailContent = `<p>Provision Time:${t}</p>
-                //                     <p>Model Id:${fields.rowKeyPutPro2}</p>
-                //                     <p>has been uploaded by ${fields.operator_namePro}</p>
-                //                     <p>Model Content:${fields.jsonInputPro}</p>`
-                // sendEmail('New model online updated',emailContent);
+                let emailContent = `<p>Provision Time:${t}</p>
+                                  <p>Operator: ${fields.operator_namePro}</p>
+                                  <p>Submission: front-end entered</p>
+                                  <p>Model Id:${fields.rowKeyPut2Pro2}</p>
+                                  <p>Model Content:${fields.jsonInputPro}</p>`
+                sendEmail('(Production) New model online updated',emailContent);
+
+
+                if(success == true) {
+                  res.json({
+                    status: '0',
+                    msg: '',
+                  });
+                }else{
+                  res.json({
+                    status:'3',
+                    msg:'',
+                  });
+                }
+
+
               });
           });
-        res.json({
-          status:'1',
-          msg:'Great !',
-        });
       }
     });
 
@@ -217,7 +237,7 @@ router.post("/hbase", function (req,res,next) {
 });
 
 /*
-[=============================================AB TEST PART================================================]
+[=============================================A/B TEST PART================================================]
 * post abtest whitelist
 * */
 router.post('/uploadABtest', function(req, res){
@@ -260,26 +280,34 @@ router.post('/uploadABtest', function(req, res){
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
             console.log(success);
-            // var m = time.getMonth() + 1;
-            //   var t = time.getFullYear() + "-" + m + "-"
-            //   + time.getDate() + " " + time.getHours() + ":"
-            //   + time.getMinutes() + ":" + time.getSeconds();
-            //    let emailContent = `<p>Provision Time:${t}</p>
-            //                        <p>Test Id:${fields.rowKeyPutPro}</p>
-            //                        <p>has been uploaded by ${fields.operator_name}</p>
-            //                        <p>A/B Test Content:${fields.abtestData}</p>`
-            //   sendEmail('Roll back done!',emailContent);
+            if(success == true) {
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+
+            var time = new Date();
+            var m = time.getMonth() + 1;
+            var t = time.getFullYear() + "-" + m + "-"
+              + time.getDate() + " " + time.getHours() + ":"
+              + time.getMinutes() + ":" + time.getSeconds();
+            let emailContent = `<p>Provision Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>A/B Testing Content:${fields.abtestData}</p>`
+            sendEmail('(Production) New A/B Test online updated',emailContent);
           });
       });
 
 
   });
-
-  res.json({
-    status:'0',
-    msg:'',
-  });
-
 
 });
 
@@ -358,6 +386,28 @@ router.post('/uploadRollBack', function(req, res){
                   this.exists(function (err, exists) {
                     assert.ok(exists);
                     console.log(success);
+                    if(success == true) {
+                      res.json({
+                        status: '0',
+                        msg: '',
+                      });
+                    }else{
+                      res.json({
+                        status:'1',
+                        msg:'',
+                      });
+                    }
+                    var time = new Date();   // 程序计时的月从0开始取值后+1
+                    var m = time.getMonth() + 1;
+                    var t = time.getFullYear() + "-" + m + "-"
+                      + time.getDate() + " " + time.getHours() + ":"
+                      + time.getMinutes() + ":" + time.getSeconds();
+                    let emailContent = `<p>Roll Back Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
+                                <p>Row Key:${fields.rowKeyPut3}</p>                         
+                                <p>A/B Testing Content:${obj.abtestData}</p>`
+                    sendEmail('(Production) Roll Back',emailContent);
                   });
                 });
               });

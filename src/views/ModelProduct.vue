@@ -29,7 +29,14 @@
                 <input type="text" name="operator_namePro" id="operator_namePro" v-model="operator_namePro" placeholder="operator name"class="input-light operator-name">
                 <br><br>
                 <lable for="hbaseTablePro">Table Name:  </lable>
-                <input type="text" name="hbaseTablePro" id="hbaseTablePro" v-model="hbaseTablePro" placeholder="Production Default here" class="txt input-light table-name-css">
+                <!--<input type="text" name="hbaseTablePro" id="hbaseTablePro" v-model="hbaseTablePro" placeholder="Production Default here" class="txt input-light table-name-css">-->
+                <el-input
+                  placeholder="Default value here"
+                  v-model="hbaseTablePro"
+                  :disabled="true"
+                  style="width:250px; height:41px"
+                  class="table-name-css">
+                </el-input>
                 <br>
                 <lable for="rowKeyPro">Model Id: </lable>
                 <input type="text" name="rowKeyPro" id="rowKeyPro" v-model="rowKeyPro" placeholder="Your Key" class="txt input-light row-key-css">
@@ -108,8 +115,8 @@
         goodList:[],
 
         operator_namePro:'',
-        hbaseTablePro:'test',
-        rowKeyPro:'1',
+        hbaseTablePro:'treatment_store',
+        rowKeyPro:'',
         colFamilyPro:'f',
         file:'',
         jsonInputPro: '{\n' +
@@ -128,7 +135,6 @@
     },
     components: {
       NavHeader:NavHeader,
-      // NavFooter:NavFooter,
       NavBreadCrumb:NavBreadCrumb
     },
     mounted: function(){
@@ -167,6 +173,31 @@
       //submit from the file
       submitFile(event){
         event.preventDefault();
+        if(this.operator_namePro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.file == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请选择提交文件！',
+            type: 'warning'
+          });
+          return false;
+        }
+
 
         let formData = new FormData();
         formData.append('operator_namePro', this.operator_namePro);
@@ -186,14 +217,23 @@
         axios.post("/parserPro/upload", formData, config
         ).then(rst =>{
           var res = rst.data;
-          if(res.status==0){
+          if(res.status==2){
             this.$message.error('错误，Model Id重复！');
           }
-
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
           if(res.status==1){
             this.$message.error('错误，非正确json格式！');
-          }else{
-            console.log('Well done');
           }
 
         }).catch(function(){
@@ -211,6 +251,30 @@
       //submit from typing
       submitJson(event){
         event.preventDefault();
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.operator_namePro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.jsonInputPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 提交json内容不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
 
         let formData = new FormData();
         formData.append('hbaseTablePutPro2', this.hbaseTablePro);
@@ -250,14 +314,21 @@
           ,config
         ).then(rst =>{
           var res = rst.data;
-          if(res.status==0){
+          if(res.status==2){
             this.$message.error('错误，Model Id重复！');
-          }else{
-
-            console.log('done');
           }
-
-          //console.log(rst.data);
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
           console.log('Success! From node.js');
         })
           .catch(function(){
