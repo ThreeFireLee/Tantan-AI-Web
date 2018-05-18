@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"test-abtest","colFamilyPut3":"f","rowKeyPut3":"2","experiment_name":"b","abtestData":"{\"experiment_name\":\"b\",\"hash_id\":\"2\",\"whitelists\":[{\"user_ids\":[2],\"treatment\":\"b\"}],\"ramp\":[{\"treatment\":\"model_001_lr_like_mlc0\",\"percentage\":100}]}","operator_name":"liyan","email_person":""}

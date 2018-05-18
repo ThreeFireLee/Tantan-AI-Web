@@ -1,6 +1,7 @@
 <template>
   <div>
     <nav-header></nav-header>
+    <!--<new-header></new-header>-->
     <nav-bread-crumb>
       <span>Model Stage</span>
     </nav-bread-crumb>
@@ -122,6 +123,7 @@
     //import NavFooter from '@/components/NavFooter.vue'
     import NavBreadCrumb from '@/components/NavBread.vue'
     import axios from 'axios'
+    import NewHeader from "../components/NewHeader";
 
     export default {
         data(){
@@ -150,6 +152,7 @@
           }
         },
         components: {
+          NewHeader,
           NavHeader:NavHeader,
           // NavFooter:NavFooter,
           NavBreadCrumb:NavBreadCrumb

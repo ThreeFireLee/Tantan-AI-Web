@@ -244,33 +244,6 @@ router.post('/uploadABtest', function(req, res){
 
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    console.log(fields);//这里就是post的XXX 的数据
-    var t1 = new Date().getTime();//timestamp
-    console.log(t1);
-
-    let fieldJ = JSON.stringify(fields);
-    // console.log(fieldJ);
-    // let fieldF = JSON.parse(fieldJ);
-    // console.log(fieldF.abtestData);
-
-    //maintain experiment files
-    fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('ABtest experiment backup file done!');
-      }
-    });
-
-    //maintain name list
-    fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('Name list done!');
-      }
-    });
-
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
@@ -281,6 +254,34 @@ router.post('/uploadABtest', function(req, res){
             console.log('insert abtest data');
             console.log(success);
             if(success == true) {
+              console.log(fields);//这里就是post的XXX 的数据
+              var t1 = new Date().getTime();//timestamp
+              console.log(t1);
+
+              let fieldJ = JSON.stringify(fields);
+              // console.log(fieldJ);
+              // let fieldF = JSON.parse(fieldJ);
+              // console.log(fieldF.abtestData);
+
+              //maintain experiment files
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + '_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+
+
               res.json({
                 status: '0',
                 msg: '',
@@ -358,7 +359,7 @@ router.post('/uploadRollBack', function(req, res){
 
     console.log(fields);//这里就是post的XXX 的数据
 
-    fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + fields.rowKeyPut3 + "_namelist"), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + '_' + fields.rowKeyPut3 + "_namelist"), 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
@@ -387,6 +388,26 @@ router.post('/uploadRollBack', function(req, res){
                     assert.ok(exists);
                     console.log(success);
                     if(success == true) {
+                      var t1 = new Date().getTime();//timestamp
+
+                      //maintain experiment files
+                      fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), JSON.stringify(obj), function (err) {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log('ABtest experiment backup file done!');
+                        }
+                      });
+
+                      //maintain name list
+                      fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",obj.hbaseTablePut3 +'_' + obj.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log('Name list done!');
+                        }
+                      });
+
                       res.json({
                         status: '0',
                         msg: '',
@@ -417,11 +438,6 @@ router.post('/uploadRollBack', function(req, res){
     });
 
 
-  });
-
-  res.json({
-    status:'0',
-    msg:'',
   });
 
 

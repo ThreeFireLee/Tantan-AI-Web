@@ -66,6 +66,7 @@
                     <br><br>
                     <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">
                     <input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">
+                    <!--<i class="el-icon-circle-plus"></i>-->
                     </div>
                    <br><br>
                   <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
@@ -319,7 +320,7 @@
          this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
          this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
          this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
-          this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
+         this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
         });
       },
 
@@ -403,7 +404,8 @@
         //parse user_ids to array
         this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
           user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),
-          treatment: x.treatment
+          treatment: x.treatment,
+
           // 先分割 ， 字符串 然后 过滤掉空字符串。
           // 因为如果本身是空字符串 的话 会生成一个长度是1的空字符串列表
           //user_ids: x.user_ids.split('，').filter(x => x.trim())
@@ -414,6 +416,25 @@
           percentage: Number.isNaN(parseFloat(y.percentage)) ? null:parseFloat(y.percentage)
 
         }));
+        //judge whether the input is valid number (not character )
+        let whitelists_length = this.abtest1.abtestCore.whitelists.length;
+        let n=0;
+        for (n; n<whitelists_length; n++)  {
+          let new_user = this.abtest1.abtestCore.whitelists[n].user_ids;
+          let userid_length = new_user.length;
+          let i=0;
+          for (i; i<userid_length;i++){
+            if(Number.isNaN(parseInt(new_user[i]))){
+              this.$message({
+                showClose: true,
+                message: '警告，user id必须是数字！',
+                type: 'warning'
+              });
+              return false;
+            }
+          }
+        }
+
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
         let abtestData =  abtestDataOri
@@ -521,35 +542,52 @@
         if(this.abtest1.rowKeyPut3 == ""){
           this.$message({
             showClose: true,
-            message: '警告，row key 不能为空！',
+            message: '警告，row key不能为空！',
             type: 'warning'
           });
           return false;
         }
-        let formData = new FormData();
-        formData.append('operator_name', this.abtest1.operator_name);
-        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
-        axios.post("/parser/uploadRollBack", formData
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status == 0){
-            this.$notify({
-              title: '提交成功',
-              message: '数据已覆盖',
-              type: 'success'
-            });
-          }else if(res.status == 1){
-            this.$notify.error({
-              title: '提交失败',
-              message: '数据未覆盖'
-            });
-          }
-          console.log('Success! From node.js');
-        })
-          .catch(function(){
-            console.log('FAILURE!!');
+        this.$confirm('是否确认回滚?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '回滚提交!'
           });
+          let formData = new FormData();
+          formData.append('operator_name', this.abtest1.operator_name);
+          formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+          formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+          axios.post("/parser/uploadRollBack", formData
+          ).then(rst =>{
+            var res = rst.data;
+            if(res.status == 0){
+              this.$notify({
+                title: '提交成功',
+                message: '数据已覆盖',
+                type: 'success'
+              });
+            }else if(res.status == 1){
+              this.$notify.error({
+                title: '提交失败',
+                message: '数据未覆盖'
+              });
+            }
+            console.log('Success! From node.js');
+          })
+            .catch(function(){
+              console.log('FAILURE!!');
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+          return false;
+        });
       }
 
     }

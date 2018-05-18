@@ -238,28 +238,6 @@ router.post('/uploadABtest', function(req, res){
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     console.log(fields);//这里就是post的XXX 的数据
-    var t1 = new Date().getTime();//timestamp
-    let fieldJ = JSON.stringify(fields);
-    //t1.toString()
-
-    //maintain experiment files
-    fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('ABtest experiment backup file done!');
-      }
-    });
-
-    //maintain name list
-    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('Name list done!');
-      }
-    });
-
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
@@ -270,6 +248,30 @@ router.post('/uploadABtest', function(req, res){
             console.log('insert abtest data');
             console.log(success);
             if(success == true) {
+
+              var t1 = new Date().getTime();//timestamp
+              let fieldJ = JSON.stringify(fields);
+              //t1.toString()
+
+              //maintain experiment files
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+
+
               res.json({
                 status: '0',
                 msg: '',

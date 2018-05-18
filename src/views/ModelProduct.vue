@@ -115,7 +115,7 @@
         goodList:[],
 
         operator_namePro:'',
-        hbaseTablePro:'treatment_store',
+        hbaseTablePro:'mods_model_storage',
         rowKeyPro:'',
         colFamilyPro:'f',
         file:'',

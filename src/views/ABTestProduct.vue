@@ -403,6 +403,26 @@
           percentage: Number.isNaN(parseFloat(y.percentage)) ? null:parseFloat(y.percentage)
 
         }));
+        //judge whether the input is valid number (not character )
+        let whitelists_length = this.abtestPro.abtestCore.whitelists.length;
+        let n=0;
+        for (n; n<whitelists_length; n++)  {
+          let new_user = this.abtestPro.abtestCore.whitelists[n].user_ids;
+          let userid_length = new_user.length;
+          let i=0;
+          for (i; i<userid_length;i++){
+            if(Number.isNaN(parseInt(new_user[i]))){
+              this.$message({
+                showClose: true,
+                message: '警告，user id必须是数字！',
+                type: 'warning'
+              });
+              return false;
+            }
+          }
+        }
+
+
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtestPro.abtestCore);
         let abtestData =  abtestDataOri
@@ -505,30 +525,47 @@
           });
           return false;
         }
-        let formData = new FormData();
-        formData.append('operator_name', this.abtestPro.operator_name);
-        formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
-        axios.post("/parserPro/uploadRollBack", formData
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status == 0){
-            this.$notify({
-              title: '提交成功',
-              message: '数据已覆盖',
-              type: 'success'
-            });
-          }else if(res.status == 1){
-            this.$notify.error({
-              title: '提交失败',
-              message: '数据未覆盖'
-            });
-          }
-          console.log('Success! From node.js');
-        })
-          .catch(function(){
-            console.log('FAILURE!!');
+        this.$confirm('是否确认回滚?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '回滚提交!'
           });
+          let formData = new FormData();
+          formData.append('operator_name', this.abtestPro.operator_name);
+          formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
+          formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+          axios.post("/parserPro/uploadRollBack", formData
+          ).then(rst =>{
+            var res = rst.data;
+            if(res.status == 0){
+              this.$notify({
+                title: '提交成功',
+                message: '数据已覆盖',
+                type: 'success'
+              });
+            }else if(res.status == 1){
+              this.$notify.error({
+                title: '提交失败',
+                message: '数据未覆盖'
+              });
+            }
+            console.log('Success! From node.js');
+          })
+            .catch(function(){
+              console.log('FAILURE!!');
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+
       }
 
     }
