@@ -253,8 +253,7 @@
           ]
 
         },
-        operator_name:'',
-        email_person:''
+        operator_name:''
       },
 
         abExperimentRst:''
@@ -313,14 +312,18 @@
 
         ).then(rst =>{
           var res = rst.data;
-          this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
+          if(res.status == 0) {
+            this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
 
-          //we need parse so that we can take value from JSON form
-         let dataAfterParse = JSON.parse(this.abExperimentRst);
-         this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
-         this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
-         this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
-         this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
+            //we need parse so that we can take value from JSON form
+            let dataAfterParse = JSON.parse(this.abExperimentRst);
+            this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
+            this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
+            this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
+            this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
+          }else{
+            this.$message.error('错误，无此row key！');
+          }
         });
       },
 
@@ -486,7 +489,6 @@
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
-        formData.append('email_person', this.abtest1.email_person);
 
         //100% validation
         let result = this.sumValue();

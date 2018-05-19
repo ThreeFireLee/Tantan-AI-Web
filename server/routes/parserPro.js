@@ -232,6 +232,11 @@ router.post("/hbase", function (req,res,next) {
         });
 
       });
+    }else{
+      res.json({
+        status:'1',
+        msg:''
+      });
     }
   });
 });
@@ -344,6 +349,11 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
           }
         });
 
+      });
+    }else{
+      res.json({
+        status:'1',
+        msg:''
       });
     }
   });

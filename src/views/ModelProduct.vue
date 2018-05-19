@@ -79,11 +79,12 @@
 
             <div>
               <div class="show-hbase-data">
-
-                <div>
-                  {{searchRst}}
-                </div>
-
+                <el-input
+                  type="textarea"
+                  autosize
+                  placeholder="Retrieve Result"
+                  v-model="searchRst">
+                </el-input>
                 <br><br><br><br><br>
               </div>
 
@@ -165,7 +166,11 @@
 
         ).then(rst =>{
           var res = rst.data;
-          this.searchRst = res.result.hbaseRst;//都是parserPror内的参数，比如这里的result和habseRst
+          if(res.status == 0) {
+            this.searchRst = res.result.hbaseRst;//都是parserPror内的参数，比如这里的result和habseRst
+          }else{
+            this.$message.error('错误，无此model id！');
+          }
 
         });
       },

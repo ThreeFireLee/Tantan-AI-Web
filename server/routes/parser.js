@@ -206,12 +206,10 @@ router.post("/hbase", function (req,res,next) {
       this.get(param.colFamily,function(err,values){
 
         console.log('get column family');
-        //console.log(values);
         values = values[0].$;
-        // values = JSON.stringify(values).replace(/[\\]/g,'');
-         //values = JSON.stringify(values).replace(reg,"");
+        // let valueNew = JSON.parse(values);
+        // console.log(valueNew.model_id);
 
-        // var v = values.$;
             res.json({
               status:'0',
               msg:'',
@@ -220,6 +218,11 @@ router.post("/hbase", function (req,res,next) {
               }
             });
 
+      });
+    }else{
+      res.json({
+        status:'1',
+        msg:''
       });
     }
   });
@@ -323,6 +326,10 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
         //console.log(values);
 
         values = values[0].$;
+        console.log(values);
+        //let new_value = JSON.stringify(values);
+        //console.log(new_value);
+        //console.log(new_value.model_type);
 
         //values = JSON.stringify(values).replace(/[\\]/g,'');
         //values = JSON.stringify(values).replace(reg,"");
@@ -341,6 +348,11 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
           }
         });
 
+      });
+    }else{
+      res.json({
+        status:'1',
+        msg:''
       });
     }
   });
