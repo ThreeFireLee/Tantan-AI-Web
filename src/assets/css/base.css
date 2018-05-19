@@ -2825,8 +2825,12 @@ html {
   border-radius: 4px;
 }
 .rollback{
-  width: 300px;
   margin-right: 50px;
+}
+
+.ab-serach-rowkey{
+  width: 90px;
+  margin-bottom: 10px;
 }
 
 

@@ -156,6 +156,14 @@
       //retrieve data from hbase
       onSubmit(event) {
         event.preventDefault();
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
 
         axios.post("/parserPro/hbase",
           {

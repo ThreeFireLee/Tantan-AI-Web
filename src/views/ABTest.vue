@@ -72,7 +72,15 @@
                   <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
                   <!--<el-button type="primary" v-on:click="submitForReview($event)">Review</el-button>-->
                   <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
-                <br>
+                <br><br>
+                  <!--<label>Row Key: </label>-->
+                  <!--<el-input placeholder="row key" v-model="test1" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
+                  <!--<br>-->
+                  <!--<label>User Id: </label>-->
+                  <!--<el-input placeholder="user id" v-model="test2" style="width: 250px; margin-left: 12px" clearable></el-input>-->
+                    <!--<br>-->
+                  <!--<el-button type="primary" style="margin: 20px 0 0 130px">Search Id</el-button>-->
+                <!--<br><br><br><br><br><br>-->
                 <label>Notification List: </label>
                   <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
                   <input list="emailList">
