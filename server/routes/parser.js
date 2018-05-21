@@ -11,7 +11,7 @@ var formidable = require('formidable');
 var fs = require('fs');
 var assert = require('assert');
 var hbase = require('hbase');
-var sendEmail = require('./send-email.js');
+var sendEmail = require('./stage-send-email.js');
 
 // var multiparty = require('multiparty');
 

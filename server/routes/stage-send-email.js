@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
-   //service: '163',
+  //service: '163',
   host: 'smtp.p1.com',
   port: 465,
   secure: true, // use TLS
@@ -13,8 +13,8 @@ const transport = nodemailer.createTransport({
 module.exports = function sendEmail(subject, message) {
   const mailOptions = {
     from: 'ai-operations@p1.com',
-    // to:'liyan@p1.com, wuzuxiang@p1.com',
-     to:'ai@p1.com',
+    to:'liyan@p1.com, wuzuxiang@p1.com, tanyunzhi@p1.com',
+    // to:'ai@p1.com',
     subject,
     html: message,
   };
