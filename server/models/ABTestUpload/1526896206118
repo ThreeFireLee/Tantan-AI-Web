@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"undefined","rowKeyPut3":"tantan-rec-male-mlc9990","colFamilyPut3":"f","operator_name":"test","jsonInput":"{\"employees\":[{\"firstName\":\"Bill\",\"lastName\":\"Gates\"},{\"firstName\":\"George\",\"lastName\":\"Bush\"},{\"firstName\":\"Thomas\",\"lastName\":\"Carter\"}]}"}

@@ -69,6 +69,7 @@
                     <!--<i class="el-icon-circle-plus"></i>-->
                     </div>
                    <br><br>
+
                   <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
                   <!--<el-button type="primary" v-on:click="submitForReview($event)">Review</el-button>-->
                   <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
@@ -81,8 +82,17 @@
                     <!--<br>-->
                   <!--<el-button type="primary" style="margin: 20px 0 0 130px" @click="onRetrieveUserId($event)">Search Id</el-button>-->
                 <!--<br><br><br><br><br><br>-->
+                  <el-input
+                    type="textarea"
+                    :rows="4"
+                    style="width: 525px; margin-bottom: 20px"
+                    placeholder="Your Json"
+                    v-model="jsonArea">
+                  </el-input>
+                  <br>
+                  <el-button type="primary" style="margin: 2px 0 40px 190px" @click="submitABwithJson($event)">Json Provision</el-button>
+                  <br>
                 <label>Notification List: </label>
-                  <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
                   <input list="emailList">
                   <datalist id="emailList">
                     <option>AI推荐事业部</option>
@@ -266,8 +276,7 @@
         },
         operator_name:''
       },
-
-        abExperimentRst:''
+        jsonArea:''
 
       }
     },
@@ -284,6 +293,7 @@
             total + parseFloat(value.percentage)
         },0);
       },
+
       //show percentage section
       format (index) {
         let p = 0;
@@ -301,34 +311,7 @@
         }
         return `[${p}%~${a}%)`
       },
-      // onRetrieveUserId(event){
-      //   event.preventDefault();
-      //   if(this.abtest1.rowKeyPut4 == ""){
-      //     this.$message({
-      //       showClose: true,
-      //       message: '警告,row key不能为空！',
-      //       type: 'warning'
-      //     });
-      //     return false;
-      //   }
-      //
-      //   axios.post("/parser/hbaseABRetrieve",
-      //     {
-      //       rowKey:this.abtest1.rowKeyPut3,
-      //       hbaseTable: this.abtest1.hbaseTablePut3,
-      //       colFamily: this.abtest1.colFamilyPut3
-      //     },
-      //
-      //   ).then(rst =>{
-      //     var res = rst.data;
-      //     if(res.status == 0) {
-      //
-      //     }else{
-      //       this.$message.error('错误，无此row key！');
-      //     }
-      //   });
-      //
-      // },
+
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
@@ -351,10 +334,10 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0) {
-            this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
-
+            // this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
+            let abExperimentRst = res.result.ABRst;
             //we need parse so that we can take value from JSON form
-            let dataAfterParse = JSON.parse(this.abExperimentRst);
+            let dataAfterParse = JSON.parse(abExperimentRst);
             this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
             this.abtest1.abtestCore.experiment_id = dataAfterParse.experiment_id;
             this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
@@ -366,6 +349,135 @@
         });
       },
 
+      //retrieve with user id
+      // onRetrieveUserId(event){
+      //   event.preventDefault();
+      //   if(this.abtest1.rowKeyPut4 == ""){
+      //     this.$message({
+      //       showClose: true,
+      //       message: '警告,row key不能为空！',
+      //       type: 'warning'
+      //     });
+      //     return false;
+      //   }
+      //   if(this.abtest1.searchUserId == ""){
+      //     this.$message({
+      //       showClose: true,
+      //       message: '警告,user id不能为空！',
+      //       type: 'warning'
+      //     });
+      //     return false;
+      //   }
+      //
+      //   axios.post("/parser/ABTestUserId",
+      //     {
+      //       rowKey:this.abtest1.rowKeyPut4,
+      //       hbaseTable: this.abtest1.hbaseTablePut3,
+      //       colFamily: this.abtest1.colFamilyPut3,
+      //       searchUserId: this.abtest1.searchUserId
+      //     },
+      //
+      //   ).then(rst =>{
+      //     var res = rst.data;
+      //     if(res.status == 0) {
+      //       this.$message({
+      //         message: '恭喜你，这是一条成功消息',
+      //         type: 'success'
+      //       });
+      //     }else if(res.status == 1){
+      //       this.$message.error('错误，无此row key！');
+      //     }else{
+      //       this.$message.error('错误，无此user id！');
+      //     }
+      //   });
+      //
+      // },
+      submitABwithJson(event){
+        event.preventDefault();
+        if(this.abtest1.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.jsonArea == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 提交json内容不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+
+        let formData = new FormData();
+        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
+        formData.append('operator_name', this.abtest1.operator_name);
+
+        let jsonTest = this.jsonArea;
+
+        //get rid of break line symbols
+        jsonTest = jsonTest.replace(/\ +/g,"");
+        jsonTest = jsonTest.replace(/\t/g,"");
+        jsonTest = jsonTest.replace(/\r\n/g,"");
+        jsonTest = jsonTest.replace(/\n/g,"");
+
+        //json format test
+        try
+        {
+          if (typeof JSON.parse(jsonTest) == "object") {
+            //formData.append('jsonInput', jsonTest);
+            console.log(jsonTest);
+          }
+        }
+        catch(err)
+        {
+          this.$message.error('错误，非正确json格式！' + err);
+          return false;//如果报错，则防止程序继续执行
+        }
+
+
+        formData.append('jsonInput', jsonTest);
+        console.log(jsonTest);
+        //formData.append('jsonInput', this.InputWithType.jsonInput);
+
+
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+
+
+        axios.post("/parser/uploadABJson", formData
+          ,config
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
+          console.log(res);
+          console.log('Success! From node.js');
+        })
+      },
       //review your json input
       submitForReview(event){
         event.preventDefault();
@@ -409,6 +521,7 @@
         })
 
       },
+
       submitWhiteList(event){
         event.preventDefault();
         if(this.abtest1.rowKeyPut3 == ""){

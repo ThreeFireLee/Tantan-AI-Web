@@ -304,6 +304,77 @@ router.post('/uploadABtest', function(req, res){
 });
 
 /*
+* Post with json entered
+*
+* */
+router.post('/uploadABJson', function(req, res){
+
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+    console.log(fields);//这里就是post的XXX 的数据
+
+    //Insert to hbase
+    client.table(fields.hbaseTablePut3)
+      .create(fields.colFamilyPut3, function(err, success){
+        this
+          .row(fields.rowKeyPut3)
+          .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+            if(success == true) {
+
+              var t1 = new Date().getTime();//timestamp
+              let fieldJ = JSON.stringify(fields);
+
+              //maintain experiment files
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+
+
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+            // var time = new Date();   // 程序计时的月从0开始取值后+1
+            // var m = time.getMonth() + 1;
+            // var t = time.getFullYear() + "-" + m + "-"
+            //   + time.getDate() + " " + time.getHours() + ":"
+            //   + time.getMinutes() + ":" + time.getSeconds();
+            // let emailContent = `<p>Provision Time:${t}</p>
+            //                     <p>Operator: ${fields.operator_name}</p>
+            //                     <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+            //                     <p>Row Key:${fields.experiment_name}</p>
+            //                     <p>A/B Testing Content:${fields.abtestData}</p>`
+            // sendEmail('(Stage) New A/B Test online updated',emailContent);
+          });
+      });
+
+
+  });
+});
+
+
+/*
 *
 * retrieve abtest data from database
 * */
@@ -357,6 +428,65 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
     }
   });
 });
+
+/*
+* Retrieve traffic/treatment with user id
+* */
+// router.post("/ABTestUserId", function (req,res,next) {
+//   // res.send('this is our hbase');
+//   var param = {
+//     rowKey:req.body.rowKey,
+//     hbaseTable:req.body.hbaseTable,
+//     colFamily:req.body.colFamily,
+//     searchUserId:req.body.searchUserId
+//   }
+//   console.log(req.body);
+//
+// //Get from hbase
+//   var myRow = client.table(param.hbaseTable).row(param.rowKey);
+//   myRow.exists(param.colFamily ,function(err,exists){
+//     if(exists){
+//       this.get(param.colFamily,function(err,values){
+//
+//         console.log('get column family');
+//         //console.log(values);
+//
+//         values = values[0].$;
+//         values = JSON.parse(values);
+//         console.log(values);
+//         for(let i = 0; i < values.whitelists.length; i++){
+//           for(let j = 0; j< values.whitelists[i].user_ids.length; j++){
+//                 if(param.searchUserId == values.whitelists[i].user_ids[j]){
+//
+//                   console.log(values.whitelists[i].treatment);
+//
+//                   res.json({
+//                     status:'0',
+//                     msg:'',
+//                     result:{
+//                       ABRst:values
+//                     }
+//                   });
+//                   return false;
+//                 }
+//           }
+//         }
+//
+//         res.json({
+//           status:'2',
+//           msg:''
+//         });
+//
+//       });
+//     }else{
+//       res.json({
+//         status:'1',
+//         msg:''
+//       });
+//     }
+//   });
+// });
+
 
 /*
 * Roll back (get old ver directly and save)

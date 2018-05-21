@@ -10,14 +10,14 @@ var formidable = require('formidable');
 var fs = require('fs');
 var assert = require('assert');
 var hbase = require('hbase');
-var sendEmail = require('./send-email.js');
+var sendEmail = require('./stage-send-email.js');
 
 // var multiparty = require('multiparty');
 
 var client = hbase({
   host:'localhost',
   port:8010
-});
+ });
 
 router.get('/', function(req, res, next) {
   res.send('this is our parser');
@@ -164,7 +164,7 @@ router.post('/uploadHbase', function(req, res){
                 let emailContent = `<p>Provision Time:${t}</p>
                                   <p>Operator: ${fields.operator_namePro}</p>
                                   <p>Submission: front-end entered</p>
-                                  <p>Model Id:${fields.rowKeyPut2Pro2}</p>
+                                  <p>Model Id:${fields.rowKeyPutPro2}</p>
                                   <p>Model Content:${fields.jsonInputPro}</p>`
                 sendEmail('(Production) New model online updated',emailContent);
 
@@ -317,6 +317,75 @@ router.post('/uploadABtest', function(req, res){
 
 });
 
+/*
+* Post with json entered
+*
+* */
+router.post('/uploadABJson', function(req, res){
+
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+    console.log(fields);//这里就是post的XXX 的数据
+
+    //Insert to hbase
+    client.table(fields.hbaseTablePut3)
+      .create(fields.colFamilyPut3, function(err, success){
+        this
+          .row(fields.rowKeyPut3)
+          .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+            if(success == true) {
+
+              var t1 = new Date().getTime();//timestamp
+              let fieldJ = JSON.stringify(fields);
+
+              //maintain experiment files
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+
+
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+            // var time = new Date();   // 程序计时的月从0开始取值后+1
+            // var m = time.getMonth() + 1;
+            // var t = time.getFullYear() + "-" + m + "-"
+            //   + time.getDate() + " " + time.getHours() + ":"
+            //   + time.getMinutes() + ":" + time.getSeconds();
+            // let emailContent = `<p>Provision Time:${t}</p>
+            //                     <p>Operator: ${fields.operator_name}</p>
+            //                     <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+            //                     <p>Row Key:${fields.experiment_name}</p>
+            //                     <p>A/B Testing Content:${fields.abtestData}</p>`
+            // sendEmail('(Stage) New A/B Test online updated',emailContent);
+          });
+      });
+
+
+  });
+});
 /*
 *
 * retrieve abtest data from database

@@ -2534,7 +2534,13 @@ html {
   height: 90px;
   margin-left: 100px;
   margin-bottom: 40px;
-
+}
+.the-submit2 {
+  /*margin-top: 270px;*/
+  width: 160px;
+  height: 90px;
+  margin-left: 150px;
+  margin-bottom: 40px;
 }
 .model-panel {
   /*float: left;*/
