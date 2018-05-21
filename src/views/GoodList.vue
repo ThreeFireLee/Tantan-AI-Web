@@ -137,12 +137,7 @@
             rowKey:'',
             colFamily:'f',
             file:'',
-            jsonInput: '{\n' +
-              '  "person": {\n' +
-              '    "name": "wanger",\n' +
-              '    "birth": "1999"\n' +
-              '  }\n' +
-              '}',
+            jsonInput: '',
 
 
             searchRst:'',

@@ -14,6 +14,7 @@ module.exports = function sendEmail(subject, message) {
   const mailOptions = {
     from: 'ai-operations@p1.com',
     to:'liyan@p1.com, wuzuxiang@p1.com',
+    // to:'ai@p1.com',
     subject,
     html: message,
   };

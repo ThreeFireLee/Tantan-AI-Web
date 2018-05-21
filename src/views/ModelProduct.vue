@@ -120,12 +120,7 @@
         rowKeyPro:'',
         colFamilyPro:'f',
         file:'',
-        jsonInputPro: '{\n' +
-        '  "person": {\n' +
-        '    "name": "wanger",\n' +
-        '    "birth": "1999"\n' +
-        '  }\n' +
-        '}',
+        jsonInputPro: '',
 
         searchRst:'',
 

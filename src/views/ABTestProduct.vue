@@ -28,7 +28,7 @@
                   <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
-                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
+                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.abtestCore.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
                   <!--<input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtestPro.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">-->
@@ -134,11 +134,12 @@
         operationChose: 'abtest-1',
 
         abtestPro:{
-          hbaseTablePut3:'test-abtest',
+          hbaseTablePut3:'treatment_store',
           colFamilyPut3:'f',
           rowKeyPut3:'',
           abtestCore:{
             experiment_name:'',
+            experiment_id:'',
             hash_id:'',
             whitelists: [{
               user_ids: '',
@@ -163,8 +164,8 @@
             ],
             ramp:[
               {
-                treatment:'model_001_lr_like_mlc0',//"model_001_lr_like_mlc0",
-                percentage:'100',
+                treatment:'',//"model_001_lr_like_mlc0",
+                percentage:'',
               },
               {
                 treatment:'',
@@ -310,6 +311,7 @@
             //we need parse so that we can take value from JSON form
             let dataAfterParse = JSON.parse(this.abExperimentRst);
             this.abtestPro.abtestCore.experiment_name = dataAfterParse.experiment_name;
+            this.abtestPro.abtestCore.experiment_id = dataAfterParse.experiment_id;
             this.abtestPro.abtestCore.hash_id = dataAfterParse.hash_id;
             this.abtestPro.abtestCore.whitelists = dataAfterParse.whitelists;
             this.abtestPro.abtestCore.ramp = dataAfterParse.ramp;
@@ -427,7 +429,7 @@
           }
         }
 
-
+        this.abtestPro.abtestCore.experiment_id = parseInt(this.abtestPro.abtestCore.experiment_id);
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtestPro.abtestCore);
         let abtestData =  abtestDataOri

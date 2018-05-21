@@ -30,7 +30,7 @@
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
-                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.experiment_id" placeholder="1,2,3... " class="txt input-light ex-name-css">
+                  <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.abtestCore.experiment_id" placeholder="1,2,3... " class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
                   <!--<input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtest1.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">-->
@@ -74,12 +74,12 @@
                   <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
                 <br><br>
                   <!--<label>Row Key: </label>-->
-                  <!--<el-input placeholder="row key" v-model="test1" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
+                  <!--<el-input placeholder="row key" v-model="abtest1.rowKeyPut4" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
                   <!--<br>-->
                   <!--<label>User Id: </label>-->
-                  <!--<el-input placeholder="user id" v-model="test2" style="width: 250px; margin-left: 12px" clearable></el-input>-->
+                  <!--<el-input placeholder="user id" v-model="abtest1.searchUserId" style="width: 250px; margin-left: 12px" clearable></el-input>-->
                     <!--<br>-->
-                  <!--<el-button type="primary" style="margin: 20px 0 0 130px">Search Id</el-button>-->
+                  <!--<el-button type="primary" style="margin: 20px 0 0 130px" @click="onRetrieveUserId($event)">Search Id</el-button>-->
                 <!--<br><br><br><br><br><br>-->
                 <label>Notification List: </label>
                   <!--<input type="text" v-model="abtest1.email_person" placeholder="" class="input-light seg-name">-->
@@ -148,12 +148,15 @@
 
 
       abtest1:{
-        hbaseTablePut3:'test-abtest',
+        hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
         rowKeyPut3:'',
+        rowKeyPut4:'',
+        searchUserId:'',
         //experiment_id:'',
         abtestCore:{
             experiment_name:'',
+            experiment_id:'',
             hash_id:'',
             whitelists: [{
               user_ids: '',
@@ -178,8 +181,8 @@
             ],
           ramp:[
             {
-              treatment:'model_001_lr_like_mlc0',//"model_001_lr_like_mlc0",
-              percentage:'100',
+              treatment:'',//"model_001_lr_like_mlc0",
+              percentage:'',
             },
             {
               treatment:'',
@@ -298,14 +301,41 @@
         }
         return `[${p}%~${a}%)`
       },
-
+      // onRetrieveUserId(event){
+      //   event.preventDefault();
+      //   if(this.abtest1.rowKeyPut4 == ""){
+      //     this.$message({
+      //       showClose: true,
+      //       message: '警告,row key不能为空！',
+      //       type: 'warning'
+      //     });
+      //     return false;
+      //   }
+      //
+      //   axios.post("/parser/hbaseABRetrieve",
+      //     {
+      //       rowKey:this.abtest1.rowKeyPut3,
+      //       hbaseTable: this.abtest1.hbaseTablePut3,
+      //       colFamily: this.abtest1.colFamilyPut3
+      //     },
+      //
+      //   ).then(rst =>{
+      //     var res = rst.data;
+      //     if(res.status == 0) {
+      //
+      //     }else{
+      //       this.$message.error('错误，无此row key！');
+      //     }
+      //   });
+      //
+      // },
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
         if(this.abtest1.rowKeyPut3 == ""){
           this.$message({
             showClose: true,
-            message: '警告,row key 不能为空！',
+            message: '警告,row key不能为空！',
             type: 'warning'
           });
           return false;
@@ -326,6 +356,7 @@
             //we need parse so that we can take value from JSON form
             let dataAfterParse = JSON.parse(this.abExperimentRst);
             this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
+            this.abtest1.abtestCore.experiment_id = dataAfterParse.experiment_id;
             this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
             this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
             this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
@@ -383,7 +414,7 @@
         if(this.abtest1.rowKeyPut3 == ""){
           this.$message({
             showClose: true,
-            message: '警告，row key 不能为空！',
+            message: '警告，row key不能为空！',
             type: 'warning'
           });
           return false;
@@ -446,6 +477,7 @@
           }
         }
 
+        this.abtest1.abtestCore.experiment_id = parseInt(this.abtest1.abtestCore.experiment_id);
         let formData = new FormData();
         let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
         let abtestData =  abtestDataOri
