@@ -149,10 +149,10 @@
         abtestPro:{
           hbaseTablePut3:'treatment_store',
           colFamilyPut3:'f',
-          rowKeyPut3:'',
+          rowKeyPut3:'tantan-rec-male-mlc9990',
           abtestCore:{
             experiment_name:'',
-            experiment_id:'',
+            experiment_id:'1',
             hash_id:'',
             whitelists: [{
               user_ids: '',
@@ -160,11 +160,11 @@
             }],
             ramp:[
               {
-                treatment:'',//"model_001_lr_like_mlc0",
-                percentage:'',
+                treatment:'test',//"model_001_lr_like_mlc0",
+                percentage:'100',
               }]
           },
-          operator_name:''
+          operator_name:'test'
         },
         jsonArea:''
 
@@ -393,6 +393,14 @@
       },
       submitWhiteList(event){
         event.preventDefault();
+        if(this.abtestPro.abtestCore.experiment_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
         if(this.abtestPro.rowKeyPut3 == ""){
           this.$message({
             showClose: true,
@@ -425,6 +433,7 @@
           });
           return false;
         }
+
         //parse user_ids to array
         this.abtestPro.abtestCore.whitelists = this.abtestPro.abtestCore.whitelists.map(x =>({
           user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),

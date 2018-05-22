@@ -260,7 +260,7 @@ router.post('/uploadABtest', function(req, res){
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
             console.log(success);
-            if(success == true) {
+            if(success === true) {
               console.log(fields);//这里就是post的XXX 的数据
               var t1 = new Date().getTime();//timestamp
               console.log(t1);
@@ -285,20 +285,68 @@ router.post('/uploadABtest', function(req, res){
                   console.log(err);
                 } else {
                   console.log('Name list done!');
+                  //读取上一份数据并放入邮件内
+                  fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 + '_' + fields.rowKeyPut3 + '_namelist'), 'utf8', (err, data) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                    console.log(data);
+                    let arr = data.split(/[\s]*\n[\s]*/);
+
+                    //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
+                    let last2 = arr[arr.length - 3];
+                    console.log(last2);
+                    let time = new Date();   // 程序计时的月从0开始取值后+1
+                    let m = time.getMonth() + 1;
+                    let t = time.getFullYear() + "-" + m + "-"
+                      + time.getDate() + " " + time.getHours() + ":"
+                      + time.getMinutes() + ":" + time.getSeconds();
+
+                    if(last2 === undefined){
+                      console.log('no previous version');
+                      let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Content:${fields.abtestData}</p>
+                                      <p>Previous A/B Content: none</p>`
+                      sendEmail('(Production) New A/B Test online updated',emailContent);
+                    }else{
+                      console.log('correct');
+                      fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",last2), 'utf8', (err, data) => {
+                        if (err) {
+                          console.log(err);
+                        }
+                        console.log(data);
+                        let obj = JSON.parse(data);
+                        //console.log(obj.abtestData);
+                        console.log(obj);
+                        if(obj.abtestData === undefined){
+                          let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Content:${fields.abtestData}</p>
+                                      <p>Previous A/B Content:${obj.jsonInput}</p>`
+                          sendEmail('(Stage) New A/B Test online updated', emailContent);
+                        }else {
+                          let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Content:${fields.abtestData}</p>
+                                      <p>Previous A/B Content:${obj.abtestData}</p>`
+                          sendEmail('(Production) New A/B Test online updated', emailContent);
+
+                        }
+
+                      });
+                    }
+
+
+                  });
                 }
               });
-
-              var time = new Date();
-              var m = time.getMonth() + 1;
-              var t = time.getFullYear() + "-" + m + "-"
-                + time.getDate() + " " + time.getHours() + ":"
-                + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p>Provision Time:${t}</p>
-                                <p>Operator: ${fields.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                <p>Row Key:${fields.experiment_name}</p>                         
-                                <p>A/B Testing Content:${fields.abtestData}</p>`
-              sendEmail('(Production) New A/B Test online updated',emailContent);
 
               res.json({
                 status: '0',

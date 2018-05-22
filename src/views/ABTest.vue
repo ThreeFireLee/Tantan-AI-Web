@@ -442,6 +442,14 @@
 
       submitWhiteList(event){
         event.preventDefault();
+        if(this.abtest1.abtestCore.experiment_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
         if(this.abtest1.rowKeyPut3 == ""){
           this.$message({
             showClose: true,
