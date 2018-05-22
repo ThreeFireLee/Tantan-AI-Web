@@ -22,7 +22,7 @@
           <!-- main operation panel-->
           <div class="accessory-list-wrap">
             <div class="model-main">
-              <form action=""  method="post" enctype="multipart/form-data">
+              <el-form action=""  :model="abtestPro" ref="abtestPro"method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.operator_name" placeholder="operator name"class="input-light seg-name">
@@ -31,7 +31,6 @@
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.abtestCore.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
                   <br>
                   <lable for="hbaseTablePut3">Table Name:  </lable>
-                  <!--<input type="text" name="hbaseTablePut3" id="hbaseTablePut3" v-model="abtestPro.hbaseTablePut3" placeholder="e.g: treatment_store" class="txt input-light table-name-css">-->
                   <el-input
                     placeholder="Default value here"
                     v-model="abtestPro.hbaseTablePut3"
@@ -46,8 +45,7 @@
                   <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
                   <lable for="colFamilyPut3">Column Family:</lable>
-                  <!--<input type="text" name="colFamilyPut3" id="colFamilyPut3" v-model="abtestPro.colFamilyPut3" placeholder="Col Family" class="txt input-light col-family-css">-->
-                  <el-input
+                   <el-input
                     placeholder="Default value here"
                     v-model="abtestPro.colFamilyPut3"
                     :disabled="true"
@@ -60,46 +58,27 @@
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
 
-                  <div v-for="l in abtestPro.abtestCore.whitelists">
-                    <br><br>
-                    <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">
-                    <input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">
-                  </div>
-                  <br><br>
+                  <!--<div v-for="l in abtestPro.abtestCore.whitelists">-->
+                    <!--<br><br>-->
+                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">-->
+                    <!--<input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">-->
+                  <!--</div>-->
+                  <br><br><br>
+                  <el-form-item
+                    v-for="(l, index) in abtestPro.abtestCore.whitelists"
+                    :label="(index + 1)"
+                    :key="l.key"
+                    :prop="'whitelists.' + index + '.value'"
+                  >
+                    <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
+                    <el-input style="width: 200px" v-model="l.user_ids" placeholder="white list (user ids)"></el-input>
+                    <el-button type="success" icon="el-icon-circle-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini"></el-button>
+                  </el-form-item>
+
                   <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
                   <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
                   <br>
-                  <el-input
-                    type="textarea"
-                    :rows="4"
-                    style="width: 525px; margin-bottom: 20px"
-                    placeholder="Your Json"
-                    v-model="jsonArea">
-                  </el-input>
-                  <br>
-                  <el-button type="primary" style="margin: 2px 0 40px 190px" @click="submitABwithJson($event)">Json Provision</el-button>
-                  <br>
-                  <label>Notification List: </label>
-                  <!--<input type="text" v-model="abtestPro.email_person" placeholder="" class="input-light seg-name">-->
-                  <input list="emailList">
-
-                  <datalist id="emailList">
-                    <option>AI推荐事业部</option>
-                    <option>wuxianren@p1.com</option>
-                    <option>hubo@p1.com</option>
-                    <option>zhoushan@p1.com</option>
-                    <option>tanyunzhi@p1.com</option>
-                    <option>liumeng@p1.com</option>
-                    <option>gaomochi@p1.com</option>
-                    <option>huanghaihun@p1.com</option>
-                    <option>liao@p1.com</option>
-                    <option>lihuili@p1.com</option>
-                    <option>yangzeyu@p1.com</option>
-                    <option>chencangxiong@p1.com</option>
-                    <option>pengdesheng@p1.com</option>
-                    <option>liyan@p1.com</option>
-                    <option>wuzuxiang@p1.com</option>
-                  </datalist>
                   <br><br><br><br>
                 </div>
 
@@ -107,17 +86,40 @@
                 <div class="model-quarter-div">
                   <p2>Total Percent: </p2> {{sumValue()}} %
                   <a href="/#/abtest"  class="button-2 button-primary button-rounded button-small stage-production-place">>>>Stage</a>
+                  <br><br><br>
+                  <!--<div v-for="(l,index) in abtestPro.abtestCore.ramp">-->
+                    <!--<br>-->
+                    <!--<input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%-->
+                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">-->
+                    <!--<br>-->
+                    <!--<span>{{format(index)}}</span>-->
+                  <!--</div>-->
+                  <el-form-item
+                    v-for="(l, index) in abtestPro.abtestCore.ramp"
+                    :label="(index + 1)"
+                    :key="l.key"
+                    :prop="'whitelists.' + index + '.value'"
+                  >
+                    <el-input style="width: 80px" v-model="l.percentage" placeholder=""></el-input>%
+                    <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
+                    <el-button type="success" icon="el-icon-circle-plus" circle @click="addPercent" size="mini" style="margin-left: 10px"></el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removePercent(l)" size="mini"></el-button>
+                    <br>
+                    <span style="margin-left: 20px">{{format(index)}}</span>
+                  </el-form-item>
+                  <el-input
+                    type="textarea"
+                    :rows="4"
+                    style="width: 425px; margin-bottom: 20px"
+                    placeholder="Your Json"
+                    v-model="jsonArea">
+                  </el-input>
                   <br>
-                  <div v-for="(l,index) in abtestPro.abtestCore.ramp">
-                    <br>
-                    <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
-                    <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
-                    <br>
-                    <span>{{format(index)}}</span>
-                  </div>
+                  <el-button type="primary" style="margin: 2px 0 40px 150px" @click="submitABwithJson($event)">Json Provision</el-button>
+                  <br>
                   <br><br>
                 </div>
-              </form>
+              </el-form>
             </div>
 
 
@@ -136,7 +138,7 @@
   import NavBreadCrumb from '@/components/NavBread.vue'
   import axios from 'axios'
   import FPC from 'floating-point-calculator';
-  //import NavFooter from '@/components/NavFooter.vue'
+
 
   export default {
     data(){
@@ -155,108 +157,12 @@
             whitelists: [{
               user_ids: '',
               treatment:''
-            },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids:'',
-                treatment:''
-              }
-            ],
+            }],
             ramp:[
               {
                 treatment:'',//"model_001_lr_like_mlc0",
                 percentage:'',
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {//10
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              },
-              {
-                treatment:'',
-                percentage:''
-              }
-
-            ]
-
+              }]
           },
           operator_name:''
         },
@@ -293,6 +199,30 @@
           a = FPC.add(a, parseFloat(cur))
         }
         return `[${p}%~${a}%)`
+      },
+      addDomain() {
+        this.abtestPro.abtestCore.whitelists.push({
+          user_ids: '',
+          treatment:''
+        });
+      },
+      removeDomain(item) {
+        var index = this.abtestPro.abtestCore.whitelists.indexOf(item);
+        if (index !== -1) {
+          this.abtestPro.abtestCore.whitelists.splice(index, 1)
+        }
+      },
+      addPercent() {
+        this.abtestPro.abtestCore.ramp.push({
+          treatment:'',
+          percentage:''
+        });
+      },
+      removePercent(item) {
+        var index = this.abtestPro.abtestCore.ramp.indexOf(item);
+        if (index !== -1) {
+          this.abtestPro.abtestCore.ramp.splice(index, 1)
+        }
       },
 
       //retrieve ABTEST data from hbase
@@ -331,6 +261,8 @@
           }
         });
       },
+
+      //whitelist provision
       submitABwithJson(event){
         event.preventDefault();
         if(this.abtestPro.rowKeyPut3 == ""){
@@ -375,7 +307,7 @@
         //json format test
         try
         {
-          if (typeof JSON.parse(jsonTest) == "object") {
+          if (typeof JSON.parse(jsonTest) === "object") {
             //formData.append('jsonInput', jsonTest);
             console.log(jsonTest);
           }

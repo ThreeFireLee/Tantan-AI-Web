@@ -24,7 +24,6 @@
             <div class="model-main">
 
               <el-form action="" :model="abtest1" ref="abtest1" class="demo-dynamic" method="post" enctype="multipart/form-data">
-                <!--:model="abtest1" id="abtest1"-->
                 <div class="model-quarter-div">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
@@ -61,13 +60,6 @@
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
-
-                  <!--<div v-for="l in abtest1.abtestCore.whitelists">-->
-                    <!--<br><br>-->
-                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">-->
-                    <!--<input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">-->
-                    <!--&lt;!&ndash;<i class="el-icon-circle-plus"></i>&ndash;&gt;-->
-                    <!--</div>-->
                   <br><br><br>
                   <el-form-item
                     v-for="(l, index) in abtest1.abtestCore.whitelists"
@@ -95,27 +87,7 @@
                   <!--<el-button type="primary" style="margin: 20px 0 0 130px" @click="onRetrieveUserId($event)">Search Id</el-button>-->
                 <!--<br><br><br><br><br><br>-->
 
-                <label>Notification List: </label>
-                  <input list="emailList">
-                  <datalist id="emailList">
-                    <option>AI推荐事业部</option>
-                    <option>wuxianren@p1.com</option>
-                    <option>hubo@p1.com</option>
-                    <option>zhoushan@p1.com</option>
-                    <option>tanyunzhi@p1.com</option>
-                    <option>liumeng@p1.com</option>
-                    <option>gaomochi@p1.com</option>
-                    <option>huanghaihun@p1.com</option>
-                    <option>liao@p1.com</option>
-                    <option>lihuili@p1.com</option>
-                    <option>yangzeyu@p1.com</option>
-                    <option>chencangxiong@p1.com</option>
-                    <option>pengdesheng@p1.com</option>
-                    <option>liyan@p1.com</option>
-                    <option>wuzuxiang@p1.com</option>
-                  </datalist>
                   <br><br><br><br>
-                  <confirm :m="msg"></confirm>
               </div>
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{sumValue()}} %
@@ -146,14 +118,6 @@
                 <br>
                 <el-button type="primary" style="margin: 2px 0 40px 150px" @click="submitABwithJson($event)">Json Provision</el-button>
                 <br>
-
-                <!--<div v-for="(l,index) in abtest1.abtestCore.ramp">-->
-                  <!--<br>-->
-                  <!--<input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%-->
-                  <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">-->
-                  <!--<br>-->
-                  <!--<span>{{format(index)}}</span>-->
-                <!--</div>-->
                 <br><br>
               </div>
               </el-form>
@@ -188,10 +152,9 @@
       abtest1:{
         hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
-        rowKeyPut3:'1',
+        rowKeyPut3:'tantan-rec-male-mlc9990',
         rowKeyPut4:'',
         searchUserId:'',
-        //experiment_id:'',
         abtestCore:{
             experiment_name:'test',
             experiment_id:'22222',
@@ -202,8 +165,8 @@
             }],
           ramp:[
             {
-              treatment:'',//"model_001_lr_like_mlc0",
-              percentage:'',
+              treatment:'1',//"model_001_lr_like_mlc0",
+              percentage:'100',
             }]
 
         },
@@ -467,7 +430,6 @@
           .replace(',{"treatment":"","percentage":""}','')
           .replace(/{"treatment":"","percentage":""},/,'')
 
-        // alert("Your json: \n" + abtestDataReview);
         const h = this.$createElement;
         this.$msgbox({
           title: 'Your Json',

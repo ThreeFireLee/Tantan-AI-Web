@@ -72,7 +72,7 @@
               <div>
                 <!--&nbsp-->
                 <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
-                <button v-on:click="submitFile($event)" class="btn-3 button-primary">Provision File</button>
+                <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
                 <button v-on:click="submitJson($event)" class="btn button-primary">Provision</button>
               </div>
             </form>

@@ -86,6 +86,19 @@ router.post('/upload', function(req, res){
                    assert.ok(exists);
                    console.log(success);
                    if(success == true) {
+
+                     var time = new Date();   // 程序计时的月从0开始取值后+1
+                     var m = time.getMonth() + 1;
+                     var t = time.getFullYear() + "-" + m + "-"
+                       + time.getDate() + " " + time.getHours() + ":"
+                       + time.getMinutes() + ":" + time.getSeconds();
+                     let emailContent = `<p>Provision Time:${t}</p>
+                                      <p>Operator: ${fields.operator_namePro}</p>
+                                      <p>Submission: File</p>
+                                      <p>Model Id:${fields.rowKeyPutPro}</p>
+                                      <p>Model Content:${JSON.stringify(obj)}</p>`
+                     sendEmail('(Production) New model online updated', emailContent);
+
                      res.json({
                        status: '0',
                        msg: '',
@@ -96,17 +109,6 @@ router.post('/upload', function(req, res){
                        msg:'',
                      });
                    }
-                   var time = new Date();   // 程序计时的月从0开始取值后+1
-                   var m = time.getMonth() + 1;
-                   var t = time.getFullYear() + "-" + m + "-"
-                     + time.getDate() + " " + time.getHours() + ":"
-                     + time.getMinutes() + ":" + time.getSeconds();
-                   let emailContent = `<p>Provision Time:${t}</p>
-                                      <p>Operator: ${fields.operator_namePro}</p>
-                                      <p>Submission: File</p>
-                                      <p>Model Id:${fields.rowKeyPutPro}</p>
-                                      <p>Model Content:${JSON.stringify(obj)}</p>`
-                   sendEmail('(Production) New model online updated', emailContent);
 
                  });
                });
@@ -286,6 +288,17 @@ router.post('/uploadABtest', function(req, res){
                 }
               });
 
+              var time = new Date();
+              var m = time.getMonth() + 1;
+              var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p>Provision Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
+                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>A/B Testing Content:${fields.abtestData}</p>`
+              sendEmail('(Production) New A/B Test online updated',emailContent);
 
               res.json({
                 status: '0',
@@ -297,18 +310,6 @@ router.post('/uploadABtest', function(req, res){
                 msg:'',
               });
             }
-
-            var time = new Date();
-            var m = time.getMonth() + 1;
-            var t = time.getFullYear() + "-" + m + "-"
-              + time.getDate() + " " + time.getHours() + ":"
-              + time.getMinutes() + ":" + time.getSeconds();
-            let emailContent = `<p>Provision Time:${t}</p>
-                                <p>Operator: ${fields.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                <p>Row Key:${fields.experiment_name}</p>                         
-                                <p>A/B Testing Content:${fields.abtestData}</p>`
-            sendEmail('(Production) New A/B Test online updated',emailContent);
           });
       });
 
@@ -357,7 +358,19 @@ router.post('/uploadABJson', function(req, res){
                   console.log('Name list done!');
                 }
               });
-
+              let ex= JSON.parse(fields.jsonInput);
+              var time = new Date();   // 程序计时的月从0开始取值后+1
+              var m = time.getMonth() + 1;
+              var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p>Provision Time:${t}</p>
+                                  <p>Operator: ${fields.operator_name}</p>
+                                  <p>Submission: Json</p>
+                                  <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
+                                  <p>Row Key:${fields.rowKeyPut3}</p>
+                                  <p>A/B Testing Content:${fields.jsonInput}</p>`
+              sendEmail('(Production) New A/B Test online updated',emailContent);
 
               res.json({
                 status: '0',
@@ -369,17 +382,6 @@ router.post('/uploadABJson', function(req, res){
                 msg:'',
               });
             }
-            // var time = new Date();   // 程序计时的月从0开始取值后+1
-            // var m = time.getMonth() + 1;
-            // var t = time.getFullYear() + "-" + m + "-"
-            //   + time.getDate() + " " + time.getHours() + ":"
-            //   + time.getMinutes() + ":" + time.getSeconds();
-            // let emailContent = `<p>Provision Time:${t}</p>
-            //                     <p>Operator: ${fields.operator_name}</p>
-            //                     <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-            //                     <p>Row Key:${fields.experiment_name}</p>
-            //                     <p>A/B Testing Content:${fields.abtestData}</p>`
-            // sendEmail('(Stage) New A/B Test online updated',emailContent);
           });
       });
 
@@ -486,6 +488,17 @@ router.post('/uploadRollBack', function(req, res){
                           console.log('Name list done!');
                         }
                       });
+                      var time = new Date();   // 程序计时的月从0开始取值后+1
+                      var m = time.getMonth() + 1;
+                      var t = time.getFullYear() + "-" + m + "-"
+                        + time.getDate() + " " + time.getHours() + ":"
+                        + time.getMinutes() + ":" + time.getSeconds();
+                      let emailContent = `<p>Roll Back Time:${t}</p>
+                                <p>Operator: ${fields.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
+                                <p>Row Key:${fields.rowKeyPut3}</p>                         
+                                <p>A/B Testing Content:${obj.abtestData}</p>`
+                      sendEmail('(Production) Roll Back',emailContent);
 
                       res.json({
                         status: '0',
@@ -497,17 +510,7 @@ router.post('/uploadRollBack', function(req, res){
                         msg:'',
                       });
                     }
-                    var time = new Date();   // 程序计时的月从0开始取值后+1
-                    var m = time.getMonth() + 1;
-                    var t = time.getFullYear() + "-" + m + "-"
-                      + time.getDate() + " " + time.getHours() + ":"
-                      + time.getMinutes() + ":" + time.getSeconds();
-                    let emailContent = `<p>Roll Back Time:${t}</p>
-                                <p>Operator: ${fields.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
-                                <p>Row Key:${fields.rowKeyPut3}</p>                         
-                                <p>A/B Testing Content:${obj.abtestData}</p>`
-                    sendEmail('(Production) Roll Back',emailContent);
+
                   });
                 });
               });
