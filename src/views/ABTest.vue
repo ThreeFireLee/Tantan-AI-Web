@@ -23,7 +23,7 @@
           <div class="accessory-list-wrap">
             <div class="model-main">
 
-              <form action=""  method="post" enctype="multipart/form-data">
+              <el-form action="" :model="abtest1" ref="abtest1" class="demo-dynamic" method="post" enctype="multipart/form-data">
                 <!--:model="abtest1" id="abtest1"-->
                 <div class="model-quarter-div">
                   <label>Operator: </label>
@@ -62,13 +62,25 @@
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
 
-                  <div v-for="l in abtest1.abtestCore.whitelists">
-                    <br><br>
-                    <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">
-                    <input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">
-                    <!--<i class="el-icon-circle-plus"></i>-->
-                    </div>
-                   <br><br>
+                  <!--<div v-for="l in abtest1.abtestCore.whitelists">-->
+                    <!--<br><br>-->
+                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">-->
+                    <!--<input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">-->
+                    <!--&lt;!&ndash;<i class="el-icon-circle-plus"></i>&ndash;&gt;-->
+                    <!--</div>-->
+                  <br><br><br>
+                  <el-form-item
+                    v-for="(l, index) in abtest1.abtestCore.whitelists"
+                    :label="(index + 1)"
+                    :key="l.key"
+                    :prop="'whitelists.' + index + '.value'"
+                  >
+                    <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
+                    <el-input style="width: 200px" v-model="l.user_ids" placeholder="white list (user ids)"></el-input>
+                    <el-button type="success" icon="el-icon-circle-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini"></el-button>
+                  </el-form-item>
+
 
                   <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
                   <!--<el-button type="primary" v-on:click="submitForReview($event)">Review</el-button>-->
@@ -82,16 +94,7 @@
                     <!--<br>-->
                   <!--<el-button type="primary" style="margin: 20px 0 0 130px" @click="onRetrieveUserId($event)">Search Id</el-button>-->
                 <!--<br><br><br><br><br><br>-->
-                  <el-input
-                    type="textarea"
-                    :rows="4"
-                    style="width: 525px; margin-bottom: 20px"
-                    placeholder="Your Json"
-                    v-model="jsonArea">
-                  </el-input>
-                  <br>
-                  <el-button type="primary" style="margin: 2px 0 40px 190px" @click="submitABwithJson($event)">Json Provision</el-button>
-                  <br>
+
                 <label>Notification List: </label>
                   <input list="emailList">
                   <datalist id="emailList">
@@ -117,17 +120,43 @@
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{sumValue()}} %
                 <a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">>>Production</a>
+                <br><br><br>
+
+                <el-form-item
+                  v-for="(l, index) in abtest1.abtestCore.ramp"
+                  :label="(index + 1)"
+                  :key="l.key"
+                  :prop="'whitelists.' + index + '.value'"
+                >
+                  <el-input style="width: 80px" v-model="l.percentage" placeholder=""></el-input>%
+                  <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
+                  <el-button type="success" icon="el-icon-circle-plus" circle @click="addPercent" size="mini" style="margin-left: 10px"></el-button>
+                  <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removePercent(l)" size="mini"></el-button>
+                  <br>
+                  <span style="margin-left: 20px">{{format(index)}}</span>
+                </el-form-item>
+
+                <el-input
+                  type="textarea"
+                  :rows="4"
+                  style="width: 425px; margin-bottom: 20px"
+                  placeholder="Your Json"
+                  v-model="jsonArea">
+                </el-input>
                 <br>
-                <div v-for="(l,index) in abtest1.abtestCore.ramp">
-                  <br>
-                  <input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%
-                  <input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">
-                  <br>
-                  <span>{{format(index)}}</span>
-                </div>
+                <el-button type="primary" style="margin: 2px 0 40px 150px" @click="submitABwithJson($event)">Json Provision</el-button>
+                <br>
+
+                <!--<div v-for="(l,index) in abtest1.abtestCore.ramp">-->
+                  <!--<br>-->
+                  <!--<input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%-->
+                  <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">-->
+                  <!--<br>-->
+                  <!--<span>{{format(index)}}</span>-->
+                <!--</div>-->
                 <br><br>
               </div>
-              </form>
+              </el-form>
 
             </div>
 
@@ -146,9 +175,8 @@
 
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
-  //import confirm from '@/components/ConfirmPart.vue'
   import axios from 'axios'
-  //import NavFooter from '@/components/NavFooter.vue'
+  import FPC from 'floating-point-calculator';
 
   export default {
     data(){
@@ -160,121 +188,26 @@
       abtest1:{
         hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
-        rowKeyPut3:'',
+        rowKeyPut3:'1',
         rowKeyPut4:'',
         searchUserId:'',
         //experiment_id:'',
         abtestCore:{
-            experiment_name:'',
-            experiment_id:'',
-            hash_id:'',
+            experiment_name:'test',
+            experiment_id:'22222',
+            hash_id:'222222',
             whitelists: [{
               user_ids: '',
               treatment:''
-            },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids: '',
-                treatment:''
-              },
-              {
-                user_ids:'',
-                treatment:''
-              }
-            ],
+            }],
           ramp:[
             {
               treatment:'',//"model_001_lr_like_mlc0",
               percentage:'',
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {//10
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            },
-            {
-              treatment:'',
-              percentage:''
-            }
-
-          ]
+            }]
 
         },
-        operator_name:''
+        operator_name:'test'
       },
         jsonArea:''
 
@@ -290,7 +223,7 @@
         return  this.abtest1.abtestCore.ramp.reduce((total,value) => {
           return Number.isNaN(parseFloat(value.percentage)) ?
             total :
-            total + parseFloat(value.percentage)
+            FPC.add(total,parseFloat(value.percentage))
         },0);
       },
 
@@ -301,17 +234,40 @@
         for (let i = 0; i < index; i++) {
           let cur = val[i].percentage;
           if (!Number.isNaN(parseFloat(cur))) {
-            p += parseFloat(cur)
+            p = FPC.add(p, parseFloat(cur))
           }
         }
         let a = p;
         let cur = val[index].percentage;
         if (!Number.isNaN(parseFloat(cur))) {
-          a += parseFloat(cur)
+          a = FPC.add(a, parseFloat(cur))
         }
         return `[${p}%~${a}%)`
       },
-
+      addDomain() {
+        this.abtest1.abtestCore.whitelists.push({
+          user_ids: '',
+          treatment:''
+        });
+      },
+      removeDomain(item) {
+        var index = this.abtest1.abtestCore.whitelists.indexOf(item);
+        if (index !== -1) {
+          this.abtest1.abtestCore.whitelists.splice(index, 1)
+        }
+      },
+      addPercent() {
+        this.abtest1.abtestCore.ramp.push({
+          treatment:'',
+          percentage:''
+        });
+      },
+      removePercent(item) {
+        var index = this.abtest1.abtestCore.ramp.indexOf(item);
+        if (index !== -1) {
+          this.abtest1.abtestCore.ramp.splice(index, 1)
+        }
+      },
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();

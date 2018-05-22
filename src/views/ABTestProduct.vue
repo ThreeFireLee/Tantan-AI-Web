@@ -135,6 +135,7 @@
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
   import axios from 'axios'
+  import FPC from 'floating-point-calculator';
   //import NavFooter from '@/components/NavFooter.vue'
 
   export default {
@@ -273,7 +274,7 @@
         return  this.abtestPro.abtestCore.ramp.reduce((total,value) => {
           return Number.isNaN(parseFloat(value.percentage)) ?
             total :
-            total + parseFloat(value.percentage)
+            FPC.add(total,parseFloat(value.percentage))
         },0);
       },
       //show percentage section
@@ -283,13 +284,13 @@
         for (let i = 0; i < index; i++) {
           let cur = val[i].percentage;
           if (!Number.isNaN(parseFloat(cur))) {
-            p += parseFloat(cur)
+            p = FPC.add(p, parseFloat(cur))
           }
         }
         let a = p;
         let cur = val[index].percentage;
         if (!Number.isNaN(parseFloat(cur))) {
-          a += parseFloat(cur)
+          a = FPC.add(a, parseFloat(cur))
         }
         return `[${p}%~${a}%)`
       },

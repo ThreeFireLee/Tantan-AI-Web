@@ -293,12 +293,11 @@ router.post('/uploadABtest', function(req, res){
             let emailContent = `<p>Provision Time:${t}</p>
                                 <p>Operator: ${fields.operator_name}</p>
                                 <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                <p>Row Key:${fields.experiment_name}</p>                         
+                                <p>Row Key:${fields.experiment_name}</p>
                                 <p>A/B Testing Content:${fields.abtestData}</p>`
             sendEmail('(Stage) New A/B Test online updated',emailContent);
           });
       });
-
 
   });
 });
