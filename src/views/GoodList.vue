@@ -6,59 +6,51 @@
       <span>Model Stage</span>
     </nav-bread-crumb>
   <div class="accessory-result-page">
-    <div class="container">
+    <div >
       <div class="filter-nav">
       </div>
       <div class="accessory-result">
         <!-- filter -->
-        <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
-          <dl class="filter-price">
-            <dt>Operations</dt>
-            <dd><a href="/" v-bind:class="{'cur':operationChose ==='model'}" @click="operationChose='model'">Model</a></dd>
-            <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose ==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
-            <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
-            <!--<dd v-for="(ops,index) in operationFilter">-->
-              <!--<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>-->
-            <!--</dd>-->
-          </dl>
-        </div>
-        <!--<el-aside width="250px">-->
-          <!--<el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">-->
-            <!--<el-radio-button :label="false">展开</el-radio-button>-->
-            <!--<el-radio-button :label="true">收起</el-radio-button>-->
-          <!--</el-radio-group>-->
-          <!--<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">-->
-            <!--<el-submenu index="1">-->
-              <!--<template slot="title">-->
-                <!--<i class="el-icon-star-on"></i>-->
-                <!--<span slot="title">Model</span>-->
-              <!--</template>-->
-              <!--<el-menu-item-group>-->
-                <!--<el-menu-item index="1-1">Stage</el-menu-item>-->
-                <!--<el-menu-item index="1-2">Production</el-menu-item>-->
-              <!--</el-menu-item-group>-->
-            <!--</el-submenu>-->
-            <!--<el-submenu index="2">-->
-              <!--<template slot="title">-->
-                <!--<i class="el-icon-location"></i>-->
-                <!--<span slot="title">A/B Testing</span>-->
-              <!--</template>-->
-              <!--<el-menu-item-group>-->
-                <!--<el-menu-item index="1-1">Stage</el-menu-item>-->
-                <!--<el-menu-item index="1-2">Production</el-menu-item>-->
-              <!--</el-menu-item-group>-->
-            <!--</el-submenu>-->
-            <!--<el-menu-item index="3">-->
-              <!--<i class="el-icon-menu"></i>-->
-              <!--<span slot="title">test</span>-->
-
-            <!--</el-menu-item>-->
+        <!--<div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">-->
+          <!--<dl class="filter-price">-->
+            <!--<dt>Operations</dt>-->
+            <!--<dd><a href="/" v-bind:class="{'cur':operationChose ==='model'}" @click="operationChose='model'">Model</a></dd>-->
+            <!--<dd><a href="/#/abtest" v-bind:class="{'cur':operationChose ==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>-->
+            <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
+            <!--&lt;!&ndash;<dd v-for="(ops,index) in operationFilter">&ndash;&gt;-->
+              <!--&lt;!&ndash;<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</dd>&ndash;&gt;-->
+          <!--</dl>-->
+        <!--</div>-->
+        <el-aside width="280px">
+          <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" >
+            <!-- class="el-menu-vertical-demo"-->
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-star-on"></i>
+                <span slot="title">Model</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/">Stage</el-menu-item>
+                <el-menu-item index="/modelproduct">Production</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span slot="title">A/B Testing</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/abtest">Stage</el-menu-item>
+                <el-menu-item index="/abtestproduct">Production</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
             <!--<el-menu-item index="4" >-->
               <!--<i class="el-icon-document"></i>-->
-              <!--<span slot="title">导航三</span>-->
+              <!--<span slot="title">导航</span>-->
             <!--</el-menu-item>-->
-          <!--</el-menu>-->
-        <!--</el-aside>-->
+          </el-menu>
+        </el-aside>
 
         <!-- main operation panel -->
         <!--<div class="accessory-list-wrap">-->
@@ -137,9 +129,9 @@
               </div>
             </div>
         </div>
-        <div>
-          <a href="/#/modelproduct"  class="button-2 button-primary button-rounded ">>>Production</a>
-        </div>
+        <!--<div>-->
+          <!--<a href="/#/modelproduct"  class="button-2 button-primary button-rounded ">>>Production</a>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
@@ -162,7 +154,6 @@
         data(){
           return{
             goodList:[],
-            isCollapse: true,
 
             operator_name:'',
             hbaseTable:'mods_model_storage',

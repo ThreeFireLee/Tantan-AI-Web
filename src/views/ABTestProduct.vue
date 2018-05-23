@@ -5,20 +5,48 @@
       <span>A/B Testing Production</span>
     </nav-bread-crumb>
     <div class="accessory-result-page accessory-page">
-      <div class="container">
+      <div>
         <div class="filter-nav">
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
-            <dl class="filter-price">
-              <dt>Operations</dt>
-              <dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>
-              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
-              <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
-            </dl>
-          </div>
-
+          <!--<div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">-->
+            <!--<dl class="filter-price">-->
+              <!--<dt>Operations</dt>-->
+              <!--<dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>-->
+              <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>-->
+              <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
+            <!--</dl>-->
+          <!--</div>-->
+          <el-aside width="280px">
+            <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" >
+              <!-- class="el-menu-vertical-demo"-->
+              <el-submenu index="1">
+                <template slot="title">
+                  <i class="el-icon-star-on"></i>
+                  <span slot="title">Model</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/">Stage</el-menu-item>
+                  <el-menu-item index="/modelproduct">Production</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span slot="title">A/B Testing</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/abtest">Stage</el-menu-item>
+                  <el-menu-item index="/abtestproduct">Production</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <!--<el-menu-item index="4" >-->
+              <!--<i class="el-icon-document"></i>-->
+              <!--<span slot="title">导航</span>-->
+              <!--</el-menu-item>-->
+            </el-menu>
+          </el-aside>
           <!-- main operation panel-->
           <div class="accessory-list-wrap">
             <div class="model-main">
@@ -85,7 +113,7 @@
 
                 <div class="model-quarter-div">
                   <p2>Total Percent: </p2> {{sumValue()}} %
-                  <a href="/#/abtest"  class="button-2 button-primary button-rounded button-small stage-production-place">>>>Stage</a>
+                  <!--<a href="/#/abtest"  class="button-2 button-primary button-rounded button-small stage-production-place">>>>Stage</a>-->
                   <br><br><br>
                   <!--<div v-for="(l,index) in abtestPro.abtestCore.ramp">-->
                     <!--<br>-->
@@ -436,7 +464,7 @@
 
         //parse user_ids to array
         this.abtestPro.abtestCore.whitelists = this.abtestPro.abtestCore.whitelists.map(x =>({
-          user_ids: x.user_ids.split(',').filter(x => x.trim()).map(x => Number(x)),
+          user_ids: x.user_ids.toString().split(',').filter(x => x.trim()).map(x => Number(x)),
           treatment: x.treatment
           // 先分割 ， 字符串 然后 过滤掉空字符串。
           // 因为如果本身是空字符串 的话 会生成一个长度是1的空字符串列表

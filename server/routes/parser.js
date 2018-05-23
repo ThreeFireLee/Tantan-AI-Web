@@ -348,7 +348,10 @@ router.post('/uploadABtest', function(req, res){
 
           });
       });
-
+    res.json({
+                  status: '0',
+                  msg: '',
+                });
   });
 });
 
