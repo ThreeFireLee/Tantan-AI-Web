@@ -72,7 +72,7 @@
                   >
                     <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
                     <el-input style="width: 200px" v-model="l.user_ids" placeholder="white list (user ids)"></el-input>
-                    <el-button type="success" icon="el-icon-circle-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
+                    <el-button type="success" icon="el-icon-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini"></el-button>
                   </el-form-item>
 
@@ -102,7 +102,7 @@
                   >
                     <el-input style="width: 80px" v-model="l.percentage" placeholder=""></el-input>%
                     <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
-                    <el-button type="success" icon="el-icon-circle-plus" circle @click="addPercent" size="mini" style="margin-left: 10px"></el-button>
+                    <el-button type="success"  icon="el-icon-plus" circle @click="addPercent" size="mini" style="margin-left: 10px"></el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removePercent(l)" size="mini"></el-button>
                     <br>
                     <span style="margin-left: 20px">{{format(index)}}</span>
@@ -511,6 +511,7 @@
         formData.append('experiment_name', this.abtestPro.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtestPro.operator_name);
+
         //100% validation
         let result = this.sumValue();
         if (result !== 100){
