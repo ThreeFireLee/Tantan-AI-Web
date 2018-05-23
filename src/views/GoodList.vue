@@ -5,7 +5,7 @@
     <nav-bread-crumb>
       <span>Model Stage</span>
     </nav-bread-crumb>
-  <div class="accessory-result-page accessory-page">
+  <div class="accessory-result-page">
     <div class="container">
       <div class="filter-nav">
       </div>
@@ -14,14 +14,51 @@
         <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
           <dl class="filter-price">
             <dt>Operations</dt>
-            <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-            <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
-            <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>-->
+            <dd><a href="/" v-bind:class="{'cur':operationChose ==='model'}" @click="operationChose='model'">Model</a></dd>
+            <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose ==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+            <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
             <!--<dd v-for="(ops,index) in operationFilter">-->
               <!--<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>-->
             <!--</dd>-->
           </dl>
         </div>
+        <!--<el-aside width="250px">-->
+          <!--<el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">-->
+            <!--<el-radio-button :label="false">展开</el-radio-button>-->
+            <!--<el-radio-button :label="true">收起</el-radio-button>-->
+          <!--</el-radio-group>-->
+          <!--<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">-->
+            <!--<el-submenu index="1">-->
+              <!--<template slot="title">-->
+                <!--<i class="el-icon-star-on"></i>-->
+                <!--<span slot="title">Model</span>-->
+              <!--</template>-->
+              <!--<el-menu-item-group>-->
+                <!--<el-menu-item index="1-1">Stage</el-menu-item>-->
+                <!--<el-menu-item index="1-2">Production</el-menu-item>-->
+              <!--</el-menu-item-group>-->
+            <!--</el-submenu>-->
+            <!--<el-submenu index="2">-->
+              <!--<template slot="title">-->
+                <!--<i class="el-icon-location"></i>-->
+                <!--<span slot="title">A/B Testing</span>-->
+              <!--</template>-->
+              <!--<el-menu-item-group>-->
+                <!--<el-menu-item index="1-1">Stage</el-menu-item>-->
+                <!--<el-menu-item index="1-2">Production</el-menu-item>-->
+              <!--</el-menu-item-group>-->
+            <!--</el-submenu>-->
+            <!--<el-menu-item index="3">-->
+              <!--<i class="el-icon-menu"></i>-->
+              <!--<span slot="title">test</span>-->
+
+            <!--</el-menu-item>-->
+            <!--<el-menu-item index="4" >-->
+              <!--<i class="el-icon-document"></i>-->
+              <!--<span slot="title">导航三</span>-->
+            <!--</el-menu-item>-->
+          <!--</el-menu>-->
+        <!--</el-aside>-->
 
         <!-- main operation panel -->
         <!--<div class="accessory-list-wrap">-->
@@ -84,7 +121,7 @@
                       <!--&nbsp-->
               <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
               <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
-              <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision/Overwrite</button>
+              <button v-on:click="submitJson($event)" class="btn-3 button-primary">Json Provision</button>
             </div>
             </form>
 
@@ -92,19 +129,13 @@
               <div class="show-hbase-data">
                 <el-input
                   type="textarea"
-                  autosize
+                  :autosize="{ minRows: 8}"
                   placeholder="Retrieve Result"
                   v-model="searchRst">
                 </el-input>
-
                 <br><br><br><br><br>
               </div>
-
             </div>
-
-
-
-
         </div>
         <div>
           <a href="/#/modelproduct"  class="button-2 button-primary button-rounded ">>>Production</a>
@@ -131,6 +162,7 @@
         data(){
           return{
             goodList:[],
+            isCollapse: true,
 
             operator_name:'',
             hbaseTable:'mods_model_storage',
@@ -167,6 +199,12 @@
                 this.goodList = [];
               }
             });
+          },
+          handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+          },
+          handleClose(key, keyPath) {
+            console.log(key, keyPath);
           },
 
 

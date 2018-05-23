@@ -13,8 +13,9 @@
           <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
             <dl class="filter-price">
               <dt>Operations</dt>
-              <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-              <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+              <dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>
+              <dd><a href="/#/abtest" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+              <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
             </dl>
           </div>
 
@@ -81,7 +82,7 @@
               <div class="show-hbase-data">
                 <el-input
                   type="textarea"
-                  autosize
+                  :autosize="{ minRows: 8}"
                   placeholder="Retrieve Result"
                   v-model="searchRst">
                 </el-input>

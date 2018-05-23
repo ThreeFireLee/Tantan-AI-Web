@@ -467,7 +467,7 @@ body {
   font-size: 1.4rem;
   color: #605F5F;
   font-family: "akkurat", sans-serif;
-  background: #f5f7fc;
+  background: rgba(245, 247, 252, 0);
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: grayscale;
   -moz-osx-font-smoothing: grayscale;
@@ -2838,7 +2838,13 @@ html {
   width: 90px;
   margin-bottom: 10px;
 }
-
+.button-left{
+  margin-left: 40px;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 900px;
+}
 
 
 .show-hbase-data{
@@ -2846,7 +2852,7 @@ html {
   width: 900px;
   font-weight: 900;
   margin-bottom: 80px;
-  margin-top: 10px;
+  margin-top: 40px;
 
 }
 

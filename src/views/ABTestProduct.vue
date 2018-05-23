@@ -13,9 +13,9 @@
           <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
             <dl class="filter-price">
               <dt>Operations</dt>
-              <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest-1'">A/B Testing</a></dd>
-              <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>-->
+              <dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>
+              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+              <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
             </dl>
           </div>
 
@@ -76,8 +76,8 @@
                     <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini"></el-button>
                   </el-form-item>
 
-                  <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
-                  <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
+                  <button v-on:click="submitForReview($event)" class="btn button-primary button-left">Review</button>
+                  <button v-on:click="submitWhiteList($event)" class="btn button-primary button-left">Provision</button>
                   <br>
                   <br><br><br><br>
                 </div>
@@ -144,7 +144,7 @@
     data(){
       return {
         message: '',
-        operationChose: 'abtest-1',
+        operationChose: 'abtest',
 
         abtestPro:{
           hbaseTablePut3:'treatment_store',

@@ -13,9 +13,9 @@
           <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">
             <dl class="filter-price">
               <dt>Operations</dt>
-              <dd><a href="/" v-bind:class="{'cur':operationChose=='model'}" @click="operationChose='model'">Model</a></dd>
-              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='abtest'}" @click="operationChose='abtest-1'">A/B Testing</a></dd>
-              <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose=='wait-test'}" @click="operationChose='wait-test'">Wait for test</a></dd>-->
+              <dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>
+              <dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>
+              <!--<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>-->
             </dl>
           </div>
 
@@ -70,13 +70,12 @@
                     <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
                     <el-input style="width: 200px" v-model="l.user_ids" placeholder="white list (user ids)"></el-input>
                     <el-button type="success" icon="el-icon-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
-                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini"></el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini" ></el-button>
                   </el-form-item>
 
-
-                  <button v-on:click="submitForReview($event)" class="btn button-primary">Review</button>
+                  <button v-on:click="submitForReview($event)" class="btn button-primary button-left">Review</button>
                   <!--<el-button type="primary" v-on:click="submitForReview($event)">Review</el-button>-->
-                  <button v-on:click="submitWhiteList($event)" class="btn button-primary the-submit">Provision</button>
+                  <button v-on:click="submitWhiteList($event)" class="btn button-primary button-left">Provision</button>
                 <br><br>
                   <!--<label>Row Key: </label>-->
                   <!--<el-input placeholder="row key" v-model="abtest1.rowKeyPut4" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
@@ -102,11 +101,12 @@
                 >
                   <el-input style="width: 80px" v-model="l.percentage" placeholder=""></el-input>%
                   <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
-                  <el-button type="success" icon="el-icon-plus" circle @click="addPercent" size="mini" style="margin-left: 10px"></el-button>
+                  <el-button type="success" icon="el-icon-plus" size="mini" circle @click="addPercent" style="margin-left: 10px"></el-button>
                   <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removePercent(l)" size="mini"></el-button>
                   <br>
                   <span style="margin-left: 20px">{{format(index)}}</span>
                 </el-form-item>
+
 
                 <el-input
                   type="textarea"
@@ -146,7 +146,7 @@
     data(){
       return {
         message: '',
-        operationChose: 'abtest-1',
+        operationChose: 'abtest',
 
 
       abtest1:{

@@ -3,14 +3,14 @@
 * Node.js Router for Production.
 *
 * */
-var express = require('express');
-var router = express.Router();
-var path = require('path');
-var formidable = require('formidable');
-var fs = require('fs');
-var assert = require('assert');
-var hbase = require('hbase');
-var sendEmail = require('./stage-send-email.js');
+let express = require('express');
+let router = express.Router();
+let path = require('path');
+let formidable = require('formidable');
+let fs = require('fs');
+let assert = require('assert');
+let hbase = require('hbase');
+let sendEmail = require('./stage-send-email.js');
 
 // var multiparty = require('multiparty');
 
@@ -38,7 +38,7 @@ router.get('/upload', function(req, res, next) {
 //upload with file
 router.post('/upload', function(req, res){
 
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.uploadDir = path.join(__dirname, './../models/ModelUploadPro');
 
   form.parse(req, function (err, fields, files) {
@@ -50,7 +50,7 @@ router.post('/upload', function(req, res){
       console.log(data);
    try
    {
-     if (typeof JSON.parse(data) == "object") {
+     if (typeof JSON.parse(data) === "object") {
        console.log('correct json format');
      }
    }
@@ -64,9 +64,9 @@ router.post('/upload', function(req, res){
      return false;//如果报错，则防止程序继续执行
    }
 
-      var obj = JSON.parse(data);
+    let obj = JSON.parse(data);
 
-   var myCol = client.table(fields.hbaseTablePutPro).row(fields.rowKeyPutPro);
+   let myCol = client.table(fields.hbaseTablePutPro).row(fields.rowKeyPutPro);
    myCol.exists(fields.colFamilyPutPro,function(err,exists){
      if(exists){
        console.log('Already exist');
@@ -85,11 +85,11 @@ router.post('/upload', function(req, res){
                  this.exists(function (err, exists) {
                    assert.ok(exists);
                    console.log(success);
-                   if(success == true) {
+                   if(success === true) {
 
-                     var time = new Date();   // 程序计时的月从0开始取值后+1
-                     var m = time.getMonth() + 1;
-                     var t = time.getFullYear() + "-" + m + "-"
+                     let time = new Date();   // 程序计时的月从0开始取值后+1
+                     let m = time.getMonth() + 1;
+                     let t = time.getFullYear() + "-" + m + "-"
                        + time.getDate() + " " + time.getHours() + ":"
                        + time.getMinutes() + ":" + time.getSeconds();
                      let emailContent = `<p>Provision Time:${t}</p>
@@ -137,13 +137,13 @@ router.get('/uploadHbase', function(req, res, next) {
  */
 router.post('/uploadHbase', function(req, res){
 
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
 
     console.log(fields);//这里就是post的XXX 的数据
 
     //test whether already exist
-    var myCol = client.table(fields.hbaseTablePutPro2).row(fields.rowKeyPutPro2);
+    let myCol = client.table(fields.hbaseTablePutPro2).row(fields.rowKeyPutPro2);
     myCol.exists(fields.colFamilyPutPro2,function(err,exists){
       if(exists){
         console.log('Already exist');
@@ -158,9 +158,9 @@ router.post('/uploadHbase', function(req, res){
               .row(fields.rowKeyPutPro2)
               .put(fields.colFamilyPutPro2 + ':model', fields.jsonInputPro, function(err, success) {
                 console.log(success);
-                var time = new Date();   // 程序计时的月从0开始取值后+1
-                var m = time.getMonth() + 1;
-                var t = time.getFullYear() + "-" + m + "-"
+                let time = new Date();   // 程序计时的月从0开始取值后+1
+                let m = time.getMonth() + 1;
+                let t = time.getFullYear() + "-" + m + "-"
                   + time.getDate() + " " + time.getHours() + ":"
                   + time.getMinutes() + ":" + time.getSeconds();
                 let emailContent = `<p>Provision Time:${t}</p>
@@ -171,7 +171,7 @@ router.post('/uploadHbase', function(req, res){
                 sendEmail('(Production) New model online updated',emailContent);
 
 
-                if(success == true) {
+                if(success === true) {
                   res.json({
                     status: '0',
                     msg: '',
@@ -204,7 +204,7 @@ router.get('/hbase', function(req, res, next) {
 
 router.post("/hbase", function (req,res,next) {
   // res.send('this is our hbase');
-  var param = {
+  let param = {
     rowKeyPro:req.body.rowKeyPro,
     hbaseTablePro:req.body.hbaseTablePro,
     colFamilyPro:req.body.colFamilyPro
@@ -212,7 +212,7 @@ router.post("/hbase", function (req,res,next) {
   console.log(req.body);
 
 //Get from hbase
-  var myRow = client.table(param.hbaseTablePro).row(param.rowKeyPro);
+  let myRow = client.table(param.hbaseTablePro).row(param.rowKeyPro);
   myRow.exists(param.colFamilyPro,function(err,exists){
     if(exists){
       this.get(param.colFamilyPro,function(err,values){
@@ -249,7 +249,7 @@ router.post("/hbase", function (req,res,next) {
 * */
 router.post('/uploadABtest', function(req, res){
 
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
 
     //Insert to hbase
@@ -262,7 +262,7 @@ router.post('/uploadABtest', function(req, res){
             console.log(success);
             if(success === true) {
               console.log(fields);//这里就是post的XXX 的数据
-              var t1 = new Date().getTime();//timestamp
+              let t1 = new Date().getTime();//timestamp
               console.log(t1);
 
               let fieldJ = JSON.stringify(fields);
@@ -328,7 +328,7 @@ router.post('/uploadABtest', function(req, res){
                                       <p>Row Key:${fields.experiment_name}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content:${obj.jsonInput}</p>`
-                          sendEmail('(Stage) New A/B Test online updated', emailContent);
+                          sendEmail('(Production) New A/B Test online updated', emailContent);
                         }else {
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
@@ -372,7 +372,7 @@ router.post('/uploadABtest', function(req, res){
 * */
 router.post('/uploadABJson', function(req, res){
 
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     console.log(fields);//这里就是post的XXX 的数据
 
@@ -384,13 +384,13 @@ router.post('/uploadABJson', function(req, res){
           .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
             console.log('insert abtest data');
             console.log(success);
-            if(success == true) {
+            if(success === true) {
 
-              var t1 = new Date().getTime();//timestamp
+              let t1 = new Date().getTime();//timestamp
               let fieldJ = JSON.stringify(fields);
 
               //maintain experiment files
-              fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
                 if (err) {
                   console.log(err);
                 } else {
@@ -399,7 +399,7 @@ router.post('/uploadABJson', function(req, res){
               });
 
               //maintain name list
-              fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
                 if (err) {
                   console.log(err);
                 } else {
@@ -407,9 +407,9 @@ router.post('/uploadABJson', function(req, res){
                 }
               });
               let ex= JSON.parse(fields.jsonInput);
-              var time = new Date();   // 程序计时的月从0开始取值后+1
-              var m = time.getMonth() + 1;
-              var t = time.getFullYear() + "-" + m + "-"
+              let time = new Date();   // 程序计时的月从0开始取值后+1
+              let m = time.getMonth() + 1;
+              let t = time.getFullYear() + "-" + m + "-"
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
               let emailContent = `<p>Provision Time:${t}</p>
@@ -442,7 +442,7 @@ router.post('/uploadABJson', function(req, res){
 * */
 router.post("/hbaseABRetrieve", function (req,res,next) {
   // res.send('this is our hbase');
-  var param = {
+  let param = {
     rowKey:req.body.rowKey,
     hbaseTable:req.body.hbaseTable,
     colFamily:req.body.colFamily
@@ -450,7 +450,7 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
   console.log(req.body);
 
 //Get from hbase
-  var myRow = client.table(param.hbaseTable).row(param.rowKey);
+  let myRow = client.table(param.hbaseTable).row(param.rowKey);
   myRow.exists(param.colFamily, function(err,exists){
     if(exists){
       this.get(param.colFamily,function(err,values){
@@ -483,7 +483,7 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
 * */
 router.post('/uploadRollBack', function(req, res){
 
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
 
     console.log(fields);//这里就是post的XXX 的数据
@@ -496,14 +496,14 @@ router.post('/uploadRollBack', function(req, res){
       let arr = data.split(/[\s]*\n[\s]*/);
 
       //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
-      var last2 = arr[arr.length - 3];
+      let last2 = arr[arr.length - 3];
       console.log(last2);
       fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",last2), 'utf8', (err, data) => {
         if (err) {
           console.log(err);
         }
 
-        var obj = JSON.parse(data);
+        let obj = JSON.parse(data);
         console.log(obj.abtestData);
 
         //Put to hbase
@@ -516,8 +516,8 @@ router.post('/uploadRollBack', function(req, res){
                   this.exists(function (err, exists) {
                     assert.ok(exists);
                     console.log(success);
-                    if(success == true) {
-                      var t1 = new Date().getTime();//timestamp
+                    if(success === true) {
+                      let t1 = new Date().getTime();//timestamp
 
                       //maintain experiment files
                       fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), JSON.stringify(obj), function (err) {
@@ -536,9 +536,9 @@ router.post('/uploadRollBack', function(req, res){
                           console.log('Name list done!');
                         }
                       });
-                      var time = new Date();   // 程序计时的月从0开始取值后+1
-                      var m = time.getMonth() + 1;
-                      var t = time.getFullYear() + "-" + m + "-"
+                      let time = new Date();   // 程序计时的月从0开始取值后+1
+                      let m = time.getMonth() + 1;
+                      let t = time.getFullYear() + "-" + m + "-"
                         + time.getDate() + " " + time.getHours() + ":"
                         + time.getMinutes() + ":" + time.getSeconds();
                       let emailContent = `<p>Roll Back Time:${t}</p>
