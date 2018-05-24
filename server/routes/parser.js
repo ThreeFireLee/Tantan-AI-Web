@@ -348,10 +348,10 @@ router.post('/uploadABtest', function(req, res){
 
           });
       });
-    res.json({
-                  status: '0',
-                  msg: '',
-                });
+    // res.json({
+    //               status: '0',
+    //               msg: '',
+    //             });
   });
 });
 
@@ -568,61 +568,78 @@ router.post('/uploadRollBack', function(req, res){
         let obj = JSON.parse(data);
         //console.log(obj.abtestData);
         console.log(obj);
+        if(obj.abtestData === undefined) {
+          res.json({
+            status: '0',
+            msg: '',
+            result: {
+              rollbackRst: obj.jsonInput
+            }
+          });
+        }else{
+          res.json({
+            status: '0',
+            msg: '',
+            result: {
+              rollbackRst: obj.abtestData
+            }
+          });
+        }
 
       //Put to hbase
-      client.table(obj.hbaseTablePut3)
-        .create(obj.colFamilyPut3, function(err, success){
-          this
-            .row(obj.rowKeyPut3)
-            .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
-                  console.log(success);
-                  if(success === true) {
-                    let t1 = new Date().getTime();//timestamp
-                    //maintain experiment files
-                    fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), JSON.stringify(obj), function (err) {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        console.log('ABtest experiment backup file done!');
-                      }
-                    });
-
-                    //maintain name list
-                    fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",obj.hbaseTablePut3 +'_' + obj.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        console.log('Name list done!');
-                      }
-                    });
-
-                    let time = new Date();   // 程序计时的月从0开始取值后+1
-                    let m = time.getMonth() + 1;
-                    let t = time.getFullYear() + "-" + m + "-"
-                      + time.getDate() + " " + time.getHours() + ":"
-                      + time.getMinutes() + ":" + time.getSeconds();
-                    let emailContent = `<p>Roll Back Time:${t}</p>
-                                <p>Operator: ${fields.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
-                                <p>Row Key:${fields.rowKeyPut3}</p>                         
-                                <p>A/B Testing Content:${obj.abtestData}</p>`
-                    sendEmail('(Stage) Roll Back',emailContent);
-
-                    res.json({
-                      status: '0',
-                      msg: '',
-                    });
-                  }else{
-                    res.json({
-                      status:'1',
-                      msg:'',
-                    });
-                  }
-
-
-
-            });
-        });
+      // client.table(obj.hbaseTablePut3)
+      //   .create(obj.colFamilyPut3, function(err, success){
+      //     this
+      //       .row(obj.rowKeyPut3)
+      //       .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
+      //             console.log(success);
+      //             // if(success === true) {
+      //             //   let t1 = new Date().getTime();//timestamp
+      //             //   //maintain experiment files
+      //             //   fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), JSON.stringify(obj), function (err) {
+      //             //     if (err) {
+      //             //       console.log(err);
+      //             //     } else {
+      //             //       console.log('ABtest experiment backup file done!');
+      //             //     }
+      //             //   });
+      //             //
+      //             //   //maintain name list
+      //             //   fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",obj.hbaseTablePut3 +'_' + obj.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+      //             //     if (err) {
+      //             //       console.log(err);
+      //             //     } else {
+      //             //       console.log('Name list done!');
+      //             //     }
+      //             //   });
+      //             //
+      //             //   let time = new Date();   // 程序计时的月从0开始取值后+1
+      //             //   let m = time.getMonth() + 1;
+      //             //   let t = time.getFullYear() + "-" + m + "-"
+      //             //     + time.getDate() + " " + time.getHours() + ":"
+      //             //     + time.getMinutes() + ":" + time.getSeconds();
+      //             //   let emailContent = `<p>Roll Back Time:${t}</p>
+      //             //               <p>Operator: ${fields.operator_name}</p>
+      //             //               <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
+      //             //               <p>Row Key:${fields.rowKeyPut3}</p>
+      //             //               <p>A/B Testing Content:${obj.abtestData}</p>`
+      //             //   sendEmail('(Stage) Roll Back',emailContent);
+      //             //
+      //             //   res.json({
+      //             //     status: '0',
+      //             //     msg: '',
+      //             //   });
+      //             // }else{
+      //             //   res.json({
+      //             //     status:'1',
+      //             //     msg:'',
+      //             //   });
+      //             // }
+      //
+      //
+      //
+      //       });
+      //   });
 
       });
 

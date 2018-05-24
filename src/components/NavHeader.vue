@@ -1,7 +1,6 @@
 <template>
   <header class="header">
     <symbol id="icon-cart" viewBox="0 0 38 32">
-      <title>cart</title>
         </symbol>
     <div class="navbar">
       <div class="navbar-left-container">

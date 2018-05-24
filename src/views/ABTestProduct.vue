@@ -4,9 +4,10 @@
     <nav-bread-crumb>
       <span>A/B Testing Production</span>
     </nav-bread-crumb>
-    <div class="accessory-result-page accessory-page">
+    <div class="accessory-result-page">
       <div>
-        <div class="filter-nav">
+        <!--<div class="filter-nav">-->
+        <div>
         </div>
         <div class="accessory-result">
           <!-- filter -->
@@ -18,39 +19,11 @@
               <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
             <!--</dl>-->
           <!--</div>-->
-          <el-aside width="280px">
-            <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" >
-              <!-- class="el-menu-vertical-demo"-->
-              <el-submenu index="1">
-                <template slot="title">
-                  <i class="el-icon-star-on"></i>
-                  <span slot="title">Model</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/">Stage</el-menu-item>
-                  <el-menu-item index="/modelproduct">Production</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-submenu index="2">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span slot="title">A/B Testing</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/abtest">Stage</el-menu-item>
-                  <el-menu-item index="/abtestproduct">Production</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <!--<el-menu-item index="4" >-->
-              <!--<i class="el-icon-document"></i>-->
-              <!--<span slot="title">导航</span>-->
-              <!--</el-menu-item>-->
-            </el-menu>
-          </el-aside>
+          <side-nav></side-nav>
+
           <!-- main operation panel-->
           <div class="accessory-list-wrap">
-            <div class="model-main">
-              <el-form action=""  :model="abtestPro" ref="abtestPro"method="post" enctype="multipart/form-data">
+            <el-form action=""  :model="abtestPro" ref="abtestPro"method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.operator_name" placeholder="operator name"class="input-light seg-name">
@@ -85,12 +58,6 @@
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
-
-                  <!--<div v-for="l in abtestPro.abtestCore.whitelists">-->
-                    <!--<br><br>-->
-                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light seg-name">-->
-                    <!--<input type="text" v-model="l.user_ids" placeholder="white list(user ids)" class="txt input-light abtest-seg">-->
-                  <!--</div>-->
                   <br><br><br>
                   <el-form-item
                     v-for="(l, index) in abtestPro.abtestCore.whitelists"
@@ -115,13 +82,7 @@
                   <p2>Total Percent: </p2> {{sumValue()}} %
                   <!--<a href="/#/abtest"  class="button-2 button-primary button-rounded button-small stage-production-place">>>>Stage</a>-->
                   <br><br><br>
-                  <!--<div v-for="(l,index) in abtestPro.abtestCore.ramp">-->
-                    <!--<br>-->
-                    <!--<input type="text" v-model="l.percentage" placeholder="" class="txt input-light abtest-ramp">%-->
-                    <!--<input type="text" v-model="l.treatment" placeholder="treatment name" class="input-light abtest-ramp-name">-->
-                    <!--<br>-->
-                    <!--<span>{{format(index)}}</span>-->
-                  <!--</div>-->
+
                   <el-form-item
                     v-for="(l, index) in abtestPro.abtestCore.ramp"
                     :label="(index + 1)"
@@ -137,19 +98,17 @@
                   </el-form-item>
                   <el-input
                     type="textarea"
-                    :rows="4"
-                    style="width: 425px; margin-bottom: 20px"
+                    :autosize="{ minRows: 8}"
+                    style="width: 425px; margin: 0 0 20px 20px"
                     placeholder="Your Json"
                     v-model="jsonArea">
                   </el-input>
                   <br>
-                  <el-button type="primary" style="margin: 2px 0 40px 150px" @click="submitABwithJson($event)">Json Provision</el-button>
+                  <el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>
                   <br>
                   <br><br>
                 </div>
               </el-form>
-            </div>
-
 
           </div>
         </div>
@@ -164,6 +123,7 @@
   import './../assets/css/login.css'
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
+  import SideNav from '../components/SideNav'
   import axios from 'axios'
   import FPC from 'floating-point-calculator';
 
@@ -177,10 +137,10 @@
         abtestPro:{
           hbaseTablePut3:'treatment_store',
           colFamilyPut3:'f',
-          rowKeyPut3:'tantan-rec-male-mlc9990',
+          rowKeyPut3:'',
           abtestCore:{
             experiment_name:'',
-            experiment_id:'1',
+            experiment_id:'',
             hash_id:'',
             whitelists: [{
               user_ids: '',
@@ -188,11 +148,11 @@
             }],
             ramp:[
               {
-                treatment:'test',//"model_001_lr_like_mlc0",
-                percentage:'100',
+                treatment:'',//"model_001_lr_like_mlc0",
+                percentage:'',
               }]
           },
-          operator_name:'test'
+          operator_name:''
         },
         jsonArea:''
 
@@ -200,6 +160,7 @@
     },
     components: {
       NavHeader:NavHeader,
+      SideNav:SideNav,
       NavBreadCrumb:NavBreadCrumb
     },
 
@@ -598,46 +559,66 @@
           });
           return false;
         }
-        this.$confirm('是否确认回滚?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '回滚提交!'
-          });
-          let formData = new FormData();
-          formData.append('operator_name', this.abtestPro.operator_name);
-          formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
-          formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
-          axios.post("/parserPro/uploadRollBack", formData
-          ).then(rst =>{
-            var res = rst.data;
-            if(res.status == 0){
-              this.$notify({
-                title: '提交成功',
-                message: '数据已覆盖',
-                type: 'success'
-              });
-            }else if(res.status == 1){
-              this.$notify.error({
-                title: '提交失败',
-                message: '数据未覆盖'
-              });
-            }
-            console.log('Success! From node.js');
-          })
-            .catch(function(){
-              console.log('FAILURE!!');
+        let formData = new FormData();
+        formData.append('operator_name', this.abtestPro.operator_name);
+        formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
+        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        axios.post("/parserPro/uploadRollBack", formData
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.jsonArea = res.result.rollbackRst;
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未覆盖'
             });
-
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
+          }
+          console.log('Success! From node.js');
+        })
+          .catch(function(){
+            console.log('FAILURE!!');
           });
-        });
+        // this.$confirm('是否确认回滚?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '回滚提交!'
+        //   });
+        //   let formData = new FormData();
+        //   formData.append('operator_name', this.abtestPro.operator_name);
+        //   formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
+        //   formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        //   axios.post("/parserPro/uploadRollBack", formData
+        //   ).then(rst =>{
+        //     var res = rst.data;
+        //     if(res.status == 0){
+        //       this.$notify({
+        //         title: '提交成功',
+        //         message: '数据已覆盖',
+        //         type: 'success'
+        //       });
+        //     }else if(res.status == 1){
+        //       this.$notify.error({
+        //         title: '提交失败',
+        //         message: '数据未覆盖'
+        //       });
+        //     }
+        //     console.log('Success! From node.js');
+        //   })
+        //     .catch(function(){
+        //       console.log('FAILURE!!');
+        //     });
+        //
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消操作'
+        //   });
+        // });
 
       }
 

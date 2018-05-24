@@ -1,56 +1,15 @@
 <template>
   <div>
     <nav-header></nav-header>
-    <!--<new-header></new-header>-->
     <nav-bread-crumb>
       <span>Model Stage</span>
     </nav-bread-crumb>
   <div class="accessory-result-page">
-    <div >
-      <div class="filter-nav">
+    <div>
+      <div>
       </div>
       <div class="accessory-result">
-        <!-- filter -->
-        <!--<div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">-->
-          <!--<dl class="filter-price">-->
-            <!--<dt>Operations</dt>-->
-            <!--<dd><a href="/" v-bind:class="{'cur':operationChose ==='model'}" @click="operationChose='model'">Model</a></dd>-->
-            <!--<dd><a href="/#/abtest" v-bind:class="{'cur':operationChose ==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>-->
-            <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
-            <!--&lt;!&ndash;<dd v-for="(ops,index) in operationFilter">&ndash;&gt;-->
-              <!--&lt;!&ndash;<a href="javascript:void(0)" @click="operationChose=index" v-bind:class="{'cur':operationChose==index} ">{{ops.operations}}</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</dd>&ndash;&gt;-->
-          <!--</dl>-->
-        <!--</div>-->
-        <el-aside width="280px">
-          <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" >
-            <!-- class="el-menu-vertical-demo"-->
-            <el-submenu index="1">
-              <template slot="title">
-                <i class="el-icon-star-on"></i>
-                <span slot="title">Model</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="/">Stage</el-menu-item>
-                <el-menu-item index="/modelproduct">Production</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span slot="title">A/B Testing</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="/abtest">Stage</el-menu-item>
-                <el-menu-item index="/abtestproduct">Production</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <!--<el-menu-item index="4" >-->
-              <!--<i class="el-icon-document"></i>-->
-              <!--<span slot="title">导航</span>-->
-            <!--</el-menu-item>-->
-          </el-menu>
-        </el-aside>
+        <side-nav></side-nav>
 
         <!-- main operation panel -->
         <!--<div class="accessory-list-wrap">-->
@@ -61,9 +20,8 @@
             <div class="model-quarter-div">
 
               <!--retrieve data from hbase-->
-              <!--<form action="" method="post" enctype="multipart/form-data">-->
               <label>Operator: </label>
-              <input type="text" name="operator_name" id="operator_name" v-model="operator_name" placeholder="operator name"class="input-light operator-name">
+              <input type="text" name="operator_name" id="operator_name" v-model="operator_name" placeholder="operator name" class="input-light operator-name">
               <br><br>
               <lable for="hbaseTable">Table Name:  </lable>
               <!--<input type="text" name="hbaseTable" id="hbaseTable" v-model="hbaseTable" placeholder="Table Name" class="txt input-light table-name-css">-->
@@ -93,7 +51,7 @@
                 <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
               </label>
 
-              <!--</form>-->
+
               <!--1. upload with json file -->
                 <br><br>
             </div>
@@ -129,26 +87,29 @@
               </div>
             </div>
         </div>
-        <!--<div>-->
-          <!--<a href="/#/modelproduct"  class="button-2 button-primary button-rounded ">>>Production</a>-->
-        <!--</div>-->
       </div>
     </div>
   </div>
-  <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
-  <!--<nav-footer></nav-footer>-->
   </div>
 </template>
+
+
+
+
+
+
+
+
 
 <script>
     import './../assets/css/base.css'
     import './../assets/css/product.css'
     import './../assets/css/login.css'
     import NavHeader from '@/components/NavHeader.vue'  // @ means src file
-    //import NavFooter from '@/components/NavFooter.vue'
     import NavBreadCrumb from '@/components/NavBread.vue'
     import axios from 'axios'
     import NewHeader from "../components/NewHeader";
+    import SideNav from "../components/SideNav";
 
     export default {
         data(){
@@ -172,6 +133,7 @@
           }
         },
         components: {
+          SideNav:SideNav,
           NewHeader,
           NavHeader:NavHeader,
           // NavFooter:NavFooter,
@@ -191,13 +153,6 @@
               }
             });
           },
-          handleOpen(key, keyPath) {
-            console.log(key, keyPath);
-          },
-          handleClose(key, keyPath) {
-            console.log(key, keyPath);
-          },
-
 
           //retrieve data from hbase
           onSubmit(event) {

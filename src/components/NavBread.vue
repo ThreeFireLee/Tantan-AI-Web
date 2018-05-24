@@ -6,12 +6,19 @@
         <slot></slot>
       </nav>
     </div>
+
   </div>
 </template>
 
 <script>
     export default {
-        name: "nav-bread-crum"
+        name: "nav-bread-crum",
+      data(){
+        return {
+          searchCriteria: '',
+          breadcrumbItems: 'test'
+        }
+      },
     }
 </script>
 

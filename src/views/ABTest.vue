@@ -4,53 +4,16 @@
     <nav-bread-crumb>
       <span>A/B Testing Stage</span>
     </nav-bread-crumb>
-    <div class="accessory-result-page accessory-page">
+    <div class="accessory-result-page">
       <div>
-        <div class="filter-nav">
+        <!--<div class="filter-nav">-->
+        <div>
         </div>
         <div class="accessory-result">
-          <!-- filter -->
-          <!--<div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">-->
-            <!--<dl class="filter-price">-->
-              <!--<dt>Operations</dt>-->
-              <!--<dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>-->
-              <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>-->
-              <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
-            <!--</dl>-->
-          <!--</div>-->
-          <el-aside width="280px">
-            <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" >
-              <!-- class="el-menu-vertical-demo"-->
-              <el-submenu index="1">
-                <template slot="title">
-                  <i class="el-icon-star-on"></i>
-                  <span slot="title">Model</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/">Stage</el-menu-item>
-                  <el-menu-item index="/modelproduct">Production</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-submenu index="2">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span slot="title">A/B Testing</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/abtest">Stage</el-menu-item>
-                  <el-menu-item index="/abtestproduct">Production</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <!--<el-menu-item index="4" >-->
-              <!--<i class="el-icon-document"></i>-->
-              <!--<span slot="title">导航</span>-->
-              <!--</el-menu-item>-->
-            </el-menu>
-          </el-aside>
+          <side-nav></side-nav>
 
           <!-- main operation panel-->
           <div class="accessory-list-wrap">
-            <div class="model-main">
 
               <el-form action="" :model="abtest1" ref="abtest1" class="demo-dynamic" method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div">
@@ -139,20 +102,17 @@
 
                 <el-input
                   type="textarea"
-                  :rows="4"
-                  style="width: 425px; margin-bottom: 20px"
-                  placeholder="Your Json"
+                  :autosize="{ minRows: 8}"
+                  style="width: 425px; margin: 0 0 20px 20px"
+                  placeholder="Your Json/Roll back data"
                   v-model="jsonArea">
                 </el-input>
                 <br>
-                <el-button type="primary" style="margin: 2px 0 40px 150px" @click="submitABwithJson($event)">Json Provision</el-button>
+                <el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>
                 <br>
-                <br><br>
+
               </div>
               </el-form>
-
-            </div>
-
 
           </div>
         </div>
@@ -168,6 +128,7 @@
 
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
+  import SideNav from '../components/SideNav'
   import axios from 'axios'
   import FPC from 'floating-point-calculator';
 
@@ -181,31 +142,32 @@
       abtest1:{
         hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
-        rowKeyPut3:'tantan-rec-male-mlc9990',
+        rowKeyPut3:'',
         rowKeyPut4:'',
         searchUserId:'',
         abtestCore:{
-            experiment_name:'test',
-            experiment_id:'22222',
-            hash_id:'222222',
+            experiment_name:'',
+            experiment_id:'',
+            hash_id:'',
             whitelists: [{
               user_ids: '',
               treatment:''
             }],
           ramp:[
             {
-              treatment:'1',//"model_001_lr_like_mlc0",
-              percentage:'100',
+              treatment:'',//"model_001_lr_like_mlc0",
+              percentage:'',
             }]
 
         },
-        operator_name:'test'
+        operator_name:''
       },
         jsonArea:''
 
       }
     },
     components: {
+      SideNav:SideNav,
       NavHeader:NavHeader,
       NavBreadCrumb:NavBreadCrumb
     },
@@ -280,8 +242,8 @@
           },
 
         ).then(rst =>{
-          var res = rst.data;
-          if(res.status === 0) {
+          let res = rst.data;
+          if(res.status == 0) {
             // this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
             let abExperimentRst = res.result.ABRst;
             //we need parse so that we can take value from JSON form
@@ -641,6 +603,7 @@
             console.log('FAILURE!!');
           });
       },
+
       submitRollBack(event){
         event.preventDefault();
         if(this.abtest1.operator_name == ""){
@@ -659,47 +622,34 @@
           });
           return false;
         }
-        this.$confirm('是否确认回滚?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '回滚提交!'
-          });
-          let formData = new FormData();
-          formData.append('operator_name', this.abtest1.operator_name);
-          formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
-          formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
-          axios.post("/parser/uploadRollBack", formData
-          ).then(rst =>{
-            var res = rst.data;
-            if(res.status == 0){
-              this.$notify({
-                title: '提交成功',
-                message: '数据已覆盖',
-                type: 'success'
-              });
-            }else if(res.status == 1){
-              this.$notify.error({
-                title: '提交失败',
-                message: '数据未覆盖'
-              });
-            }
-            console.log('Success! From node.js');
-          })
-            .catch(function(){
-              console.log('FAILURE!!');
-            });
 
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
+        let formData = new FormData();
+        formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+
+        axios.post("/parser/uploadRollBack", formData
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.jsonArea = res.result.rollbackRst;
+            // this.$notify({
+            //   title: '提交成功',
+            //   message: '数据已覆盖',
+            //   type: 'success'
+            // });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未覆盖'
+            });
+          }
+          console.log('Success! From node.js');
+        })
+          .catch(function(){
+            console.log('FAILURE!!');
           });
-          return false;
-        });
+
       }
 
     }
