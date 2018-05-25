@@ -293,8 +293,8 @@ router.post('/uploadABtest', function(req, res){
                       console.log('no previous version');
                       let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content: none</p>`
                       sendEmail('(Stage) New A/B Test online updated',emailContent);
@@ -311,16 +311,16 @@ router.post('/uploadABtest', function(req, res){
                         if(obj.abtestData === undefined){
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content:${obj.jsonInput}</p>`
                           sendEmail('(Stage) New A/B Test online updated', emailContent);
                         }else {
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content:${obj.abtestData}</p>`
                           sendEmail('(Stage) New A/B Test online updated', emailContent);
@@ -451,17 +451,6 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
 
         values = values[0].$;
         console.log(values);
-        //let new_value = JSON.stringify(values);
-        //console.log(new_value);
-        //console.log(new_value.model_type);
-
-        //values = JSON.stringify(values).replace(/[\\]/g,'');
-        //values = JSON.stringify(values).replace(reg,"");
-        // values = values.replace('"$":"{','"$":{');
-        // values = values.replace('}"}]','}}');
-        // values = values.replace('}"}"}]','}}}');
-        // values = values.replace('modelContent": "{"','modelContent": {"');
-        // values = values.replace('[{"column":"','{"column":"');
 
         res.json({
           status:'0',
@@ -551,19 +540,12 @@ router.post('/uploadRollBackSec', function(req, res){
 
     let rollDataDeal = JSON.parse(fields.rollbackData);
     // console.log(rollDataDeal);
-    let baseName = rollDataDeal.result.rollbackRst.hbaseTablePut3;
-    let colName = rollDataDeal.result.rollbackRst.colFamilyPut3;
-    let rowKey = rollDataDeal.result.rollbackRst.rowKeyPut3
-    let abtestData = rollDataDeal.result.rollbackRst.abtestData;
+    let rollDataScan = rollDataDeal.result.rollbackRst;
+    let baseName = rollDataScan.hbaseTablePut3;
+    let colName = rollDataScan.colFamilyPut3;
+    let rowKey = rollDataScan.rowKeyPut3
+    let abtestData = rollDataScan.abtestData;
     console.log(abtestData);
-              //
-              //
-              //
-              // res.json({
-              //   status: '0',
-              //   msg: '',
-              // });
-
     //Insert to hbase
     client.table(baseName)
       .create(colName, function(err, success){
@@ -574,39 +556,39 @@ router.post('/uploadRollBackSec', function(req, res){
             console.log(success);
              if(success === true) {
               //
-              // let t1 = new Date().getTime();//timestamp
-              // let fieldJ = JSON.stringify(fields);
+              let t1 = new Date().getTime();//timestamp
+              let fieldJ = JSON.stringify(rollDataScan);
 
               //maintain experiment files
-              // fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
-              //   if (err) {
-              //     console.log(err);
-              //   } else {
-              //     console.log('ABtest experiment backup file done!');
-              //   }
-              // });
-              //
-              // //maintain name list
-              // fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
-              //   if (err) {
-              //     console.log(err);
-              //   } else {
-              //     console.log('Name list done!');
-              //   }
-              // });
-              // let ex = JSON.parse(fields.abtestData);
-              // let time = new Date();   // 程序计时的月从0开始取值后+1
-              // let m = time.getMonth() + 1;
-              // let t = time.getFullYear() + "-" + m + "-"
-              //   + time.getDate() + " " + time.getHours() + ":"
-              //   + time.getMinutes() + ":" + time.getSeconds();
-              // let emailContent = `<p>Provision Time:${t}</p>
-              //                   <p>Operator: ${fields.operator_name}</p>
-              //                   <p>Submission: Json</p>
-              //                   <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
-              //                   <p>Row Key:${fields.rowKeyPut3}</p>
-              //                   <p>A/B Testing Content:${fields.abtestData}</p>`
-              // sendEmail('(Stage) New A/B Test online updated',emailContent);
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist", baseName +'_' + rowKey + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+
+              let ex = JSON.parse(abtestData);
+              let time = new Date();   // 程序计时的月从0开始取值后+1
+              let m = time.getMonth() + 1;
+              let t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p>Provision Time:${t}</p>
+                                <p>Operator: ${rollDataScan.operator_name}</p>
+                                <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
+                                <p>Row Key:${rowKey}</p>
+                                <p>A/B Testing Content:${abtestData}</p>`
+              sendEmail('(Stage) Roll Back',emailContent);
 
               res.json({
                 status: '0',

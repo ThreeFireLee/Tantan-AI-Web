@@ -100,17 +100,17 @@
                 </el-form-item>
 
 
-                <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 8}"
-                  style="width: 425px; margin: 0 0 20px 20px"
-                  placeholder="Your Json/Roll back data"
-                  v-model="jsonArea">
-                </el-input>
-                <br>
-                <el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>
-                <br>
-
+                <!--<el-input-->
+                  <!--type="textarea"-->
+                  <!--:autosize="{ minRows: 8}"-->
+                  <!--style="width: 425px; margin: 0 0 20px 20px"-->
+                  <!--placeholder="Your Json"-->
+                  <!--v-model="jsonArea">-->
+                <!--</el-input>-->
+                <!--<br>-->
+                <!--<el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>-->
+                <!--<br>-->
+                  <br><br>
               </div>
               </el-form>
 
@@ -155,8 +155,8 @@
             }],
           ramp:[
             {
-              treatment:'',//"model_001_lr_like_mlc0",
-              percentage:'',
+              treatment:'control',//"model_001_lr_like_mlc0",
+              percentage:'100',
             }]
 
         },
@@ -565,7 +565,7 @@
         //100% validation
         let result = this.sumValue();
         if (result !== 100){
-          this.$message.error('错误，Allocation percentage not 100%. 再次提交需刷新页面');
+          this.$message.error('错误，Allocation percentage not 100%！');
           return false;
         } else {
           this.$message({
@@ -690,5 +690,3 @@
   }
 
 </script>
-
-<!--<input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">-->

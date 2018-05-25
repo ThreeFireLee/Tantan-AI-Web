@@ -10,15 +10,6 @@
         <div>
         </div>
         <div class="accessory-result">
-          <!-- filter -->
-          <!--<div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterBy}">-->
-            <!--<dl class="filter-price">-->
-              <!--<dt>Operations</dt>-->
-              <!--<dd><a href="/" v-bind:class="{'cur':operationChose==='model'}" @click="operationChose='model'">Model</a></dd>-->
-              <!--<dd><a href="javascript:void(0)" v-bind:class="{'cur':operationChose==='abtest'}" @click="operationChose='abtest'">A/B Testing</a></dd>-->
-              <!--&lt;!&ndash;<dd><a href="/#/history" v-bind:class="{'cur':operationChose==='history'}" @click="operationChose='history'">History</a></dd>&ndash;&gt;-->
-            <!--</dl>-->
-          <!--</div>-->
           <side-nav></side-nav>
 
           <!-- main operation panel-->
@@ -96,16 +87,16 @@
                     <br>
                     <span style="margin-left: 20px">{{format(index)}}</span>
                   </el-form-item>
-                  <el-input
-                    type="textarea"
-                    :autosize="{ minRows: 8}"
-                    style="width: 425px; margin: 0 0 20px 20px"
-                    placeholder="Your Json"
-                    v-model="jsonArea">
-                  </el-input>
-                  <br>
-                  <el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>
-                  <br>
+                  <!--<el-input-->
+                    <!--type="textarea"-->
+                    <!--:autosize="{ minRows: 8}"-->
+                    <!--style="width: 425px; margin: 0 0 20px 20px"-->
+                    <!--placeholder="Your Json"-->
+                    <!--v-model="jsonArea">-->
+                  <!--</el-input>-->
+                  <!--<br>-->
+                  <!--<el-button type="primary" style="margin: 2px 0 40px 170px" @click="submitABwithJson($event)">Json Provision</el-button>-->
+                  <!--<br>-->
                   <br><br>
                 </div>
               </el-form>
@@ -135,7 +126,7 @@
         operationChose: 'abtest',
 
         abtestPro:{
-          hbaseTablePut3:'treatment_store',
+          hbaseTablePut3:'test',
           colFamilyPut3:'f',
           rowKeyPut3:'',
           abtestCore:{
@@ -148,8 +139,8 @@
             }],
             ramp:[
               {
-                treatment:'',//"model_001_lr_like_mlc0",
-                percentage:'',
+                treatment:'control',//"model_001_lr_like_mlc0",
+                percentage:'100',
               }]
           },
           operator_name:''
@@ -504,7 +495,7 @@
         //100% validation
         let result = this.sumValue();
         if (result !== 100){
-          this.$message.error('错误，Allocation percentage not 100%');
+          this.$message.error('错误，Allocation percentage not 100%!');
           return false;
         } else {
           this.$message({
@@ -567,11 +558,43 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0){
-            this.jsonArea = res.result.rollbackRst;
+            let finalRst;
+            if(res.result.rollbackRst.abtestData == undefined){
+              finalRst = res.result.rollbackRst.jsonInput;
+            }else{
+              finalRst = res.result.rollbackRst.abtestData;
+            }
+            this.$confirm(finalRst, '回滚数据确认', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(() => {
+
+              let formData1 = new FormData();
+              let resTest = JSON.stringify(res);
+              formData1.append('rollbackData', resTest);
+              axios.post("/parserPro/uploadRollBackSec", formData1
+              ).then(rst2 =>{
+                let res2 = rst2.data;
+                if(res2.status == 0){
+                  this.$notify({
+                    title: '提交成功',
+                    message: '数据已覆盖',
+                    type: 'success'
+                  });
+                }else {
+                  this.$notify.error({
+                    title: '提交失败',
+                    message: '数据未覆盖'
+                  });
+                  console.log('Failed! From node.js');
+                }
+              })
+
+            })
           }else if(res.status == 1){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未覆盖'
+              message: '数据未读出'
             });
           }
           console.log('Success! From node.js');
@@ -628,5 +651,3 @@
   }
 
 </script>
-
-<!--<input type="text" name="ramping_1" id="ramping_1" v-model="abtest1.ramping_1" placeholder="" class="txt input-light abtest-ramp">-->

@@ -306,8 +306,8 @@ router.post('/uploadABtest', function(req, res){
                       console.log('no previous version');
                       let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content: none</p>`
                       sendEmail('(Production) New A/B Test online updated',emailContent);
@@ -324,16 +324,16 @@ router.post('/uploadABtest', function(req, res){
                         if(obj.abtestData === undefined){
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content:${obj.jsonInput}</p>`
                           sendEmail('(Production) New A/B Test online updated', emailContent);
                         }else {
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
-                                      <p>A/B Testing Experiment Name:${fields.rowKeyPut3}</p>
-                                      <p>Row Key:${fields.experiment_name}</p>
+                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
+                                      <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
                                       <p>Previous A/B Content:${obj.abtestData}</p>`
                           sendEmail('(Production) New A/B Test online updated', emailContent);
@@ -478,9 +478,96 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
   });
 });
 
+
+
 /*
-* Roll back (get old ver directly and save)
+* roll back submitted after checked
+*
 * */
+router.post('/uploadRollBackSec', function(req, res){
+
+  let form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+    console.log(fields);//这里就是post的XXX 的数据
+
+    let rollDataDeal = JSON.parse(fields.rollbackData);
+    // console.log(rollDataDeal);
+    let rollDataScan = rollDataDeal.result.rollbackRst;
+    let baseName = rollDataScan.hbaseTablePut3;
+    let colName = rollDataScan.colFamilyPut3;
+    let rowKey = rollDataScan.rowKeyPut3
+    let abtestData = rollDataScan.abtestData;
+    console.log(abtestData);
+    //
+    //
+    //
+    // res.json({
+    //   status: '0',
+    //   msg: '',
+    // });
+
+    //Insert to hbase
+    client.table(baseName)
+      .create(colName, function(err, success){
+        this
+          .row(rowKey)
+          .put(colName + ':content', abtestData, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+            if(success === true) {
+
+              let t1 = new Date().getTime();//timestamp
+              let fieldJ = JSON.stringify(rollDataScan);
+
+              //maintain experiment files
+              fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('ABtest experiment backup file done!');
+                }
+              });
+
+              //maintain name list
+              fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro", baseName +'_' + rowKey + '_namelist'), t1.toString() + '\n', function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log('Name list done!');
+                }
+              });
+              let ex = JSON.parse(abtestData);
+              let time = new Date();   // 程序计时的月从0开始取值后+1
+              let m = time.getMonth() + 1;
+              let t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p>Provision Time:${t}</p>
+                                <p>Operator: ${rollDataScan.operator_name}</p>
+                                <p>Submission: Json</p>
+                                <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
+                                <p>Row Key:${rowKey}</p>
+                                <p>A/B Testing Content:${abtestData}</p>`
+              sendEmail('(Stage) New A/B Test online updated',emailContent);
+
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+          });
+      });
+
+  });
+});
+  /*
+  * Roll back (get old ver directly and save)
+  * */
 router.post('/uploadRollBack', function(req, res){
 
   let form = new formidable.IncomingForm();
@@ -504,13 +591,13 @@ router.post('/uploadRollBack', function(req, res){
         }
 
         let obj = JSON.parse(data);
-        console.log(obj.abtestData);
+        // console.log(obj.abtestData);
         if(obj.abtestData === undefined) {
           res.json({
             status: '0',
             msg: '',
             result: {
-              rollbackRst: obj.jsonInput
+              rollbackRst: obj
             }
           });
         }else{
@@ -518,7 +605,7 @@ router.post('/uploadRollBack', function(req, res){
             status: '0',
             msg: '',
             result: {
-              rollbackRst: obj.abtestData
+              rollbackRst: obj
             }
           });
         }
