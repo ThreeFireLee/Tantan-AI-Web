@@ -64,10 +64,9 @@
                     <el-button type="success" icon="el-icon-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini" ></el-button>
                   </el-form-item>
-
-                  <button v-on:click="submitForReview($event)" class="btn button-primary button-left">Review</button>
-                  <!--<el-button type="primary" v-on:click="submitForReview($event)">Review</el-button>-->
-                  <button v-on:click="submitWhiteList($event)" class="btn button-primary button-left">Provision</button>
+                  <el-button type="primary" @click="submitForReview($event)" style="width: 150px; margin-left:20px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
+                  <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
+                  <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                 <br><br>
                   <!--<label>Row Key: </label>-->
                   <!--<el-input placeholder="row key" v-model="abtest1.rowKeyPut4" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
@@ -388,6 +387,7 @@
           console.log('Success! From node.js');
         })
       },
+
       //review your json input
       submitForReview(event){
         event.preventDefault();
@@ -431,6 +431,182 @@
 
       },
 
+      //submit to production server
+      submitPromote(event){
+        event.preventDefault();
+        if(this.abtest1.abtestCore.experiment_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.rowKeyPut3 == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，请填写操作人！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.abtestCore.experiment_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment name未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtest1.abtestCore.hash_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        //parse user_ids to array
+        this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
+          user_ids: x.user_ids.toString().split(',').filter(x => x.trim()).map(x => Number(x)),
+          treatment: x.treatment,
+        }));
+
+        this.abtest1.abtestCore.ramp= this.abtest1.abtestCore.ramp.map(y =>({
+          treatment: y.treatment,
+          percentage: Number.isNaN(parseFloat(y.percentage)) ? null:parseFloat(y.percentage)
+
+        }));
+
+        //judge whether the input is valid number (not character )
+        let whitelists_length = this.abtest1.abtestCore.whitelists.length;
+        let n=0;
+        for (n; n<whitelists_length; n++)  {
+          let new_user = this.abtest1.abtestCore.whitelists[n].user_ids;
+          let userid_length = new_user.length;
+          let i=0;
+          for (i; i<userid_length;i++){
+            if(Number.isNaN(parseInt(new_user[i]))){
+              this.$message({
+                showClose: true,
+                message: '警告，user id必须是数字！',
+                type: 'warning'
+              });
+              return false;
+            }
+          }
+        }
+
+        this.abtest1.abtestCore.experiment_id = parseInt(this.abtest1.abtestCore.experiment_id);
+        let formData = new FormData();
+        let abtestDataOri = JSON.stringify(this.abtest1.abtestCore);
+        let abtestData =  abtestDataOri
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+
+
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+
+        formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+        formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
+        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
+        formData.append('abtestData', abtestData);
+        formData.append('operator_name', this.abtest1.operator_name);
+
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+
+        //100% validation
+        let result = this.sumValue();
+        if (result !== 100){
+          this.$message.error('错误，Allocation percentage not 100%！');
+          return false;
+        } else {
+          this.$message({
+            message: 'Allocation percentage is correct!',
+            type: 'success'
+          });
+        }
+      this.$confirm('是否确认将数据提交到Production?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: 'Promote提交!'
+          });
+        axios.post("/parserPro/uploadABtest", formData
+          ,config
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已传入Production',
+              type: 'success'
+            });
+          }else if(res.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
+          console.log('Success! From node.js');
+        })
+          .catch(function(){
+            console.log('FAILURE!!');
+          });
+        
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+
+
+      },
+
+
+      //stage whitelist submit
       submitWhiteList(event){
         event.preventDefault();
         if(this.abtest1.abtestCore.experiment_id == ""){
@@ -646,9 +822,7 @@
 
                 let formData1 = new FormData();
                 // formData1.append('operator_name', this.abtest1.operator_name);
-                // formData1.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
-                // formData1.append('rowKeyPut3', this.abtest1.rowKeyPut3);
-                // formData1.append('abtestData', finalRst);
+
               let resTest = JSON.stringify(res);
                formData1.append('rollbackData', resTest);
                 axios.post("/parser/uploadRollBackSec", formData1

@@ -544,11 +544,10 @@ router.post('/uploadRollBackSec', function(req, res){
                 + time.getMinutes() + ":" + time.getSeconds();
               let emailContent = `<p>Provision Time:${t}</p>
                                 <p>Operator: ${rollDataScan.operator_name}</p>
-                                <p>Submission: Json</p>
                                 <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
                                 <p>Row Key:${rowKey}</p>
                                 <p>A/B Testing Content:${abtestData}</p>`
-              sendEmail('(Stage) New A/B Test online updated',emailContent);
+              sendEmail('(Production) Roll Back',emailContent);
 
               res.json({
                 status: '0',
