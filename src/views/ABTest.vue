@@ -140,7 +140,7 @@
 
 
       abtest1:{
-        hbaseTablePut3:'treatment_store',
+        hbaseTablePut3:'test',
         colFamilyPut3:'f',
         rowKeyPut3:'',
         rowKeyPut4:'',
@@ -632,16 +632,48 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0){
-            this.jsonArea = res.result.rollbackRst;
-            // this.$notify({
-            //   title: '提交成功',
-            //   message: '数据已覆盖',
-            //   type: 'success'
-            // });
+            // this.jsonArea = res.result.rollbackRst;
+            let finalRst;
+            if(res.result.rollbackRst.abtestData == undefined){
+              finalRst = res.result.rollbackRst.jsonInput;
+            }else{
+              finalRst = res.result.rollbackRst.abtestData;
+            }
+            this.$confirm(finalRst, '回滚数据确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+              }).then(() => {
+
+                let formData1 = new FormData();
+                // formData1.append('operator_name', this.abtest1.operator_name);
+                // formData1.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
+                // formData1.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+                // formData1.append('abtestData', finalRst);
+              let resTest = JSON.stringify(res);
+               formData1.append('rollbackData', resTest);
+                axios.post("/parser/uploadRollBackSec", formData1
+                ).then(rst2 =>{
+                  let res2 = rst2.data;
+                  if(res2.status == 0){
+                    this.$notify({
+                      title: '提交成功',
+                      message: '数据已覆盖',
+                      type: 'success'
+                    });
+                  }else {
+                    this.$notify.error({
+                      title: '提交失败',
+                      message: '数据未覆盖'
+                    });
+                    console.log('Failed! From node.js');
+                  }
+                 })
+
+              })
           }else if(res.status == 1){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未覆盖'
+              message: '数据未读出'
             });
           }
           console.log('Success! From node.js');

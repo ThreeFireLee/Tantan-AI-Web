@@ -539,9 +539,93 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
 //   });
 // });
 
+/*
+* roll back submitted after checked
+*
+* */
+router.post('/uploadRollBackSec', function(req, res){
+
+  let form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+    console.log(fields);//这里就是post的XXX 的数据
+
+    let rollDataDeal = JSON.parse(fields.rollbackData);
+    // console.log(rollDataDeal);
+    let baseName = rollDataDeal.result.rollbackRst.hbaseTablePut3;
+    let colName = rollDataDeal.result.rollbackRst.colFamilyPut3;
+    let rowKey = rollDataDeal.result.rollbackRst.rowKeyPut3
+    let abtestData = rollDataDeal.result.rollbackRst.abtestData;
+    console.log(abtestData);
+              //
+              //
+              //
+              // res.json({
+              //   status: '0',
+              //   msg: '',
+              // });
+
+    //Insert to hbase
+    client.table(baseName)
+      .create(colName, function(err, success){
+        this
+          .row(rowKey)
+          .put(colName + ':content', abtestData, function(err, success) {
+            console.log('insert abtest data');
+            console.log(success);
+             if(success === true) {
+              //
+              // let t1 = new Date().getTime();//timestamp
+              // let fieldJ = JSON.stringify(fields);
+
+              //maintain experiment files
+              // fs.writeFile(path.join(__dirname, "./../models/ABTestUpload", t1.toString()), fieldJ, function (err) {
+              //   if (err) {
+              //     console.log(err);
+              //   } else {
+              //     console.log('ABtest experiment backup file done!');
+              //   }
+              // });
+              //
+              // //maintain name list
+              // fs.appendFile(path.join(__dirname, "./../models/ABTestUpload/namelist",fields.hbaseTablePut3 +'_' + fields.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
+              //   if (err) {
+              //     console.log(err);
+              //   } else {
+              //     console.log('Name list done!');
+              //   }
+              // });
+              // let ex = JSON.parse(fields.abtestData);
+              // let time = new Date();   // 程序计时的月从0开始取值后+1
+              // let m = time.getMonth() + 1;
+              // let t = time.getFullYear() + "-" + m + "-"
+              //   + time.getDate() + " " + time.getHours() + ":"
+              //   + time.getMinutes() + ":" + time.getSeconds();
+              // let emailContent = `<p>Provision Time:${t}</p>
+              //                   <p>Operator: ${fields.operator_name}</p>
+              //                   <p>Submission: Json</p>
+              //                   <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
+              //                   <p>Row Key:${fields.rowKeyPut3}</p>
+              //                   <p>A/B Testing Content:${fields.abtestData}</p>`
+              // sendEmail('(Stage) New A/B Test online updated',emailContent);
+
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+          });
+      });
+
+  });
+});
 
 /*
-* Roll back (get old ver directly and save)
+* Roll back get old ver directly
 * */
 router.post('/uploadRollBack', function(req, res){
 
@@ -554,7 +638,7 @@ router.post('/uploadRollBack', function(req, res){
       if (err) {
         console.log(err);
       }
-      console.log(data);
+      // console.log(data);
       let arr = data.split(/[\s]*\n[\s]*/);
 
      //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
@@ -573,7 +657,7 @@ router.post('/uploadRollBack', function(req, res){
             status: '0',
             msg: '',
             result: {
-              rollbackRst: obj.jsonInput
+              rollbackRst: obj
             }
           });
         }else{
@@ -581,7 +665,7 @@ router.post('/uploadRollBack', function(req, res){
             status: '0',
             msg: '',
             result: {
-              rollbackRst: obj.abtestData
+              rollbackRst: obj
             }
           });
         }
