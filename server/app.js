@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
 var parserRouter = require('./routes/parser');
 var parserProRouter = require('./routes/parserPro');
+var historyScan = require('./routes/historyScan');
 
 
 
@@ -36,6 +37,7 @@ app.use('/users', usersRouter);
 app.use('/goods', goodsRouter);
 app.use('/parser', parserRouter);
 app.use('/parserPro', parserProRouter);
+app.use('/historyScan', historyScan);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

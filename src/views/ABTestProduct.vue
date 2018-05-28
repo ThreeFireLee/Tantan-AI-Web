@@ -45,11 +45,20 @@
                     class="col-family-css">
                   </el-input>
                   <br><br>
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 3}"
+                    style="width: 510px; margin: 0 0 20px 0px"
+                    placeholder="Description"
+                    v-model="description">
+                  </el-input>
+                  <br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
                   <br><br><br>
+
                   <el-form-item
                     v-for="(l, index) in abtestPro.abtestCore.whitelists"
                     :label="(index + 1)"
@@ -145,7 +154,8 @@
           },
           operator_name:''
         },
-        jsonArea:''
+        jsonArea:'',
+        description:''
 
       }
     },
@@ -371,6 +381,8 @@
           ]),
         })
       },
+
+      //submit with the abtest data
       submitWhiteList(event){
         event.preventDefault();
         if(this.abtestPro.abtestCore.experiment_id == ""){
@@ -401,6 +413,14 @@
           this.$message({
             showClose: true,
             message: '警告，experiment name未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.description == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, description内容不能为空！',
             type: 'warning'
           });
           return false;
@@ -488,6 +508,7 @@
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtestPro.colFamilyPut3);
         formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        formData.append('description', this.description);
         formData.append('experiment_name', this.abtestPro.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtestPro.operator_name);

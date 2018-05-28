@@ -48,6 +48,14 @@
                     class="col-family-css">
                   </el-input>
                   <br><br>
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 3}"
+                    style="width: 510px; margin: 0 0 20px 0px"
+                    placeholder="Description"
+                    v-model="description">
+                  </el-input>
+                  <br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
@@ -161,7 +169,8 @@
         },
         operator_name:''
       },
-        jsonArea:''
+        jsonArea:'',
+        description:''
 
       }
     },
@@ -594,7 +603,7 @@
           .catch(function(){
             console.log('FAILURE!!');
           });
-        
+
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -645,6 +654,14 @@
           this.$message({
             showClose: true,
             message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.description == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, description内容不能为空！',
             type: 'warning'
           });
           return false;
@@ -735,6 +752,7 @@
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
+        formData.append('description', this.description);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
 

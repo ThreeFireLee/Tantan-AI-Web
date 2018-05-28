@@ -293,6 +293,7 @@ router.post('/uploadABtest', function(req, res){
                       console.log('no previous version');
                       let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
+                                      <p>Description: ${fields.description}</p>
                                       <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
                                       <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
@@ -311,6 +312,7 @@ router.post('/uploadABtest', function(req, res){
                         if(obj.abtestData === undefined){
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
+                                       <p>Description: ${fields.description}</p>
                                       <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
                                       <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
@@ -319,6 +321,7 @@ router.post('/uploadABtest', function(req, res){
                         }else {
                           let emailContent = `<p>Provision Time:${t}</p>
                                       <p>Operator: ${fields.operator_name}</p>
+                                       <p>Description: ${fields.description}</p>
                                       <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
                                       <p>Row Key:${fields.rowKeyPut3}</p>
                                       <p>A/B Testing Content:${fields.abtestData}</p>
