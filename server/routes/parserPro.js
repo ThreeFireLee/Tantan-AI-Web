@@ -43,7 +43,7 @@ router.post('/upload', function(req, res){
 
   form.parse(req, function (err, fields, files) {
     console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
- fs.readFile(files.file.path, 'utf8', (err, data) => {
+  fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
@@ -77,8 +77,8 @@ router.post('/upload', function(req, res){
      }else{
        //Put to hbase
        client.table(fields.hbaseTablePutPro)
-         .create(fields.colFamilyPutPro, function(err, success){
-           this
+         // .create(fields.colFamilyPutPro, function(err, success){
+         //   this
              .row(fields.rowKeyPutPro)
              .put(fields.colFamilyPutPro + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
                this.get(fields.colFamilyPutPro, function (err, cells) {
@@ -113,7 +113,7 @@ router.post('/upload', function(req, res){
                  });
                });
              });
-         });
+         // });
      }
    });
  });
@@ -153,8 +153,8 @@ router.post('/uploadHbase', function(req, res){
         });
       }else{  //Insert to hbase
         client.table(fields.hbaseTablePutPro2)
-          .create(fields.colFamilyPutPro2, function(err, success){
-            this
+          // .create(fields.colFamilyPutPro2, function(err, success){
+          //   this
               .row(fields.rowKeyPutPro2)
               .put(fields.colFamilyPutPro2 + ':model', fields.jsonInputPro, function(err, success) {
                 console.log(success);
@@ -185,7 +185,7 @@ router.post('/uploadHbase', function(req, res){
 
 
               });
-          });
+          // });
       }
     });
 
@@ -295,8 +295,8 @@ router.post('/uploadABtest', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      .create(fields.colFamilyPut3, function(err, success){
-        this
+      // .create(fields.colFamilyPut3, function(err, success){
+      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -403,7 +403,7 @@ router.post('/uploadABtest', function(req, res){
               });
             }
           });
-      });
+      // });
 
 
   });
@@ -422,8 +422,8 @@ router.post('/uploadABJson', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      .create(fields.colFamilyPut3, function(err, success){
-        this
+      // .create(fields.colFamilyPut3, function(err, success){
+      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
             console.log('insert abtest data');
@@ -475,11 +475,12 @@ router.post('/uploadABJson', function(req, res){
               });
             }
           });
-      });
+      // });
 
 
   });
 });
+
 /*
 *
 * retrieve abtest data from database
@@ -552,8 +553,8 @@ router.post('/uploadRollBackSec', function(req, res){
 
     //Insert to hbase
     client.table(baseName)
-      .create(colName, function(err, success){
-        this
+      // .create(colName, function(err, success){
+      //   this
           .row(rowKey)
           .put(colName + ':content', abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -604,10 +605,11 @@ router.post('/uploadRollBackSec', function(req, res){
               });
             }
           });
-      });
+      // });
 
   });
 });
+
   /*
   * Roll back (get old ver directly and save)
   * */
