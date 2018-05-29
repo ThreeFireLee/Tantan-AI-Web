@@ -28,6 +28,7 @@
         <el-menu-item-group>
           <el-menu-item index="/abtest">Stage</el-menu-item>
           <el-menu-item index="/abtestproduct">Production</el-menu-item>
+          <!--<el-menu-item index="/searchpage">Search</el-menu-item>-->
         </el-menu-item-group>
       </el-submenu>
       <!--<el-menu-item index="/history">-->

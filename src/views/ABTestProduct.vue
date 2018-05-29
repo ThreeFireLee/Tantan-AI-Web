@@ -135,7 +135,7 @@
         operationChose: 'abtest',
 
         abtestPro:{
-          hbaseTablePut3:'test',
+          hbaseTablePut3:'treatment_store',
           colFamilyPut3:'f',
           rowKeyPut3:'',
           abtestCore:{

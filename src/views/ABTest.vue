@@ -76,16 +76,6 @@
                   <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
                   <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                 <br><br>
-                  <!--<label>Row Key: </label>-->
-                  <!--<el-input placeholder="row key" v-model="abtest1.rowKeyPut4" style="width: 250px" clearable class="ab-serach-rowkey"></el-input>-->
-                  <!--<br>-->
-                  <!--<label>User Id: </label>-->
-                  <!--<el-input placeholder="user id" v-model="abtest1.searchUserId" style="width: 250px; margin-left: 12px" clearable></el-input>-->
-                    <!--<br>-->
-                  <!--<el-button type="primary" style="margin: 20px 0 0 130px" @click="onRetrieveUserId($event)">Search Id</el-button>-->
-                <!--<br><br><br><br><br><br>-->
-
-                  <br><br><br><br>
               </div>
               <div class="model-quarter-div">
                 <p2>Total Percent: </p2> {{sumValue()}} %
@@ -147,7 +137,7 @@
 
 
       abtest1:{
-        hbaseTablePut3:'test',
+        hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
         rowKeyPut3:'',
         rowKeyPut4:'',
@@ -267,49 +257,6 @@
         });
       },
 
-      //retrieve with user id
-      // onRetrieveUserId(event){
-      //   event.preventDefault();
-      //   if(this.abtest1.rowKeyPut4 == ""){
-      //     this.$message({
-      //       showClose: true,
-      //       message: '警告,row key不能为空！',
-      //       type: 'warning'
-      //     });
-      //     return false;
-      //   }
-      //   if(this.abtest1.searchUserId == ""){
-      //     this.$message({
-      //       showClose: true,
-      //       message: '警告,user id不能为空！',
-      //       type: 'warning'
-      //     });
-      //     return false;
-      //   }
-      //
-      //   axios.post("/parser/ABTestUserId",
-      //     {
-      //       rowKey:this.abtest1.rowKeyPut4,
-      //       hbaseTable: this.abtest1.hbaseTablePut3,
-      //       colFamily: this.abtest1.colFamilyPut3,
-      //       searchUserId: this.abtest1.searchUserId
-      //     },
-      //
-      //   ).then(rst =>{
-      //     var res = rst.data;
-      //     if(res.status == 0) {
-      //       this.$message({
-      //         message: '恭喜你，这是一条成功消息',
-      //         type: 'success'
-      //       });
-      //     }else if(res.status == 1){
-      //       this.$message.error('错误，无此row key！');
-      //     }else{
-      //       this.$message.error('错误，无此user id！');
-      //     }
-      //   });
-      //
-      // },
       submitABwithJson(event){
         event.preventDefault();
         if(this.abtest1.rowKeyPut3 == ""){
@@ -479,6 +426,14 @@
           this.$message({
             showClose: true,
             message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.description == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, description内容不能为空！',
             type: 'warning'
           });
           return false;

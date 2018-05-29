@@ -21,7 +21,7 @@ module.exports = {
           target:'http://localhost:3000'
       },
       '/parserPro/*':{
-        target:'http://localhost:3000'
+          target:'http://localhost:3000'
       },
       '/users/*':{
           target:'http://localhost:3000'
