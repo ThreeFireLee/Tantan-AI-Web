@@ -9,14 +9,14 @@ import ModelProduct from './../views/ModelProduct.vue'
 import SearchPage from './../views/SearchPage'
 
 
-import Test1 from './../configure/l2/dark-canary/config'
-import Test2 from './../configure/l2/dev/config'
-import Test3 from './../configure/l2/prod/config'
-import Test4 from './../configure/l2/staging/config'
-import Test5 from './../configure/ranker/dark-canary/config'
-import Test6 from './../configure/ranker/dev/config'
-import Test7 from './../configure/ranker/prod/config'
-import Test8 from './../configure/ranker/staging/config'
+import Test1 from '../../static/configure/l2/dark-canary/config'
+import Test2 from '../../static/configure/l2/dev/config'
+import Test3 from '../../static/configure/l2/prod/config'
+import Test4 from '../../static/configure/l2/staging/config'
+import Test5 from '../../static/configure/ranker/dark-canary/config'
+import Test6 from '../../static/configure/ranker/dev/config'
+import Test7 from '../../static/configure/ranker/prod/config'
+import Test8 from '../../static/configure/ranker/staging/config'
 
 Vue.use(Router)
 
@@ -52,8 +52,6 @@ export default new Router({
       name:'ModelProduct',
       component: ModelProduct
     },
-
-
 
 
 

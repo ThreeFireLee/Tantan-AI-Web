@@ -184,6 +184,50 @@ router.post('/uploadHbase', function(req, res){
 
 });
 
+
+//scan
+router.post("/scan", function (req,res,next) {
+  // res.send('this is our hbase');
+  let param = {
+    hbaseTable:req.body.hbaseTable,
+    colFamily:req.body.colFamily
+  }
+  console.log(req.body);
+
+  client
+    .table(param.hbaseTable)
+    .scan({
+      maxVersions: 1
+    }, function(err, values){
+      if (err === null){
+        let values_length = values.length;
+        let myArray = new Array();
+        for(let i = 0 ; i < values_length; i++) {
+          myArray.push(values[i].key);
+        }
+        console.log(myArray);
+        res.json({
+          status:'0',
+          msg:'',
+          result:{
+            finalRst: myArray
+          }
+
+        });
+
+
+      }
+      else {
+        console.log('error is' + err)
+      }
+
+    });
+
+
+});
+
+
+
 /*
     Retrieve parameters from hbase
  */

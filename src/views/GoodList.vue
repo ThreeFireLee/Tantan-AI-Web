@@ -72,6 +72,7 @@
               <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
               <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
               <button v-on:click="submitJson($event)" class="btn-3 button-primary">Json Provision</button>
+              <el-button type="warning" @click="submitScan($event)">Scan</el-button>
             </div>
             </form>
 
@@ -79,6 +80,7 @@
               <div class="show-hbase-data">
                 <el-input
                   type="textarea"
+                  readonly="readonly"
                   :autosize="{ minRows: 8}"
                   placeholder="Retrieve Result"
                   v-model="searchRst">
@@ -92,11 +94,6 @@
   </div>
   </div>
 </template>
-
-
-
-
-
 
 
 
@@ -152,6 +149,36 @@
                 this.goodList = [];
               }
             });
+          },
+
+          //scan whole model table and get data
+          submitScan(event){
+            event.preventDefault();
+            axios.post("/parser/scan",
+              {
+                hbaseTable:this.hbaseTable,
+                colFamily:this.colFamily
+              },
+            ).then(rst =>{
+
+              var res = rst.data;
+              if(res.status == 0) {
+                // this.searchRst = res.result.finalRst;//都是parser内的参数，比如这里的result和habseRst
+                let model_id = res.result.finalRst;
+                let model_show = "";
+                // this.searchRst = model_id[0].toString() + "\n" + model_id[1].toString();
+                for(let i = 0; i < model_id.length; i++){
+                  model_show += i+1 + ".     " + model_id[i].toString() + "\n";
+                }
+
+                this.searchRst = model_show;
+
+              }else{
+                this.$message.error('错误，无此model id！');
+              }
+
+            });
+
           },
 
           //retrieve data from hbase

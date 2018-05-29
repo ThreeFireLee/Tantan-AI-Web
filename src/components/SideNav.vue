@@ -31,12 +31,12 @@
           <!--<el-menu-item index="/searchpage">Search</el-menu-item>-->
         </el-menu-item-group>
       </el-submenu>
-      <!--<el-menu-item index="/history">-->
-        <!--<template slot="title">-->
-          <!--<i class="el-icon-tickets"></i>-->
-          <!--<span slot="title">History</span>-->
-        <!--</template>-->
-      <!--</el-menu-item>-->
+      <el-menu-item index="/history">
+        <template slot="title">
+          <i class="el-icon-tickets"></i>
+          <span slot="title">Experiments</span>
+        </template>
+      </el-menu-item>
 
     </el-menu>
   </el-aside>

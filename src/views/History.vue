@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>History</span>
+      <span>AB Production Experiments</span>
     </nav-bread-crumb>
     <div class="accessory-result-page">
       <div>
@@ -14,27 +14,16 @@
           <!-- main operation panel -->
           <!--<div class="accessory-list-wrap">-->
           <div>
-            <el-table
-            el-table
-            :data="tableData3"
-            height="250"
-            border
-            style="width: 100%">
-            <el-table-column
-              prop="date"
-              label="日期"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="姓名"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="地址">
-            </el-table-column>
-            </el-table>
+            <el-input
+              type="textarea"
+              readonly="readonly"
+              style="width: 900px; margin-bottom: 50px"
+              :autosize="{ minRows: 18}"
+              placeholder="AB Result"
+              v-model="valueShow">
+            </el-input>
+            <br>
+            <!--<el-button type="primary" @click="getAbHistory($event)">Scan</el-button>-->
           </div>
         </div>
       </div>
@@ -49,42 +38,15 @@
   import NavHeader from './../components/NavHeader.vue'
   import SideNav from '../components/SideNav'
   import NavBreadCrumb from '@/components/NavBread'
-    import './../assets/css/checkout.css'
+  import './../assets/css/checkout.css'
+  import axios from 'axios'
 
 
 
     export default{
       data() {
         return {
-          tableData3: [{
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-06',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }]
+          valueShow: ''
         }
       },
 
@@ -92,6 +54,25 @@
         NavHeader:NavHeader,
         SideNav:SideNav,
         NavBreadCrumb:NavBreadCrumb
+      },
+      mounted: function(){
+        this.getAbHistory();
+      },
+      methods:{
+        getAbHistory(){
+          // event.preventDefault()
+          axios.get("/historyScan/AbHistory").then(result =>{
+            var res = result.data;
+            if(res.status == "0"){
+              let resultShow = res.result.hbaseRst;
+              this.valueShow = resultShow;
+            }
+            else{
+              this.$message.error('错误，无法获取A/B test 历史记录');
+            }
+          });
+        }
+
       }
 
     }
