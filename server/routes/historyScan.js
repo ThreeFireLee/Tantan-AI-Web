@@ -9,7 +9,7 @@ let  hbase = require('hbase');
 
 let client = hbase({
   host:'localhost',
-  port:8010
+  port:20550
 });
 
 router.get('/', function(req, res, next) {

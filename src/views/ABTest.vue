@@ -510,6 +510,7 @@
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
+        formData.append('description', this.description);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.operator_name);
 
