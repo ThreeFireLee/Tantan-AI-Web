@@ -145,8 +145,6 @@ router.post('/uploadHbase', function(req, res){
 
       //Insert to hbase
       client.table(fields.hbaseTablePut2)
-        // .create(fields.colFamilyPut2, function(err, success){
-        //   this
             .row(fields.rowKeyPut2)
             .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
               console.log('insert with json columns');
@@ -176,7 +174,6 @@ router.post('/uploadHbase', function(req, res){
 
 
             });
-        // });
 
 
   });
@@ -290,8 +287,6 @@ router.post('/uploadABtest', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      // .create(fields.colFamilyPut3, function(err, success){
-      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -394,7 +389,6 @@ router.post('/uploadABtest', function(req, res){
             }
 
           });
-      // });
   });
 });
 
@@ -410,8 +404,6 @@ router.post('/uploadABJson', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      // .create(fields.colFamilyPut3, function(err, success){
-      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
             console.log('insert abtest data');
@@ -464,9 +456,6 @@ router.post('/uploadABJson', function(req, res){
             }
           });
       });
-
-
-  // });
 });
 
 
@@ -534,8 +523,6 @@ router.post('/uploadRollBackSec', function(req, res){
     console.log(abtestData);
     //Insert to hbase
     client.table(baseName)
-      // .create(colName, function(err, success){
-      //   this
           .row(rowKey)
           .put(colName + ':content', abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -587,8 +574,6 @@ router.post('/uploadRollBackSec', function(req, res){
               });
             }
           });
-      // });
-
   });
 });
 

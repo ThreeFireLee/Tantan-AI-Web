@@ -77,8 +77,6 @@ router.post('/upload', function(req, res){
      }else{
        //Put to hbase
        client.table(fields.hbaseTablePutPro)
-         // .create(fields.colFamilyPutPro, function(err, success){
-         //   this
              .row(fields.rowKeyPutPro)
              .put(fields.colFamilyPutPro + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
                this.get(fields.colFamilyPutPro, function (err, cells) {
@@ -113,7 +111,6 @@ router.post('/upload', function(req, res){
                  });
                });
              });
-         // });
      }
    });
  });
@@ -153,8 +150,6 @@ router.post('/uploadHbase', function(req, res){
         });
       }else{  //Insert to hbase
         client.table(fields.hbaseTablePutPro2)
-          // .create(fields.colFamilyPutPro2, function(err, success){
-          //   this
               .row(fields.rowKeyPutPro2)
               .put(fields.colFamilyPutPro2 + ':model', fields.jsonInputPro, function(err, success) {
                 console.log(success);
@@ -185,7 +180,6 @@ router.post('/uploadHbase', function(req, res){
 
 
               });
-          // });
       }
     });
 
@@ -295,8 +289,6 @@ router.post('/uploadABtest', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      // .create(fields.colFamilyPut3, function(err, success){
-      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -403,8 +395,6 @@ router.post('/uploadABtest', function(req, res){
               });
             }
           });
-      // });
-
 
   });
 
@@ -422,8 +412,6 @@ router.post('/uploadABJson', function(req, res){
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
-      // .create(fields.colFamilyPut3, function(err, success){
-      //   this
           .row(fields.rowKeyPut3)
           .put(fields.colFamilyPut3 + ':content', fields.jsonInput, function(err, success) {
             console.log('insert abtest data');
@@ -475,9 +463,6 @@ router.post('/uploadABJson', function(req, res){
               });
             }
           });
-      // });
-
-
   });
 });
 
@@ -553,8 +538,6 @@ router.post('/uploadRollBackSec', function(req, res){
 
     //Insert to hbase
     client.table(baseName)
-      // .create(colName, function(err, success){
-      //   this
           .row(rowKey)
           .put(colName + ':content', abtestData, function(err, success) {
             console.log('insert abtest data');
@@ -605,7 +588,6 @@ router.post('/uploadRollBackSec', function(req, res){
               });
             }
           });
-      // });
 
   });
 });
@@ -657,8 +639,6 @@ router.post('/uploadRollBack', function(req, res){
 
         //Put to hbase
         // client.table(obj.hbaseTablePut3)
-        //   .create(obj.colFamilyPut3, function(err, success){
-        //     this
         //       .row(obj.rowKeyPut3)
         //       .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
         //         this.get(obj.colFamilyPut3, function (err, cells) {
@@ -710,7 +690,6 @@ router.post('/uploadRollBack', function(req, res){
         //
         //           });
         //         });
-        //       });
         //   });
       });
 
