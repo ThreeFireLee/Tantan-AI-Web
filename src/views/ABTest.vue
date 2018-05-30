@@ -60,17 +60,21 @@
                   <label class="abtest-right-move">Hash Id</label><br>
                   <input type="text" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="txt input-light abtest-Name-css">
                   <input type="text" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
-                  <br><br><br>
+                  <br><br>
+                  <el-button size="mini" style="margin-left: 180px" round @click="addWholeTeam">添加全组</el-button>
+                  <el-button size="mini" round @click="addTeamMale">组内男童鞋</el-button>
+                  <el-button size="mini" round @click="addTeamFemale">组内女童鞋</el-button>
+                  <el-button type="success" icon="el-icon-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
+                  <br><br>
                   <el-form-item
                     v-for="(l, index) in abtest1.abtestCore.whitelists"
                     :label="(index + 1)"
                     :key="l.key"
                     :prop="'whitelists.' + index + '.value'"
                   >
-                    <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
-                    <el-input style="width: 200px" v-model="l.user_ids" placeholder="white list (user ids)"></el-input>
-                    <el-button type="success" icon="el-icon-plus" circle @click="addDomain" size="mini" style="margin-left: 10px;"></el-button>
-                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" size="mini" ></el-button>
+                    <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name" clearable></el-input>
+                    <el-input style="width: 250px" v-model="l.user_ids" placeholder="white list (user ids)" clearable></el-input>
+                    <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" style="margin-left: 10px" size="mini" ></el-button>
                   </el-form-item>
                   <el-button type="primary" @click="submitForReview($event)" style="width: 150px; margin-left:20px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
                   <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
@@ -88,8 +92,8 @@
                   :key="l.key"
                   :prop="'whitelists.' + index + '.value'"
                 >
-                  <el-input style="width: 80px" v-model="l.percentage" placeholder=""></el-input>%
-                  <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name"></el-input>
+                  <el-input style="width: 80px" v-model="l.percentage" placeholder="" clearable></el-input>%
+                  <el-input style="width: 200px" v-model="l.treatment" placeholder="treatment name" clearable></el-input>
                   <el-button type="success" icon="el-icon-plus" size="mini" circle @click="addPercent" style="margin-left: 10px"></el-button>
                   <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removePercent(l)" size="mini"></el-button>
                   <br>
@@ -196,6 +200,25 @@
         }
         return `[${p}%~${a}%)`
       },
+      addWholeTeam() {
+        this.abtest1.abtestCore.whitelists.push({
+          user_ids: [133397434,122211057,100660659,22761482,111588646,40568359,118907580,125151962,117368724,122870511,112205767,119326599,116978707,124769561],
+          treatment:''
+        });
+      },
+      addTeamMale(){
+        this.abtest1.abtestCore.whitelists.push({
+          user_ids: [133397434,122211057,100660659,22761482,111588646,40568359,118907580,125151962,117368724,122870511,112205767,119326599,116978707],
+          treatment:''
+        });
+      },
+      addTeamFemale(){
+        this.abtest1.abtestCore.whitelists.push({
+          user_ids: [124769561],
+          treatment:''
+        });
+      },
+
       addDomain() {
         this.abtest1.abtestCore.whitelists.push({
           user_ids: '',
@@ -288,6 +311,7 @@
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
+        formData.append('description', this.description);
         formData.append('operator_name', this.abtest1.operator_name);
 
         let jsonTest = this.jsonArea;

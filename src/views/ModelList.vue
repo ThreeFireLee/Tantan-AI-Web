@@ -12,27 +12,50 @@
           <side-nav></side-nav>
 
           <!-- main operation panel -->
-          <!--<div class="accessory-list-wrap">-->
           <div>
+            <!--工具条-->
+            <el-col :span="22" class="toolbar">
+              <el-form :inline="true" :model="filters">
+                <!--<el-form-item>-->
+                  <!--<el-input  placeholder="Model Id"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                  <!--<el-button type="primary" v-on:click="getUsers">查询</el-button>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                  <!--<el-button type="primary" @click="handleAdd">新增</el-button>-->
+                <!--</el-form-item>-->
+              </el-form>
+            </el-col>
             <el-table
               :data="tableData"
+              highlight-current-row
               border
-              style="width: 100%"
+              style="width: 100%;"
               :default-sort = "{prop: 'date', order: 'descending'}">
               <el-table-column
+                sortable
+                type="index"
+                label="#"
+                width="40">
+              </el-table-column>
+              <el-table-column
+                sortable
                 prop="date"
                 label="Modified Date"
                 width="180">
               </el-table-column>
               <el-table-column
+                sortable
                 prop="name"
-                label="Experiment Name"
-                width="180">
+                label="Model Id"
+                width="460">
               </el-table-column>
               <el-table-column
-                prop="content"
-                label="Content"
-                width="640">
+                sortable
+                prop="modelType"
+                label="Model Type"
+                width="290">
               </el-table-column>
             </el-table>
             <br><br>
@@ -75,10 +98,11 @@
   export default{
     data() {
       return {
-        tableData:[{
+        tableData:
+          [{
           date: '',
           name: '',
-          content: ''
+          modelType: ''
         }]
       }
     },
@@ -89,30 +113,37 @@
       NavBreadCrumb:NavBreadCrumb
     },
     mounted: function(){
-      this.getAbHistory();
+      this.modelScan();
     },
     methods:{
-      getAbHistory(){
-        axios.get("/historyScan/AbHistory").then(result =>{
-          var res = result.data;
-          if(res.status == "0"){
-            let values = res.result.hbaseRst;
-            var data = []
-            for (let i = 0; i < values.length; i++){
-              var obj = {}
-              obj.name= values[i].key;
-              obj.date = moment(values[i].timestamp).format("YYYY-MM-DD HH:mm:ss");
-              obj.content = values[i].$;
+      modelScan(){
+        axios.get("/historyScan/modelScan"
+        ).then(rst =>{
+
+          var res = rst.data;
+          if(res.status == 0) {
+
+            let models = res.result.finalRst;
+            let data = [];
+            for (let i = 0; i < models.length; i++){
+              let obj = {}
+              obj.name= models[i].key;
+              obj.date = moment(models[i].timestamp).format("YYYY-MM-DD HH:mm:ss");
+              let objDeal = JSON.parse(models[i].$);
+              obj.modelType= objDeal.modelType;
               data[i] = obj
             }
-            this.tableData = data;;
 
+
+            this.tableData = data;
+
+          }else{
+            this.$message.error('错误，无此model id！');
           }
-          else{
-            this.$message.error('错误，无法获取A/B test 历史记录');
-          }
+
         });
-      }
+
+      },
 
     }
 

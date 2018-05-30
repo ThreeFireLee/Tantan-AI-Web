@@ -16,7 +16,9 @@ router.get('/', function(req, res, next) {
   res.send('this is our history');
 
 });
-
+/*
+* A/B Testing production experiments list
+* */
 router.get('/AbHistory', function(req, res, next) {
   // scan hbase
   client
@@ -25,18 +27,11 @@ router.get('/AbHistory', function(req, res, next) {
       maxVersions: 1
     }, function(err, values){
       if (err === null) {
-        let values_length = values.length;
-        let myArray = new Array();
-        for(let i = 0 ; i < values_length; i++) {
-          let keyValue = values[i].key.toString() + "\n" + values[i].$.toString() + "\n" + "\n";
-          myArray.push(keyValue);
-        }
-        // console.log(myArray)
         res.json({
           status: '0',
           msg: '',
           result:{
-            hbaseRst: myArray
+            hbaseRst: values
           }
         });
 
@@ -52,6 +47,35 @@ router.get('/AbHistory', function(req, res, next) {
 
 });
 
+
+//scan
+router.get("/modelScan", function (req,res,next) {
+
+  client
+    .table('mods_model_storage')
+    .scan({
+      maxVersions: 1
+    }, function(err, values){
+      if (err === null){
+        res.json({
+          status:'0',
+          msg:'',
+          result:{
+            finalRst: values
+          }
+
+        });
+
+
+      }
+      else {
+        console.log('error is' + err)
+      }
+
+    });
+
+
+});
 
 
 

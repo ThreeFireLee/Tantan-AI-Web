@@ -7,6 +7,7 @@ import ABTest from './../views/ABTest.vue'
 import ABTestProduct from './../views/ABTestProduct.vue'
 import ModelProduct from './../views/ModelProduct.vue'
 import SearchPage from './../views/SearchPage'
+import ModelList from './../views/ModelList'
 
 
 import Test1 from '../../static/configure/l2/dark-canary/config'
@@ -36,6 +37,11 @@ export default new Router({
       path:'/searchpage',
       name:'SearchPage',
       component: SearchPage
+    },
+    {
+      path:'/modellist',
+      name:'ModelList',
+      component:ModelList
     },
     {
       path:'/abtest',

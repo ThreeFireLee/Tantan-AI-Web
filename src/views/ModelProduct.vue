@@ -68,7 +68,7 @@
                 <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
                 <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
                 <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision</button>
-                <el-button type="warning" @click="submitScan($event)">Scan</el-button>
+                <el-button type="warning" @click="submitScan($event)">Scan<i class="el-icon-search el-icon--right"></i></el-button>
               </div>
             </form>
 

@@ -2851,6 +2851,13 @@ html {
 a:hover {
   color: #009de6; /*鼠标经过的颜色变化*/
 }
+
+.toolbar{
+  padding-bottom: 0px;
+  background-color: #F2F2F2;
+  margin-bottom: 20px;
+}
+
 .show-hbase-data{
   color: #000000;
   width: 900px;

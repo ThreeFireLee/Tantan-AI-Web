@@ -95,12 +95,12 @@ router.post('/upload', function(req, res){
                     let t = time.getFullYear() + "-" + m + "-"
                       + time.getDate() + " " + time.getHours() + ":"
                       + time.getMinutes() + ":" + time.getSeconds();
-                    let emailContent = `<p>Provision Time:${t}</p>
-                                      <p>Operator: ${fields.operator_name}</p>
-                                      <p>Submission: File</p>
-                                      <p>Model Id:${fields.rowKeyPut}</p>
-                                      <p>Model Content:${JSON.stringify(obj)}</p>`
-                    sendEmail('(Stage) New model online updated', emailContent);
+                    let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Submission:&nbsp&nbsp</span>File</p>
+                                      <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut}</p>
+                                      <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${JSON.stringify(obj)}</p>`
+                    sendEmail('(Stage Model)' + fields.rowKeyPut, emailContent);
 
                     res.json({
                       status: '0',
@@ -155,12 +155,12 @@ router.post('/uploadHbase', function(req, res){
               let t = time.getFullYear() + "-" + m + "-"
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p>Provision Time:${t}</p>
-                                  <p>Operator: ${fields.operator_name}</p>
-                                  <p>Submission: front-end entered</p>
-                                  <p>Model Id:${fields.rowKeyPut2}</p>
-                                  <p>Model Content:${fields.jsonInput}</p>`
-              sendEmail('(Stage) New model online updated',emailContent);
+              let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                  <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                  <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
+                                  <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
+                                  <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
+              sendEmail('(Stage Model)' + fields.rowKeyPut2,emailContent);
               res.json({
                 status: '0',
                 msg: '',
@@ -330,14 +330,15 @@ router.post('/uploadABtest', function(req, res){
                       + time.getMinutes() + ":" + time.getSeconds();
                     if(last2 === undefined){
                       console.log('no previous version');
-                      let emailContent = `<p>Provision Time:${t}</p>
-                                      <p>Operator: ${fields.operator_name}</p>
-                                      <p>Description: ${fields.description}</p>
-                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
-                                      <p>Row Key:${fields.rowKeyPut3}</p>
-                                      <p>A/B Testing Content:${fields.abtestData}</p>
-                                      <p>Previous A/B Content: none</p>`
-                      sendEmail('(Stage) New A/B Test online updated',emailContent);
+                      let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator: &nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description: &nbsp&nbsp</span>${fields.description}</p>
+                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                                      <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                                      <p>${fields.abtestData}</p>
+                                      <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span> none</p>`
+                      sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
                     }else{
                       console.log('correct');
                       fs.readFile(path.join(__dirname, "./../models/ABTestUpload",last2), 'utf8', (err, data) => {
@@ -349,23 +350,28 @@ router.post('/uploadABtest', function(req, res){
                         //console.log(obj.abtestData);
                         console.log(obj);
                         if(obj.abtestData === undefined){
-                          let emailContent = `<p>Provision Time:${t}</p>
-                                      <p>Operator: ${fields.operator_name}</p>
-                                       <p>Description: ${fields.description}</p>
-                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
-                                      <p>Row Key:${fields.rowKeyPut3}</p>
-                                      <p>A/B Testing Content:${fields.abtestData}</p>
-                                      <p>Previous A/B Content:${obj.jsonInput}</p>`
-                          sendEmail('(Stage) New A/B Test online updated', emailContent);
+                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                                      <p><span style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</span></p>
+                                      <p>${fields.abtestData}</p>
+                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
+                                      <p>${obj.jsonInput}</p>`
+                          sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
                         }else {
-                          let emailContent = `<p>Provision Time:${t}</p>
-                                      <p>Operator: ${fields.operator_name}</p>
-                                       <p>Description: ${fields.description}</p>
-                                      <p>A/B Testing Experiment Name:${fields.experiment_name}</p>
-                                      <p>Row Key:${fields.rowKeyPut3}</p>
-                                      <p>A/B Testing Content:${fields.abtestData}</p>
-                                      <p>Previous A/B Content:${obj.abtestData}</p>`
-                          sendEmail('(Stage) New A/B Test online updated', emailContent);
+                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                                      <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                                      <p>${fields.abtestData}</p>
+                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
+                                      <p>${obj.abtestData}</p>`
+                          // sendEmail('(Stage) New A/B Test online updated', emailContent);
+                          sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
 
                         }
 
@@ -436,13 +442,14 @@ router.post('/uploadABJson', function(req, res){
               let t = time.getFullYear() + "-" + m + "-"
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p>Provision Time:${t}</p>
-                                <p>Operator: ${fields.operator_name}</p>
-                                <p>Submission: Json</p>
-                                <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
-                                <p>Row Key:${fields.rowKeyPut3}</p>
-                                <p>A/B Testing Content:${fields.jsonInput}</p>`
-              sendEmail('(Stage) New A/B Test online updated',emailContent);
+              let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                <p><span style="font-weight: bolder">Submission:&nbsp&nbsp</span>Json</p>
+                                <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                                <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${ex.experiment_name}</p>
+                                <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                                <p><span style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
+              sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
 
               res.json({
                 status: '0',
@@ -556,12 +563,13 @@ router.post('/uploadRollBackSec', function(req, res){
               let t = time.getFullYear() + "-" + m + "-"
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p>Provision Time:${t}</p>
-                                <p>Operator: ${rollDataScan.operator_name}</p>
-                                <p>A/B Testing Experiment Name:${ex.experiment_name}</p>
-                                <p>Row Key:${rowKey}</p>
-                                <p>A/B Testing Content:${abtestData}</p>`
-              sendEmail('(Stage) Roll Back',emailContent);
+              let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${rollDataScan.operator_name}</p>
+                                <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${ex.experiment_name}</p>
+                                <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${rowKey}</p>
+                                <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                                <p>${abtestData}</p>`
+              sendEmail('(Stage A/B Testing) ' + rowKey + 'Roll Back',emailContent);
 
               res.json({
                 status: '0',
