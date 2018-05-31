@@ -16,7 +16,7 @@
           <div class="accessory-list-wrap">
 
               <el-form action="" :model="abtest1" ref="abtest1" class="demo-dynamic" method="post" enctype="multipart/form-data">
-                <div class="model-quarter-div">
+                <div class="model-quarter-div1">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>

@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>AB Production Experiments</span>
+      <span>Model List</span>
     </nav-bread-crumb>
     <div class="accessory-result-page">
       <div>
@@ -14,36 +14,32 @@
           <!-- main operation panel -->
           <div>
             <!--工具条-->
-            <el-col :span="22" class="toolbar">
-              <el-form :inline="true" :model="filters">
-                <!--<el-form-item>-->
-                  <!--<el-input  placeholder="Model Id"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                  <!--<el-button type="primary" v-on:click="getUsers">查询</el-button>-->
-                <!--</el-form-item>-->
+            <div :span="22" class="toolbar">
+              <el-form :inline="true" style="padding: 10px 0 0 20px">
+                <el-form-item>
+                  <el-input  placeholder="Model Id" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                </el-form-item>
                 <!--<el-form-item>-->
                   <!--<el-button type="primary" @click="handleAdd">新增</el-button>-->
                 <!--</el-form-item>-->
               </el-form>
-            </el-col>
+            </div>
             <el-table
-              :data="tableData"
+              :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
               highlight-current-row
+              stripe
               border
-              style="width: 100%;"
+              v-loading="loading"
+              style="width: 100%; "
               :default-sort = "{prop: 'date', order: 'descending'}">
               <el-table-column
                 sortable
                 type="index"
                 label="#"
                 width="40">
-              </el-table-column>
-              <el-table-column
-                sortable
-                prop="date"
-                label="Modified Date"
-                width="180">
               </el-table-column>
               <el-table-column
                 sortable
@@ -57,20 +53,26 @@
                 label="Model Type"
                 width="290">
               </el-table-column>
+              <el-table-column
+                sortable
+                prop="date"
+                label="Modified Date"
+                width="180">
+              </el-table-column>
             </el-table>
-            <br><br>
-            <!--<div class="block">-->
-              <!--<span class="demonstration">完整功能</span>-->
-              <!--<el-pagination-->
-                <!--@size-change="handleSizeChange"-->
-                <!--@current-change="handleCurrentChange"-->
-                <!--:current-page="currentPage4"-->
-                <!--:page-sizes="[100, 200, 300, 400]"-->
-                <!--:page-size="100"-->
-                <!--layout="total, sizes, prev, pager, next, jumper"-->
-                <!--:total="400">-->
-              <!--</el-pagination>-->
-            <!--</div>-->
+            <br>
+            <div class="block toolbar">
+
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage3"
+                :page-size="100"
+                style="padding: 15px 0 0 470px;"
+                layout="prev, pager, next, jumper"
+                :total="1000">
+              </el-pagination>
+            </div>
           </div>
 
 
@@ -103,7 +105,9 @@
           date: '',
           name: '',
           modelType: ''
-        }]
+        }],
+        currentPage:1,
+        pagesize:10
       }
     },
 
@@ -116,6 +120,12 @@
       this.modelScan();
     },
     methods:{
+      handleSizeChange: function (size) {
+        this.pagesize = size;
+      },
+      handleCurrentChange: function(currentPage){
+        this.currentPage = currentPage;
+      },
       modelScan(){
         axios.get("/historyScan/modelScan"
         ).then(rst =>{

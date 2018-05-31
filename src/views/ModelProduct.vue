@@ -68,7 +68,6 @@
                 <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
                 <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
                 <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision</button>
-                <el-button type="warning" @click="submitScan($event)">Scan<i class="el-icon-search el-icon--right"></i></el-button>
               </div>
             </form>
 
@@ -141,35 +140,6 @@
             this.goodList = [];
           }
         });
-      },
-      //scan whole model rowKey
-      submitScan(event){
-        event.preventDefault();
-        axios.post("/parserPro/scan",
-          {
-            hbaseTable:this.hbaseTablePro,
-            colFamily:this.colFamilyPro
-          },
-        ).then(rst =>{
-
-          var res = rst.data;
-          if(res.status == 0) {
-            // this.searchRst = res.result.finalRst;//都是parser内的参数，比如这里的result和habseRst
-            let model_id = res.result.finalRst;
-            let model_show = "";
-            // this.searchRst = model_id[0].toString() + "\n" + model_id[1].toString();
-            for(let i = 0; i < model_id.length; i++){
-              model_show += i+1 + ".     " + model_id[i].toString() + "\n";
-            }
-
-            this.searchRst = model_show;
-
-          }else{
-            this.$message.error('错误，无此model id！');
-          }
-
-        });
-
       },
 
       //retrieve data from hbase

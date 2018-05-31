@@ -9,7 +9,7 @@ let  hbase = require('hbase');
 
 let client = hbase({
   host:'localhost',
-  port:20550
+  port:8010
 });
 
 router.get('/', function(req, res, next) {
@@ -48,7 +48,7 @@ router.get('/AbHistory', function(req, res, next) {
 });
 
 
-//scan
+//scan model
 router.get("/modelScan", function (req,res,next) {
 
   client
@@ -57,6 +57,14 @@ router.get("/modelScan", function (req,res,next) {
       maxVersions: 1
     }, function(err, values){
       if (err === null){
+
+         values.sort(function(a, b) {
+          return b.timestamp - a.timestamp;
+        })
+        // for(let i = 0; i < values.length; i++){
+        //   console.log(values[i].timestamp);
+        // }
+
         res.json({
           status:'0',
           msg:'',
