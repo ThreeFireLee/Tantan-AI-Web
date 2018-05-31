@@ -113,7 +113,7 @@
             goodList:[],
 
             operator_name:'',
-            hbaseTable:'test',
+            hbaseTable:'mods_model_storage',
             rowKey:'',
             colFamily:'f',
             file:'',

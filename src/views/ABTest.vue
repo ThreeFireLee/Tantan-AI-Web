@@ -18,7 +18,7 @@
               <el-form action="" :model="abtest1" ref="abtest1" class="demo-dynamic" method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div1">
                   <label>Operator: </label>
-                  <input type="text" name="operator_name" id="operator_name" v-model="abtest1.operator_name" placeholder="operator name"class="input-light seg-name">
+                  <input type="text" name="operator_name" id="operator_name" v-model="abtest1.abtestCore.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.abtestCore.experiment_id" placeholder="1,2,3... " class="txt input-light ex-name-css">
@@ -81,7 +81,7 @@
                   <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                 <br><br>
               </div>
-              <div class="model-quarter-div">
+              <div class="model-quarter-div2">
                 <p2>Total Percent: </p2> {{sumValue()}} %
                 <!--<a href="/#/abtestproduct"  class="button-2 button-primary button-rounded button-small stage-production-place">>>Production</a>-->
                 <br><br><br>
@@ -147,6 +147,7 @@
         rowKeyPut4:'',
         searchUserId:'',
         abtestCore:{
+            operator_name:'',
             experiment_name:'',
             experiment_id:'',
             hash_id:'',
@@ -160,8 +161,7 @@
               percentage:'100',
             }]
 
-        },
-        operator_name:''
+        }
       },
         jsonArea:'',
         description:''
@@ -243,6 +243,7 @@
           this.abtest1.abtestCore.ramp.splice(index, 1)
         }
       },
+
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
@@ -290,7 +291,7 @@
           });
           return false;
         }
-        if(this.abtest1.operator_name == ""){
+        if(this.abtest1.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告, 请填写操作人',
@@ -312,7 +313,7 @@
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('description', this.description);
-        formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 
         let jsonTest = this.jsonArea;
 
@@ -430,7 +431,7 @@
           });
           return false;
         }
-        if(this.abtest1.operator_name == ""){
+        if(this.abtest1.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告，请填写操作人！',
@@ -536,7 +537,7 @@
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('description', this.description);
         formData.append('abtestData', abtestData);
-        formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -614,7 +615,7 @@
           });
           return false;
         }
-        if(this.abtest1.operator_name == ""){
+        if(this.abtest1.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告，请填写操作人！',
@@ -734,7 +735,7 @@
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('description', this.description);
         formData.append('abtestData', abtestData);
-        formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 
         //100% validation
         let result = this.sumValue();
@@ -780,7 +781,7 @@
 
       submitRollBack(event){
         event.preventDefault();
-        if(this.abtest1.operator_name == ""){
+        if(this.abtest1.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告，请填写操作人！',
@@ -798,7 +799,7 @@
         }
 
         let formData = new FormData();
-        formData.append('operator_name', this.abtest1.operator_name);
+        formData.append('operator_name', this.abtest1.abtestCore.operator_name);
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
 

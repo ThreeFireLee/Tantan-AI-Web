@@ -328,7 +328,6 @@ router.post('/uploadABtest', function(req, res){
                                       <p>${fields.abtestData}</p>
                                       <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
                                       <p>${obj.abtestData}</p>`
-                          // sendEmail('(Stage) New A/B Test online updated', emailContent);
                           sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
 
                         }

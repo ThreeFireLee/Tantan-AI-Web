@@ -17,7 +17,7 @@
             <el-form action=""  :model="abtestPro" ref="abtestPro"method="post" enctype="multipart/form-data">
                 <div class="model-quarter-div1">
                   <label>Operator: </label>
-                  <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.operator_name" placeholder="operator name"class="input-light seg-name">
+                  <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.abtestCore.operator_name" placeholder="operator name"class="input-light seg-name">
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.abtestCore.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
@@ -81,7 +81,7 @@
                 </div>
 
 
-                <div class="model-quarter-div">
+                <div class="model-quarter-div2">
                   <p2>Total Percent: </p2> {{sumValue()}} %
                   <!--<a href="/#/abtest"  class="button-2 button-primary button-rounded button-small stage-production-place">>>>Stage</a>-->
                   <br><br><br>
@@ -142,6 +142,7 @@
           colFamilyPut3:'f',
           rowKeyPut3:'',
           abtestCore:{
+            operator_name:'',
             experiment_name:'',
             experiment_id:'',
             hash_id:'',
@@ -154,8 +155,7 @@
                 treatment:'control',//"model_001_lr_like_mlc0",
                 percentage:'100',
               }]
-          },
-          operator_name:''
+          }
         },
         jsonArea:'',
         description:''
@@ -284,7 +284,7 @@
           });
           return false;
         }
-        if(this.abtestPro.operator_name == ""){
+        if(this.abtestPro.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告, 请填写操作人',
@@ -305,7 +305,7 @@
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
         formData.append('colFamilyPut3', this.abtestPro.colFamilyPut3);
-        formData.append('operator_name', this.abtestPro.operator_name);
+        formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
 
         let jsonTest = this.jsonArea;
 
@@ -422,7 +422,7 @@
           });
           return false;
         }
-        if(this.abtestPro.operator_name == ""){
+        if(this.abtestPro.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告，请填写操作人！',
@@ -532,7 +532,7 @@
         formData.append('description', this.description);
         formData.append('experiment_name', this.abtestPro.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
-        formData.append('operator_name', this.abtestPro.operator_name);
+        formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
 
         //100% validation
         let result = this.sumValue();
@@ -576,7 +576,7 @@
       },
       submitRollBack(event){
         event.preventDefault();
-        if(this.abtestPro.operator_name == ""){
+        if(this.abtestPro.abtestCore.operator_name == ""){
           this.$message({
             showClose: true,
             message: '警告，请填写操作人！',
@@ -593,7 +593,7 @@
           return false;
         }
         let formData = new FormData();
-        formData.append('operator_name', this.abtestPro.operator_name);
+        formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
         axios.post("/parserPro/uploadRollBack", formData
@@ -654,7 +654,7 @@
         //     message: '回滚提交!'
         //   });
         //   let formData = new FormData();
-        //   formData.append('operator_name', this.abtestPro.operator_name);
+        //   formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
         //   formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         //   formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
         //   axios.post("/parserPro/uploadRollBack", formData

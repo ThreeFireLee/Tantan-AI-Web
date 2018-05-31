@@ -27,6 +27,9 @@ router.get('/AbHistory', function(req, res, next) {
       maxVersions: 1
     }, function(err, values){
       if (err === null) {
+        values.sort(function(a, b) {
+          return b.timestamp - a.timestamp;
+        })
         res.json({
           status: '0',
           msg: '',
@@ -77,6 +80,10 @@ router.get("/modelScan", function (req,res,next) {
 
       }
       else {
+        res.json({
+          status:'1',
+          msg:'',
+        });
         console.log('error is' + err)
       }
 

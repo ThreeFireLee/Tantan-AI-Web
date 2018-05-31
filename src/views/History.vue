@@ -15,43 +15,79 @@
           <!--<div class="accessory-list-wrap">-->
           <div>
             <el-table
-              :data="tableData"
+              :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+              highlight-current-row
+              stripe
               border
-              style="width: 100%"
+              v-loading="loading"
+              style="width: 100%; "
               :default-sort = "{prop: 'date', order: 'descending'}">
+              <el-table-column type="expand">
+                <template slot-scope="props">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                    <el-form-item >
+                      <label style="font-weight: bolder">Experiment ID:     </label>
+                      <span style="margin-right: 40px">{{ props.row.ex_id }}</span>
+                      <label style="font-weight: bolder">Hash ID: </label>
+                      <span>{{ props.row.hash_id }}</span>
+                    </el-form-item>
+                    <el-form-item>
+                      <label style="font-weight: bolder">Content: </label>
+                      <span>{{ props.row.content }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
               <el-table-column
-                prop="date"
-                label="Modified Date"
-                width="180">
+                sortable
+                type="index"
+                label="#"
+                width="40">
+              </el-table-column>
+              <el-table-column
+                prop="rowKey"
+                label="Row Key"
+                style="font-weight: bolder"
+                width="290">
               </el-table-column>
               <el-table-column
                 prop="name"
                 label="Experiment Name"
-                width="180">
+                width="220">
+              </el-table-column>
+              <!--<el-table-column-->
+              <!--prop="content"-->
+              <!--label="Content"-->
+              <!--width="640">-->
+              <!--</el-table-column>-->
+              <el-table-column
+                prop="date"
+                sortable
+                label="Modified Date"
+                width="220">
               </el-table-column>
               <el-table-column
-                prop="content"
-                label="Content"
-                width="640">
+                prop="operator_name"
+                label="Operator"
+                width="180">
               </el-table-column>
+
             </el-table>
             <br><br>
-            <!--<div class="block">-->
-              <!--<span class="demonstration">完整功能</span>-->
-              <!--<el-pagination-->
-                <!--@size-change="handleSizeChange"-->
-                <!--@current-change="handleCurrentChange"-->
-                <!--:current-page="currentPage4"-->
-                <!--:page-sizes="[100, 200, 300, 400]"-->
-                <!--:page-size="100"-->
-                <!--layout="total, sizes, prev, pager, next, jumper"-->
-                <!--:total="400">-->
-              <!--</el-pagination>-->
-            <!--</div>-->
+
+            <div class="block toolbar" >
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="pagesize"
+                style="padding: 15px 0 0 550px"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="tableData.length">
+              </el-pagination>
+            </div>
           </div>
-
-
-
 
         </div>
       </div>
@@ -77,9 +113,15 @@
       return {
         tableData:[{
           date: '',
+          ex_id:'',
+          hash_id:'',
+          operator_name:'',
+          rowKey:'',
           name: '',
           content: ''
-        }]
+        }],
+        currentPage:1,
+        pagesize:10
       }
     },
 
@@ -92,6 +134,12 @@
       this.getAbHistory();
     },
     methods:{
+      handleSizeChange: function (size) {
+        this.pagesize = size;
+      },
+      handleCurrentChange: function(currentPage){
+        this.currentPage = currentPage;
+      },
       getAbHistory(){
         axios.get("/historyScan/AbHistory").then(result =>{
           var res = result.data;
@@ -100,12 +148,17 @@
             var data = []
             for (let i = 0; i < values.length; i++){
               var obj = {}
-              obj.name= values[i].key;
+              obj.rowKey = values[i].key;
               obj.date = moment(values[i].timestamp).format("YYYY-MM-DD HH:mm:ss");
               obj.content = values[i].$;
+              let objDeal = JSON.parse(values[i].$);
+              obj.operator_name = objDeal.operator_name;
+              obj.name = objDeal.experiment_name;
+              obj.ex_id = objDeal.experiment_id;
+              obj.hash_id = objDeal.hash_id;
               data[i] = obj
             }
-            this.tableData = data;;
+            this.tableData = data;
 
           }
           else{

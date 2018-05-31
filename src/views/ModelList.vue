@@ -66,7 +66,7 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page.sync="currentPage3"
+                :current-page.sync="currentPage"
                 :page-size="100"
                 style="padding: 15px 0 0 470px;"
                 layout="prev, pager, next, jumper"
