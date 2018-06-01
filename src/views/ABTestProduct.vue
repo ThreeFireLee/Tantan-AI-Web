@@ -75,7 +75,7 @@
                   </el-form-item>
 
 
-                  <el-button type="primary" @click="submitForReview($event)" style="width: 150px; margin-left:50px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
+                  <el-button type="primary" @click="submitForReview()" style="width: 150px; margin-left:50px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
                   <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:60px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                   <br><br><br><br>
                 </div>
@@ -114,6 +114,16 @@
               </el-form>
 
           </div>
+          <el-dialog
+            title="Your Json"
+            :visible.sync="dialogVisible"
+            width="50%"
+          >
+            <vue-json-pretty :data="dialogData"></vue-json-pretty>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+              </span>
+          </el-dialog>
         </div>
       </div>
     </div>
@@ -128,7 +138,8 @@
   import NavBreadCrumb from '@/components/NavBread.vue'
   import SideNav from '../components/SideNav'
   import axios from 'axios'
-  import FPC from 'floating-point-calculator';
+  import FPC from 'floating-point-calculator'
+  import VueJsonPretty from 'vue-json-pretty'
 
 
   export default {
@@ -136,6 +147,8 @@
       return {
         message: '',
         operationChose: 'abtest',
+        dialogVisible: false,
+        dialogData:'',
 
         abtestPro:{
           hbaseTablePut3:'treatment_store',
@@ -165,7 +178,8 @@
     components: {
       NavHeader:NavHeader,
       SideNav:SideNav,
-      NavBreadCrumb:NavBreadCrumb
+      NavBreadCrumb:NavBreadCrumb,
+      VueJsonPretty
     },
 
     methods: {
@@ -362,45 +376,11 @@
       },
 
       //review your json input
-      submitForReview(event){
-        event.preventDefault();
+      submitForReview(){
         let abtestDataReviewOri = JSON.stringify(this.abtestPro.abtestCore);
-        let abtestDataReview =  abtestDataReviewOri
-          .replace('{"user_ids":"","treatment":""},','')
-          .replace('{"user_ids":"","treatment":""},','')
-          .replace('{"user_ids":"","treatment":""},','')
-          .replace('{"user_ids":"","treatment":""},','')
-          .replace(',{"user_ids":"","treatment":""}','')
+        this.dialogVisible = true;
+        this.dialogData = JSON.parse(abtestDataReviewOri);
 
-
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-          .replace(',{"treatment":"","percentage":""}','')
-          .replace(/{"treatment":"","percentage":""},/,'')
-
-        const h = this.$createElement;
-        this.$msgbox({
-          title: 'Your Json',
-          message: h('p', null, [
-            h('span', null, abtestDataReview),
-          ]),
-        })
       },
 
       //submit with the abtest data
