@@ -73,14 +73,8 @@
 
             <div>
               <div class="show-hbase-data">
-                <el-input
-                  type="textarea"
-                  readonly="readonly"
-                  :autosize="{ minRows: 8}"
-                  placeholder="Retrieve Result"
-                  v-model="searchRst">
-                </el-input>
-                <br><br><br><br><br>
+                <vue-json-pretty :path="'res'" :data="searchRst"></vue-json-pretty>
+                <br>
               </div>
 
             </div>
@@ -98,7 +92,7 @@
   import './../assets/css/product.css'
   import './../assets/css/login.css'
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
-  //import NavFooter from '@/components/NavFooter.vue'
+  import VueJsonPretty from 'vue-json-pretty'
   import NavBreadCrumb from '@/components/NavBread.vue'
   import axios from 'axios'
   import SideNav from "../components/SideNav";
@@ -125,7 +119,8 @@
     components: {
       NavHeader:NavHeader,
       SideNav:SideNav,
-      NavBreadCrumb:NavBreadCrumb
+      NavBreadCrumb:NavBreadCrumb,
+      VueJsonPretty
     },
     mounted: function(){
       this.getGoodList();
@@ -164,7 +159,8 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0) {
-            this.searchRst = res.result.hbaseRst;//都是parserPror内的参数，比如这里的result和habseRst
+            let rstShow = res.result.hbaseRst;
+            this.searchRst = JSON.parse(rstShow);//都是parserPror内的参数，比如这里的result和habseRst
           }else{
             this.$message.error('错误，无此model id！');
           }

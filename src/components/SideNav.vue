@@ -15,7 +15,7 @@
           <i class="el-icon-star-on"></i>
           <span slot="title">Model</span>
         </template>
-        <el-menu-item-group>
+        <el-menu-item-group >
           <el-menu-item index="/">Stage</el-menu-item>
           <el-menu-item index="/modelproduct">Production</el-menu-item>
         </el-menu-item-group>
@@ -28,7 +28,7 @@
         <el-menu-item-group>
           <el-menu-item index="/abtest">Stage</el-menu-item>
           <el-menu-item index="/abtestproduct">Production</el-menu-item>
-          <!--<el-menu-item index="/searchpage">Search</el-menu-item>-->
+          <el-menu-item index="/searchpage">Search</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="3">

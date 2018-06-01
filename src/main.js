@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import TreeView from "vue-json-tree-view"
 
+Vue.use(TreeView);
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 

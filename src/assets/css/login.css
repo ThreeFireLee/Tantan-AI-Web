@@ -4,6 +4,9 @@
   background-color: #1FA2F9;
   font-family: "moderat",sans-serif;
   font-size: 16px;
+  /*position: fixed;*/
+  /*display:flex;*/
+  /*background-size: cover;*/
 }
 .navbar {
   display: flex;
@@ -13,16 +16,16 @@
   height: 70px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 5px 20px 10px 20px;
+  /*padding: 5px 20px 10px 20px;*/
 }
 .navbar-left-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 20px;
 }
 .navbar-brand-logo {
   /*width: 120px;*/
+  margin-bottom: 30px;
 }
 .header a, .footer a {
   color: #ffffff;

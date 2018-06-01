@@ -45,13 +45,13 @@
                 sortable
                 prop="name"
                 label="Model Id"
-                width="460">
+                width="520">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="modelType"
                 label="Model Type"
-                width="290">
+                width="230">
               </el-table-column>
               <el-table-column
                 sortable
@@ -100,6 +100,7 @@
   export default{
     data() {
       return {
+        loading:true,
         tableData:
           [{
           date: '',
@@ -118,6 +119,7 @@
     },
     mounted: function(){
       this.modelScan();
+      this.openFullScreen();
     },
     methods:{
       handleSizeChange: function (size) {
@@ -126,6 +128,7 @@
       handleCurrentChange: function(currentPage){
         this.currentPage = currentPage;
       },
+
       modelScan(){
         axios.get("/historyScan/modelScan"
         ).then(rst =>{
@@ -146,6 +149,7 @@
 
 
             this.tableData = data;
+            this.loading = false;
 
           }else{
             this.$message.error('错误，无此model id！');

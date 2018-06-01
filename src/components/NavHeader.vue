@@ -1,14 +1,12 @@
 <template>
   <header class="header">
-    <symbol id="icon-cart" viewBox="0 0 38 32">
-        </symbol>
     <div class="navbar">
-      <div class="navbar-left-container">
+      <!--<div class="navbar-left-container">-->
         <a href="/">
-          <!--<img class="navbar-brand-logo" src="/static/valve.jpg">-->
-          <h2><p></p>TanTan AI</h2>
+          <img class="navbar-brand-logo" src="/static/tantan-ai.png">
+          <!--<h2><p></p>TanTan AI</h2>-->
           </a>
-      </div>
+      <!--</div>-->
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <!--<a href="/" class="navbar-link">我的账户</a>-->

@@ -31,9 +31,12 @@
                       <label style="font-weight: bolder">Hash ID: </label>
                       <span>{{ props.row.hash_id }}</span>
                     </el-form-item>
+                    <br>
                     <el-form-item>
                       <label style="font-weight: bolder">Content: </label>
-                      <span>{{ props.row.content }}</span>
+                      <vue-json-pretty :path="'res'" :data="JSON.parse(props.row.content)" >
+                      </vue-json-pretty>
+                      <!--<tree-view :data="JSON.parse(props.row.content)" max-depth="2" style="width: 1000px"></tree-view>-->
                     </el-form-item>
                   </el-form>
                 </template>
@@ -53,13 +56,8 @@
               <el-table-column
                 prop="name"
                 label="Experiment Name"
-                width="220">
+                width="250">
               </el-table-column>
-              <!--<el-table-column-->
-              <!--prop="content"-->
-              <!--label="Content"-->
-              <!--width="640">-->
-              <!--</el-table-column>-->
               <el-table-column
                 prop="date"
                 sortable
@@ -99,12 +97,13 @@
   import './../assets/css/base.css'
   import './../assets/css/product.css'
   import './../assets/css/login.css'
+  import './../assets/css/checkout.css'
   import NavHeader from './../components/NavHeader.vue'
   import SideNav from '../components/SideNav'
   import NavBreadCrumb from '@/components/NavBread'
-  import './../assets/css/checkout.css'
   import axios from 'axios'
   import moment from 'moment'
+  import VueJsonPretty from 'vue-json-pretty'
 
 
 
@@ -128,7 +127,8 @@
     components: {
       NavHeader:NavHeader,
       SideNav:SideNav,
-      NavBreadCrumb:NavBreadCrumb
+      NavBreadCrumb:NavBreadCrumb,
+      VueJsonPretty
     },
     mounted: function(){
       this.getAbHistory();
