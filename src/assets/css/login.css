@@ -8,7 +8,7 @@
 
   padding: 0 20px;
   z-index: 999;
-  /*position: fixed;*/
+  position: fixed;
 
 }
 .navbar {

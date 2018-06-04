@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>AB Production Experiments</span>
+      <span>AB Experiments</span>
     </nav-bread-crumb>
     <div class="accessory-result-page">
       <div>
@@ -80,7 +80,7 @@
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 40]"
                 :page-size="pagesize"
-                style="padding: 15px 0 0 550px"
+                style="padding: 15px 0 50px 550px"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="tableData.length">
               </el-pagination>

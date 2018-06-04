@@ -392,6 +392,8 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  position: relative;
+  top: 80px;
 }
 
 .accessory-result .filter {
@@ -522,12 +524,12 @@
 
 .accessory-result-page .view-more-normal {
   height: 120px;
-  margin-top: 40px;
+  margin-top: 140px;
 }
 
 .accessory-result-page .view-more-normal .view-more-btn {
   top: 0;
-  padding-top: 40px;
+  padding-top: 140px;
 }
 
 @media only screen and (max-width: 767px) {
@@ -559,6 +561,7 @@
 
   .accessory-result-page {
     font-size: 1.2rem;
+    margin-top: 200px;
   }
 
   .accessory-result-page .btn-wrap {
@@ -572,11 +575,11 @@
 
   .accessory-result-page .view-more-normal {
     height: 60px;
-    margin-top: 10px;
+    margin-top: 120px;
   }
 
   .accessory-result-page .view-more-normal .view-more-btn {
     top: 0;
-    padding-top: 20px;
+    padding-top: 210px;
   }
 }

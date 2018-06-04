@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>A/B Testing Production</span>
+      <span>A/B Test Production</span>
     </nav-bread-crumb>
     <div class="accessory-result-page">
       <div>

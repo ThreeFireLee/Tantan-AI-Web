@@ -534,6 +534,9 @@ a:hover {
   line-height: 25px;
   font-size: 14px;
   text-align:left;
+  position: relative;
+  top: 65px;
+  left: 1150px;
 }
 
 .nav-breadcrumb a {
@@ -2855,7 +2858,9 @@ html {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   height: 100%;
-  position: absolute;
+  /*position: absolute;*/
+  position: fixed;
+  top: 70px;
   /*min-height: 1050px;*/
 }
 a:hover {

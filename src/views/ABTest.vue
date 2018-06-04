@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread-crumb>
-      <span>A/B Testing Stage</span>
+      <span>A/B Test Stage</span>
     </nav-bread-crumb>
     <div class="accessory-result-page">
       <div>

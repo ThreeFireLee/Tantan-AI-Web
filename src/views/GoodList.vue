@@ -77,15 +77,26 @@
 
             <div>
               <el-dialog
-                title="Model Content"
+                title="Your Json"
                 :visible.sync="dialogVisible"
-                width="60%"
+                width="70%"
               >
+
                 <vue-json-pretty :data="searchRst"></vue-json-pretty>
                 <span slot="footer" class="dialog-footer">
               <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
               </span>
               </el-dialog>
+
+              <div class="show-hbase-data">
+                <!--<el-input-->
+                  <!--type="textarea"-->
+                  <!--:autosize="{ minRows: 8}"-->
+                  <!--placeholder="Retrieve Result"-->
+                  <!--v-model="searchRst">-->
+                <!--</el-input>-->
+                <br>
+              </div>
             </div>
         </div>
       </div>
@@ -175,6 +186,7 @@
                  this.dialogVisible = true;
                  let rstShow = res.result.hbaseRst;
                  this.searchRst = JSON.parse(rstShow);//都是parser内的参数，比如这里的result和habseRst
+                 // this.searchRst = rstShow;
                }else{
                  this.$message.error('错误，无此model id！');
                }
