@@ -76,17 +76,19 @@
             </form>
 
             <div>
+              <el-dialog
+                title="Model Content"
+                :visible.sync="dialogVisible"
+                width="60%"
+              >
+                <vue-json-pretty :data="searchRst"></vue-json-pretty>
+                <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+              </span>
+              </el-dialog>
 
               <div class="show-hbase-data">
-                <!--<el-input-->
-                  <!--type="textarea"-->
-                  <!--readonly="readonly"-->
-                  <!--:autosize="{ minRows: 8}"-->
-                  <!--placeholder="Retrieve Result"-->
-                  <!--v-model="searchRst">-->
-                <!--</el-input>-->
-                <vue-json-pretty :path="'res'" :data="searchRst"></vue-json-pretty>
-                <br>
+                <br><br><br>
               </div>
             </div>
         </div>
@@ -113,6 +115,7 @@
         data(){
           return{
             goodList:[],
+            dialogVisible: false,
 
             operator_name:'',
             hbaseTable:'mods_model_storage',
@@ -173,6 +176,7 @@
 
                var res = rst.data;
                if(res.status == 0) {
+                 this.dialogVisible = true;
                  let rstShow = res.result.hbaseRst;
                  this.searchRst = JSON.parse(rstShow);//都是parser内的参数，比如这里的result和habseRst
                }else{

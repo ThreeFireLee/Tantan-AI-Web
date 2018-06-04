@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
   res.send('this is our history');
 
 });
+
 /*
 * A/B Testing production experiments list
 * */
@@ -141,7 +142,7 @@ router.post("/ABTestUserId", function (req,res,next) {
         let userId = param.searchUserId;
         let hashId = values.hash_id;
         let finalId = userId.toString() + hashId.toString();
-
+        console.log(finalId);
         // let new_md5 = md5.create();
         // new_md5.update(finalId);
         // console.log(new_md5);
@@ -149,7 +150,8 @@ router.post("/ABTestUserId", function (req,res,next) {
         finalId = md5(finalId);
         console.log(finalId);
         let max_hex = Math.pow(2,128);
-        let rst = finalId/max_hex;
+        console.log(max_hex);
+        let rst = Math.abs(finalId)/max_hex;
         console.log(rst);
 
 

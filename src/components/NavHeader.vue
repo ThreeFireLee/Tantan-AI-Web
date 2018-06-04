@@ -3,7 +3,7 @@
     <div class="navbar">
       <!--<div class="navbar-left-container">-->
         <a href="/">
-          <img class="navbar-brand-logo" src="/static/tantan-ai.png">
+          <img class="navbar-brand-logo" src="/static/tantan-ai2.png">
           <!--<h2><p></p>TanTan AI</h2>-->
           </a>
       <!--</div>-->
