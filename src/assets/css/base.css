@@ -2891,3 +2891,4 @@ a:hover {
 
 }
 
+html,body{height:100%; margin:0;}/**把HTML和BODY的高度设置成100%**/
