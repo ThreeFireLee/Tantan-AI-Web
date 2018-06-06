@@ -453,13 +453,14 @@ router.post("/hbaseABRetrieve", function (req,res,next) {
         console.log('get column family');
         //console.log(values);
 
-        values = values[0].$;
+        let new_values = values[0].$;
 
         res.json({
           status:'0',
           msg:'',
           result:{
-            ABRst:values
+            ABRst:new_values,
+            wholeData:values
           }
         });
 

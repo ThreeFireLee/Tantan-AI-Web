@@ -5,7 +5,9 @@ let formidable = require('formidable');
 let fs = require('fs');
 let assert = require('assert');
 let md5 = require('js-md5');
-let  hbase = require('hbase');
+let hbase = require('hbase');
+let bigInt = require("big-integer");
+
 
 let client = hbase({
   host:'localhost',
@@ -139,19 +141,37 @@ router.post("/ABTestUserId", function (req,res,next) {
           }
         }
 
+
+
+
         let userId = param.searchUserId;
         let hashId = values.hash_id;
         let finalId = userId.toString() + hashId.toString();
         console.log(finalId);
-        // let new_md5 = md5.create();
-        // new_md5.update(finalId);
-        // console.log(new_md5);
 
-        finalId = md5(finalId);
-        console.log(finalId);
-        let max_hex = Math.pow(2,128);
-        console.log(max_hex);
-        let rst = Math.abs(finalId)/max_hex;
+        let MAX_MD5_BYTES = new Array(0x00, 0xff, 0xff, 0xff, 0xff,
+          0xff, 0xff, 0xff, 0xff,
+          0xff, 0xff, 0xff, 0xff,
+          0xff, 0xff, 0xff, 0xff);
+        let TEN_K_DIVIDER = bigInt("1000");
+        let MAX_MD5 = bigInt(MAX_MD5_BYTES);
+
+
+        let new_md5 = md5.create();
+        new_md5.update(finalId);
+        let digest = new_md5.digest();
+        let digestBigInteger = new Array(digest.length + 1);
+        digestBigInteger[0] = 0x00;
+
+        for(let i = 0; i < digest.length; i++){
+          digestBigInteger[i + 1] = digest[i];
+        }
+
+        let rst = bigInt(digestBigInteger).times(TEN_K_DIVIDER).divide(MAX_MD5)/10.0;
+        //let rst = digestBigInteger/MAX_MD5_BYTES;
+        // let max_hex = Math.pow(2,128);
+        // console.log(max_hex);
+        // let rst = Math.abs(finalId)/MAX_MD5_BYTES;
         console.log(rst);
 
 

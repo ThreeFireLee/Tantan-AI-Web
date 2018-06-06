@@ -19,6 +19,7 @@
                 <div class="model-quarter-div1">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtest1.abtestCore.operator_name" placeholder="operator name"class="input-light seg-name">
+                  <span style="margin-left: 50px">Time: {{modifiedTime}}</span>
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtest1.abtestCore.experiment_id" placeholder="1,2,3... " class="txt input-light ex-name-css">
@@ -136,7 +137,7 @@
   import './../assets/css/base.css'
   import './../assets/css/product.css'
   import './../assets/css/login.css'
-
+  import moment from 'moment'
   import NavHeader from '@/components/NavHeader.vue'  // @ means src file
   import NavBreadCrumb from '@/components/NavBread.vue'
   import SideNav from '../components/SideNav'
@@ -151,7 +152,7 @@
         operationChose: 'abtest',
         dialogVisible: false,
         dialogData:'',
-
+        modifiedTime:'',
 
       abtest1:{
         hbaseTablePut3:'treatment_store',
@@ -282,13 +283,19 @@
           if(res.status == 0) {
             // this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
             let abExperimentRst = res.result.ABRst;
+            let newWholeData = res.result.wholeData;
+
             //we need parse so that we can take value from JSON form
             let dataAfterParse = JSON.parse(abExperimentRst);
+
             this.abtest1.abtestCore.experiment_name = dataAfterParse.experiment_name;
             this.abtest1.abtestCore.experiment_id = dataAfterParse.experiment_id;
             this.abtest1.abtestCore.hash_id = dataAfterParse.hash_id;
             this.abtest1.abtestCore.whitelists = dataAfterParse.whitelists;
             this.abtest1.abtestCore.ramp = dataAfterParse.ramp;
+            this.modifiedTime = moment(newWholeData[0].timestamp).format("YYYY-MM-DD HH:mm:ss");
+
+
           }else{
             this.$message.error('错误，无此row key！');
           }

@@ -18,6 +18,7 @@
                 <div class="model-quarter-div1">
                   <label>Operator: </label>
                   <input type="text" name="operator_name" id="operator_name" v-model="abtestPro.abtestCore.operator_name" placeholder="operator name"class="input-light seg-name">
+                  <span style="margin-left: 50px">Time: {{modifiedTime}}</span>
                   <br><br>
                   <lable for="experiment_id">experiment id:</lable>
                   <input type="text" name="experiment_id" id="experiment_id" v-model="abtestPro.abtestCore.experiment_id" placeholder="1,2,3..." class="txt input-light ex-name-css">
@@ -140,6 +141,7 @@
   import axios from 'axios'
   import FPC from 'floating-point-calculator'
   import VueJsonPretty from 'vue-json-pretty'
+  import moment from 'moment'
 
 
   export default {
@@ -149,6 +151,7 @@
         operationChose: 'abtest',
         dialogVisible: false,
         dialogData:'',
+        modifiedTime:'',
 
         abtestPro:{
           hbaseTablePut3:'treatment_store',
@@ -272,15 +275,16 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0) {
-            this.abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
-
+            let abExperimentRst = res.result.ABRst;//都是parser内的参数，比如这里的result和habseRst
+            let newWholeData = res.result.wholeData;
             //we need parse so that we can take value from JSON form
-            let dataAfterParse = JSON.parse(this.abExperimentRst);
+            let dataAfterParse = JSON.parse(abExperimentRst);
             this.abtestPro.abtestCore.experiment_name = dataAfterParse.experiment_name;
             this.abtestPro.abtestCore.experiment_id = dataAfterParse.experiment_id;
             this.abtestPro.abtestCore.hash_id = dataAfterParse.hash_id;
             this.abtestPro.abtestCore.whitelists = dataAfterParse.whitelists;
             this.abtestPro.abtestCore.ramp = dataAfterParse.ramp;
+            this.modifiedTime = moment(newWholeData[0].timestamp).format("YYYY-MM-DD HH:mm:ss");
           }else{
             this.$message.error('错误，无此row key！');
           }
