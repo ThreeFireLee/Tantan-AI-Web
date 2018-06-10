@@ -34,8 +34,8 @@
                     class="table-name-css">
                   </el-input>
                   <br>
-                  <lable for="rowKeyPut3">Row Key:</lable>
-                  <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtest1.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
+                  <lable for="row_key">Row Key:</lable>
+                  <input type="text" name="row_key" id="row_key" v-model="abtest1.abtestCore.row_key" placeholder="row key" class="txt input-light row-key-css">
                   <button type="primary" @click="onRetrieve($event)" class="btn-4 button-primary">Retrieve</button>
                   <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
@@ -157,11 +157,11 @@
       abtest1:{
         hbaseTablePut3:'treatment_store',
         colFamilyPut3:'f',
-        rowKeyPut3:'',
         rowKeyPut4:'',
         searchUserId:'',
         abtestCore:{
             operator_name:'',
+            row_key:'',
             experiment_name:'',
             experiment_id:'',
             hash_id:'',
@@ -262,7 +262,7 @@
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
-        if(this.abtest1.rowKeyPut3 == ""){
+        if(this.abtest1.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告,row key不能为空！',
@@ -273,7 +273,7 @@
 
         axios.post("/parser/hbaseABRetrieve",
           {
-            rowKey:this.abtest1.rowKeyPut3,
+            rowKey:this.abtest1.abtestCore.row_key,
             hbaseTable: this.abtest1.hbaseTablePut3,
             colFamily: this.abtest1.colFamilyPut3
           },
@@ -304,7 +304,7 @@
 
       submitABwithJson(event){
         event.preventDefault();
-        if(this.abtest1.rowKeyPut3 == ""){
+        if(this.abtest1.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告,row key 不能为空！',
@@ -331,7 +331,7 @@
 
         let formData = new FormData();
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('description', this.description);
         formData.append('operator_name', this.abtest1.abtestCore.operator_name);
@@ -411,7 +411,7 @@
           });
           return false;
         }
-        if(this.abtest1.rowKeyPut3 == ""){
+        if(this.abtest1.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告，row key不能为空！',
@@ -521,7 +521,7 @@
 
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
-        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('description', this.description);
         formData.append('abtestData', abtestData);
@@ -595,7 +595,7 @@
           });
           return false;
         }
-        if(this.abtest1.rowKeyPut3 == ""){
+        if(this.abtest1.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告，row key不能为空！',
@@ -719,7 +719,7 @@
 
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
-        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
         formData.append('description', this.description);
         formData.append('abtestData', abtestData);
@@ -777,7 +777,7 @@
           });
           return false;
         }
-        if(this.abtest1.rowKeyPut3 == ""){
+        if(this.abtest1.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告，row key不能为空！',
@@ -789,7 +789,7 @@
         let formData = new FormData();
         formData.append('operator_name', this.abtest1.abtestCore.operator_name);
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtest1.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
 
         axios.post("/parser/uploadRollBack", formData
         ).then(rst =>{

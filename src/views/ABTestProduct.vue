@@ -32,8 +32,8 @@
                     class="table-name-css">
                   </el-input>
                   <br>
-                  <lable for="rowKeyPut3">Row Key:</lable>
-                  <input type="text" name="rowKeyPut3" id="rowKeyPut3" v-model="abtestPro.rowKeyPut3" placeholder="row key" class="txt input-light row-key-css">
+                  <lable for="row_key">Row Key:</lable>
+                  <input type="text" name="row_key" id="row_key" v-model="abtestPro.abtestCore.row_key" placeholder="row key" class="txt input-light row-key-css">
                   <button type="primary" @click="onRetrieve($event)" class="btn-4 button-primary">Retrieve</button>
                   <button type="primary" @click="submitRollBack($event)" class="btn-4 button-primary">RollBack</button>
                   <br>
@@ -156,9 +156,9 @@
         abtestPro:{
           hbaseTablePut3:'treatment_store',
           colFamilyPut3:'f',
-          rowKeyPut3:'',
           abtestCore:{
             operator_name:'',
+            row_key:'',
             experiment_name:'',
             experiment_id:'',
             hash_id:'',
@@ -256,7 +256,7 @@
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
         event.preventDefault();
-        if(this.abtestPro.rowKeyPut3 == ""){
+        if(this.abtestPro.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告,row key 不能为空！',
@@ -267,7 +267,7 @@
 
         axios.post("/parserPro/hbaseABRetrieve",
           {
-            rowKey:this.abtestPro.rowKeyPut3,
+            rowKey:this.abtestPro.abtestCore.row_key,
             hbaseTable: this.abtestPro.hbaseTablePut3,
             colFamily: this.abtestPro.colFamilyPut3
           },
@@ -294,7 +294,7 @@
       //whitelist provision
       submitABwithJson(event){
         event.preventDefault();
-        if(this.abtestPro.rowKeyPut3 == ""){
+        if(this.abtestPro.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告,row key 不能为空！',
@@ -321,7 +321,7 @@
 
         let formData = new FormData();
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtestPro.abtestCore.row_key);
         formData.append('colFamilyPut3', this.abtestPro.colFamilyPut3);
         formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
 
@@ -398,7 +398,7 @@
           });
           return false;
         }
-        if(this.abtestPro.rowKeyPut3 == ""){
+        if(this.abtestPro.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告，row key 不能为空！',
@@ -512,7 +512,7 @@
 
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
         formData.append('colFamilyPut3', this.abtestPro.colFamilyPut3);
-        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtestPro.abtestCore.row_key);
         formData.append('description', this.description);
         formData.append('experiment_name', this.abtestPro.abtestCore.experiment_name);
         formData.append('abtestData', abtestData);
@@ -568,7 +568,7 @@
           });
           return false;
         }
-        if(this.abtestPro.rowKeyPut3 == ""){
+        if(this.abtestPro.abtestCore.row_key == ""){
           this.$message({
             showClose: true,
             message: '警告，row key 不能为空！',
@@ -579,7 +579,7 @@
         let formData = new FormData();
         formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
         formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
-        formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        formData.append('rowKeyPut3', this.abtestPro.abtestCore.row_key);
         axios.post("/parserPro/uploadRollBack", formData
         ).then(rst =>{
           var res = rst.data;
@@ -640,7 +640,7 @@
         //   let formData = new FormData();
         //   formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
         //   formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
-        //   formData.append('rowKeyPut3', this.abtestPro.rowKeyPut3);
+        //   formData.append('rowKeyPut3', this.abtestPro.abtestCore.row_key);
         //   axios.post("/parserPro/uploadRollBack", formData
         //   ).then(rst =>{
         //     var res = rst.data;

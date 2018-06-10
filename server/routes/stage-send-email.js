@@ -8,7 +8,7 @@ const transport = nodemailer.createTransport({
     user: 'ai-operations@p1.com',
     pass: 'Tantanai0108',
   },
-
+  tls: {rejectUnauthorized: false}
 });
 module.exports = function sendEmail(subject, message) {
   const mailOptions = {
