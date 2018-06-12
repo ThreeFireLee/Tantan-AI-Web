@@ -77,7 +77,10 @@
 
 
                   <el-button type="primary" @click="submitForReview()" style="width: 150px; margin-left:50px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
-                  <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:60px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
+                  <el-tooltip class="item" effect="dark" content="Submit to Stage" placement="top">
+                    <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Stage Copy<i class="el-icon-sort el-icon--right"></i></el-button>
+                  </el-tooltip>
+                  <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                   <br><br><br><br>
                 </div>
 
@@ -293,6 +296,184 @@
             this.$message.error('错误，无此row key！');
           }
         });
+      },
+
+      //submit to stage
+      submitPromote(event){
+        event.preventDefault();
+        if(this.abtestPro.abtestCore.experiment_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.row_key == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，row key不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.operator_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，请填写操作人！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.experiment_name == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，experiment name未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.abtestPro.abtestCore.hash_id == ""){
+          this.$message({
+            showClose: true,
+            message: '警告，hash id未填写！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.description == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, description内容不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        //parse user_ids to array
+        this.abtestPro.abtestCore.whitelists = this.abtestPro.abtestCore.whitelists.map(x =>({
+          user_ids: x.user_ids.toString().split(',').filter(x => x.trim()).map(x => Number(x)),
+          treatment: x.treatment,
+        }));
+
+        this.abtestPro.abtestCore.ramp= this.abtestPro.abtestCore.ramp.map(y =>({
+          treatment: y.treatment,
+          percentage: Number.isNaN(parseFloat(y.percentage)) ? null:parseFloat(y.percentage)
+
+        }));
+
+        //judge whether the input is valid number (not character )
+        let whitelists_length = this.abtestPro.abtestCore.whitelists.length;
+        let n=0;
+        for (n; n<whitelists_length; n++)  {
+          let new_user = this.abtestPro.abtestCore.whitelists[n].user_ids;
+          let userid_length = new_user.length;
+          let i=0;
+          for (i; i<userid_length;i++){
+            if(Number.isNaN(parseInt(new_user[i]))){
+              this.$message({
+                showClose: true,
+                message: '警告，user id必须是数字！',
+                type: 'warning'
+              });
+              return false;
+            }
+          }
+        }
+
+        this.abtestPro.abtestCore.experiment_id = parseInt(this.abtestPro.abtestCore.experiment_id);
+        let formData = new FormData();
+        let abtestDataOri = JSON.stringify(this.abtestPro.abtestCore);
+        let abtestData =  abtestDataOri
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+          .replace(/{"user_ids":[],"treatment":""},/,'')
+          .replace(',{"user_ids":[],"treatment":""}','')
+
+
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+          .replace(',{"treatment":"","percentage":null}','')
+          .replace(/{"treatment":"","percentage":null},/,'')
+
+        formData.append('hbaseTablePut3', this.abtestPro.hbaseTablePut3);
+        formData.append('colFamilyPut3', this.abtestPro.colFamilyPut3);
+        formData.append('rowKeyPut3', this.abtestPro.abtestCore.row_key);
+        formData.append('experiment_name', this.abtestPro.abtestCore.experiment_name);
+        formData.append('description', this.description);
+        formData.append('abtestData', abtestData);
+        formData.append('operator_name', this.abtestPro.abtestCore.operator_name);
+
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+
+        //100% validation
+        let result = this.sumValue();
+        if (result !== 100){
+          this.$message.error('错误，Allocation percentage not 100%！');
+          return false;
+        } 
+        this.$confirm('是否确认将数据备份到Stage?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: 'Stage备份提交!'
+          });
+          axios.post("/parser/uploadABtest", formData
+            ,config
+          ).then(rst =>{
+            var res = rst.data;
+            if(res.status == 0){
+              this.$notify({
+                title: '提交成功',
+                message: '数据已传入Stage',
+                type: 'success'
+              });
+            }else if(res.status == 1){
+              this.$notify.error({
+                title: '提交失败',
+                message: '数据未写入'
+              });
+            }
+            console.log('Success! From node.js');
+          })
+            .catch(function(){
+              console.log('FAILURE!!');
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+
+
       },
 
       //whitelist provision

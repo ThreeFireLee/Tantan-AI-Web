@@ -78,8 +78,10 @@
                     <el-button type="danger" icon="el-icon-delete" circle @click.prevent="removeDomain(l)" style="margin-left: 10px" size="mini" ></el-button>
                   </el-form-item>
                   <el-button type="primary" @click="submitForReview() " style="width: 150px; margin-left:20px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
-                  <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
-                  <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
+                  <el-tooltip class="item" effect="dark" content="Submit to production" placement="top">
+                    <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
+                  </el-tooltip>
+                   <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
                 <br><br>
               </div>
               <div class="model-quarter-div2">
