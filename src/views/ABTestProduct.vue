@@ -434,7 +434,7 @@
         if (result !== 100){
           this.$message.error('错误，Allocation percentage not 100%！');
           return false;
-        } 
+        }
         this.$confirm('是否确认将数据备份到Stage?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
