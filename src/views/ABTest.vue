@@ -81,8 +81,10 @@
                   <el-tooltip class="item" effect="dark" content="Submit to production" placement="top">
                     <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Promote<i class="el-icon-sort el-icon--right"></i></el-button>
                   </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="Stage Provision" placement="top">
                    <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
-                <br><br>
+                  </el-tooltip>
+                    <br><br>
               </div>
               <div class="model-quarter-div2">
                 <p2>Total Percent: </p2> {{sumValue()}} %

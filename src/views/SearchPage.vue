@@ -42,7 +42,17 @@
             <el-button type="primary" style="margin: 20px 0 0 150px" @click="onRetrieveUserId($event)">Search Id</el-button>
             <br><br><br><br><br><br> <br><br><br><br><br><br> <br><br><br><br><br>
             </el-form>
+            <el-dialog
+              title="Treatment Segment"
+              :visible.sync="dialogVisible"
+              width="70%"
+            >
 
+              <span style="color: red;">{{treatSeg}}</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+              </span>
+            </el-dialog>
           </div>
         </div>
       </div>
@@ -65,6 +75,9 @@
   export default{
     data() {
       return {
+        dialogVisible: false,
+        treatSeg:'',
+
         rowKeyPut4:'',
         searchUserId:'',
         hbaseTablePut4:'treatment_store',
@@ -110,15 +123,17 @@
         ).then(rst =>{
           var res = rst.data;
           if(res.status == 0) {
-            const h = this.$createElement;
-            this.$msgbox({
-              title: 'Treatment Segment',
-              message: h('p', null, [
-                h('span', null, 'Treatment: '),
-                h('i', { style: 'color: red' }, res.result.treatment_el),
-              ]),
-              confirmButtonText: '确定'
-            })
+            this.treatSeg = res.result.treatment_el;
+            this.dialogVisible = true;
+            // const h = this.$createElement;
+            // this.$msgbox({
+            //   title: 'Treatment Segment',
+            //   message: h('p', null, [
+            //     h('span', null, 'Treatment: '),
+            //     h('i', { style: 'color: red' }, res.result.treatment_el),
+            //   ]),
+            //   confirmButtonText: '确定'
+            // })
           }else if(res.status == 1) {
             this.$message.error('错误，无此row key！');
           }else{

@@ -76,12 +76,14 @@
                   </el-form-item>
 
 
-                  <el-button type="primary" @click="submitForReview()" style="width: 150px; margin-left:50px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
+                  <el-button type="primary" @click="submitForReview()" style="width: 150px; margin-left:20px">Review<i class="el-icon-zoom-in el-icon--right"></i></el-button>
                   <el-tooltip class="item" effect="dark" content="Submit to Stage" placement="top">
                     <el-button type="warning" @click="submitPromote($event)" style="margin-left:30px">Stage Copy<i class="el-icon-sort el-icon--right"></i></el-button>
                   </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="Production Provision" placement="top">
                   <el-button type="primary" @click="submitWhiteList($event)" style="width: 150px; margin-left:30px" >Provision<i class="el-icon-upload el-icon--right"></i></el-button>
-                  <br><br><br><br>
+                  </el-tooltip>
+                    <br><br><br><br>
                 </div>
 
 
