@@ -112,10 +112,10 @@
           if(res.status == 0) {
             const h = this.$createElement;
             this.$msgbox({
-              title: 'Treatment Section',
+              title: 'Treatment Segment',
               message: h('p', null, [
                 h('span', null, 'Treatment: '),
-                h('i', { style: 'color: teal' }, res.result.treatment_el),
+                h('i', { style: 'color: red' }, res.result.treatment_el),
               ]),
               confirmButtonText: '确定'
             })
