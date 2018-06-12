@@ -7,6 +7,7 @@ let assert = require('assert');
 let md5 = require('js-md5');
 let hbase = require('hbase');
 let bigInt = require("big-integer");
+var crypto = require('crypto');
 
 
 let client = hbase({
@@ -143,37 +144,55 @@ router.post("/ABTestUserId", function (req,res,next) {
 
 
 
-
+        //calculate the percentage with md5
         let userId = param.searchUserId;
         let hashId = values.hash_id;
         let finalId = userId.toString() + hashId.toString();
         console.log(finalId);
 
-        let MAX_MD5_BYTES = new Array(0x00, 0xff, 0xff, 0xff, 0xff,
-          0xff, 0xff, 0xff, 0xff,
-          0xff, 0xff, 0xff, 0xff,
-          0xff, 0xff, 0xff, 0xff);
         let TEN_K_DIVIDER = bigInt("1000");
-        let MAX_MD5 = bigInt(MAX_MD5_BYTES);
 
+        let md5 = crypto.createHash('md5');
+        md5.update(finalId);
+        let digest = md5.digest('hex');
+        console.log(digest);
 
-        let new_md5 = md5.create();
-        new_md5.update(finalId);
-        let digest = new_md5.digest();
-        let digestBigInteger = new Array(digest.length + 1);
-        digestBigInteger[0] = 0x00;
+        let max_md5 = bigInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
+        console.log(max_md5);
+        let rst = bigInt(digest,16).times(TEN_K_DIVIDER).divide(max_md5) / 10.0;
 
-        for(let i = 0; i < digest.length; i++){
-          digestBigInteger[i + 1] = digest[i];
-        }
-
-        let rst = bigInt(digestBigInteger).times(TEN_K_DIVIDER).divide(MAX_MD5)/10.0;
-        //let rst = digestBigInteger/MAX_MD5_BYTES;
-        // let max_hex = Math.pow(2,128);
-        // console.log(max_hex);
-        // let rst = Math.abs(finalId)/MAX_MD5_BYTES;
         console.log(rst);
 
+        for(let z = 0; z < values.ramp.length; z++){
+          if(z == 0 && rst <= values.ramp[0].percentage){
+            console.log(values.ramp[0].treatment);
+            res.json({
+              status:'0',
+              msg:'',
+              result:{
+                treatment_el:values.ramp[0].treatment
+
+              }
+            });
+            return false;
+          }
+
+          let new_percents = 0;
+          for(let x = 0; x <= z; x++){
+            new_percents += values.ramp[x].percentage;
+          }
+
+          if(rst <= new_percents){
+            res.json({
+              status:'0',
+              msg:'',
+              result:{
+                treatment_el:values.ramp[z].treatment
+              }
+            });
+            return false;
+          }
+        }
 
         res.json({
           status:'2',

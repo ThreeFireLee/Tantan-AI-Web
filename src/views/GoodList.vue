@@ -77,7 +77,7 @@
 
             <div>
               <el-dialog
-                title="Your Json"
+                title="Model Content"
                 :visible.sync="dialogVisible"
                 width="70%"
               >

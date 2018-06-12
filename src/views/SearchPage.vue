@@ -112,17 +112,14 @@
           if(res.status == 0) {
             const h = this.$createElement;
             this.$msgbox({
-              title: 'Your Data',
+              title: 'Treatment Section',
               message: h('p', null, [
                 h('span', null, 'Treatment: '),
                 h('i', { style: 'color: teal' }, res.result.treatment_el),
-                // h('br'),
-                // h('span',null, 'Percentage: '),
-                // h('i', { style: 'color: teal' }, res.result.exname)
               ]),
               confirmButtonText: '确定'
             })
-          }else if(res.status == 1){
+          }else if(res.status == 1) {
             this.$message.error('错误，无此row key！');
           }else{
             this.$message.error('错误，无此user id！');

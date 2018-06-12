@@ -56,8 +56,8 @@
                   <br>
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
-                  <input type="text" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="txt input-light abtest-Name-css">
-                  <input type="text" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="txt input-light abtest-Hash-css">
+                  <el-input type="text" style="width: 300px" name="experiment_name" id="experiment_name" v-model="abtestPro.abtestCore.experiment_name" placeholder="e.g.tantan-rec-male-mlc0" class="abtest-Name-css"></el-input>
+                  <el-input type="text" :disabled="isDisabled" style="width: 200px;" name="hash_id" id="hash_id" v-model="abtestPro.abtestCore.hash_id" placeholder="hash id" class="abtest-Hash-css"></el-input>
                   <br><br>
                   <el-button size="mini" style="margin-left: 180px" round @click="addWholeTeam">添加全组</el-button>
                   <el-button size="mini" round @click="addTeamMale">组内男童鞋</el-button>
@@ -150,6 +150,7 @@
         message: '',
         operationChose: 'abtest',
         dialogVisible: false,
+        isDisabled:false,
         dialogData:'',
         modifiedTime:'',
 
@@ -285,6 +286,9 @@
             this.abtestPro.abtestCore.whitelists = dataAfterParse.whitelists;
             this.abtestPro.abtestCore.ramp = dataAfterParse.ramp;
             this.modifiedTime = moment(newWholeData[0].timestamp).format("YYYY-MM-DD HH:mm:ss");
+
+            this.isDisabled = true;
+
           }else{
             this.$message.error('错误，无此row key！');
           }
