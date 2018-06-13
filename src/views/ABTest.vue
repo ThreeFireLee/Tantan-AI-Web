@@ -60,8 +60,11 @@
                   <label>Experiment name</label>
                   <label class="abtest-right-move">Hash Id</label><br>
                   <el-input type="text" style="width: 300px" name="experiment_name" id="experiment_name" v-model="abtest1.abtestCore.experiment_name" placeholder="name" class="abtest-Name-css"></el-input>
-                  <el-input type="text" :disabled="isDisabled" style="width: 200px;" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="abtest-Hash-css"></el-input>
-                  <br><br>
+                  <el-input type="text" :disabled="isDisabled" style="width: 170px;" name="hash_id" id="hash_id" v-model="abtest1.abtestCore.hash_id" placeholder="hash id" class="abtest-Hash-css"></el-input>
+                  <el-tooltip class="item" effect="dark" content="Remove hash id disable" placement="top">
+                  <el-button type="success" @click="removeDisable" size="mini" style="margin-left: 10px; width: 20px; padding-left: 8px" icon="el-icon-edit" ></el-button>
+                  </el-tooltip>
+                    <br><br>
                   <el-button size="mini" style="margin-left: 180px" round @click="addWholeTeam">添加全组</el-button>
                   <el-button size="mini" round @click="addTeamMale">组内男童鞋</el-button>
                   <el-button size="mini" round @click="addTeamFemale">组内女童鞋</el-button>
@@ -263,6 +266,10 @@
           this.abtest1.abtestCore.ramp.splice(index, 1)
         }
       },
+      removeDisable(){
+        this.isDisabled = false;
+      },
+
 
       //retrieve ABTEST data from hbase
       onRetrieve(event) {
