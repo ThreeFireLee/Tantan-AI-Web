@@ -265,6 +265,10 @@
             handleFileUpload(event){
                   event.preventDefault();
                   this.file = this.$refs.file.files[0];
+                  let file_name = this.file.name.toString();
+                  file_name = file_name.substring(0, file_name.indexOf('.'));
+                  this.rowKey = file_name;
+                  console.log(file_name.substring(0, file_name.indexOf('.')));
 
                 },
 
