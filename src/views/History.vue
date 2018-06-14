@@ -14,6 +14,20 @@
           <!-- main operation panel -->
           <!--<div class="accessory-list-wrap">-->
           <div>
+            <!--工具条-->
+            <div :span="22" class="toolbar">
+              <el-form :inline="true" style="padding: 10px 0 0 20px">
+                <el-form-item>
+                  <el-input  placeholder="Type your row key here" v-model="rowKey" style="width: 300px" :disabled="false" prefix-icon="el-icon-search"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" v-on:click="getRst">查询</el-button>
+                </el-form-item>
+                <!--<el-form-item>-->
+                <!--<el-button type="primary" @click="handleAdd">新增</el-button>-->
+                <!--</el-form-item>-->
+              </el-form>
+            </div>
             <el-table
               :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
               highlight-current-row
@@ -119,8 +133,10 @@
           name: '',
           content: ''
         }],
+        loading:true,
         currentPage:1,
-        pagesize:10
+        pagesize:10,
+        rowKey:''
       }
     },
 
@@ -139,6 +155,44 @@
       },
       handleCurrentChange: function(currentPage){
         this.currentPage = currentPage;
+      },
+
+
+
+      getRst(){
+
+        this.loading = true;
+        axios.post("/historyScan/AbSearch",
+          {
+            rowKey:this.rowKey
+          }
+
+        ).then(result => {
+          let res = result.data;
+          if(res.status == "0"){
+            let values = res.result.hbaseRst;
+            var data = []
+            for (let i = 0; i < values.length; i++){
+              var obj = {}
+              obj.rowKey = values[i].key;
+              obj.date = moment(values[i].timestamp).format("YYYY-MM-DD HH:mm:ss");
+              obj.content = values[i].$;
+              let objDeal = JSON.parse(values[i].$);
+              obj.operator_name = objDeal.operator_name;
+              obj.name = objDeal.experiment_name;
+              obj.ex_id = objDeal.experiment_id;
+              obj.hash_id = objDeal.hash_id;
+              data[i] = obj
+            }
+            this.tableData = data;
+            this.loading = false;
+
+          }
+          else{
+            this.$message.error('错误，无法获取A/B test 历史记录');
+          }
+        });
+
       },
       getAbHistory(){
         axios.get("/historyScan/AbHistory").then(result =>{
@@ -159,6 +213,7 @@
               data[i] = obj
             }
             this.tableData = data;
+            this.loading = false;
 
           }
           else{

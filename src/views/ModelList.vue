@@ -45,13 +45,13 @@
                 sortable
                 prop="name"
                 label="Model Id"
-                width="520">
+                width="560">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="modelType"
                 label="Model Type"
-                width="230">
+                width="190">
               </el-table-column>
               <el-table-column
                 sortable

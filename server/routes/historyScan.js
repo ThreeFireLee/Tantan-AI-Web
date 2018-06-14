@@ -19,6 +19,45 @@ router.get('/', function(req, res, next) {
   res.send('this is our history');
 
 });
+/*
+* A/B Testing Search list
+* */
+router.post('/AbSearch', function(req, res, next) {
+  let param = {
+    rowKey:req.body.rowKey,
+  }
+
+  // scan hbase
+  client
+    .table('treatment_store')
+    .scan({
+      startRow: param.rowKey,
+      endRow: param.rowKey,
+      maxVersions: 100
+    }, function(err, values){
+      if (err === null) {
+        values.sort(function(a, b) {
+          return b.timestamp - a.timestamp;
+        });
+        res.json({
+          status: '0',
+          msg: '',
+          result:{
+            hbaseRst: values
+          }
+        });
+
+      }
+      else {
+        res.json({
+          status:'1',
+          msg:'',
+        });
+      }
+
+    });
+
+});
 
 /*
 * A/B Testing production experiments list
@@ -28,7 +67,7 @@ router.get('/AbHistory', function(req, res, next) {
   client
     .table('treatment_store')
     .scan({
-      maxVersions: 1
+      maxVersions: 100
     }, function(err, values){
       if (err === null) {
         values.sort(function(a, b) {
