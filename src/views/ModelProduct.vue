@@ -33,7 +33,7 @@
                 </el-input>
                 <br>
                 <lable for="rowKeyPro">Model Id: </lable>
-                <input type="text" name="rowKeyPro" id="rowKeyPro" v-model="rowKeyPro" placeholder="Your Key" class="txt input-light row-key-css">
+                <input type="text" name="rowKeyPro" id="rowKeyPro" v-model="rowKeyPro" placeholder="Your Key" class="txt input-light row-key-css" >
                 <br>
                 <lable for="colFamilyPro">Column Family:</lable>
                 <!--<input type="text" name="colFamilyPro" id="colFamilyPro" v-model="colFamilyPro" placeholder="Production Default here" class="txt input-light col-family-css">-->
@@ -255,8 +255,10 @@
         event.preventDefault();
         this.file = this.$refs.file.files[0];
         let file_name = this.file.name.toString();
-        file_name = file_name.substring(0, file_name.indexOf('.'));
-        this.rowKeyPro = file_name;
+        // file_name = file_name.substring(0, file_name.indexOf('.'));
+        if(this.rowKeyPro == ""){
+          this.rowKeyPro = file_name;
+        }
       },
 
       //submit from typing

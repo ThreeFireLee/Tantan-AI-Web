@@ -54,7 +54,7 @@
                     :autosize="{ minRows: 3}"
                     style="width: 510px; margin: 0 0 20px 0px"
                     placeholder="Description"
-                    v-model="description">
+                    v-model="abtest1.abtestCore.description">
                   </el-input>
                   <br>
                   <label>Experiment name</label>
@@ -169,6 +169,7 @@
         searchUserId:'',
         abtestCore:{
             operator_name:'',
+            description:'',
             row_key:'',
             experiment_name:'',
             experiment_id:'',
@@ -185,8 +186,7 @@
 
         }
       },
-        jsonArea:'',
-        description:''
+        jsonArea:''
 
       }
     },
@@ -346,7 +346,7 @@
         formData.append('hbaseTablePut3', this.abtest1.hbaseTablePut3);
         formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
-        formData.append('description', this.description);
+        formData.append('description', this.abtest1.abtestCore.description);
         formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 
         let jsonTest = this.jsonArea;
@@ -456,7 +456,7 @@
           });
           return false;
         }
-        if(this.description == ""){
+        if(this.abtest1.abtestCore.description == ""){
           this.$message({
             showClose: true,
             message: '警告, description内容不能为空！',
@@ -536,7 +536,7 @@
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
-        formData.append('description', this.description);
+        formData.append('description', this.abtest1.abtestCore.description);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 
@@ -640,7 +640,7 @@
           });
           return false;
         }
-        if(this.description == ""){
+        if(this.abtest1.abtestCore.description == ""){
           this.$message({
             showClose: true,
             message: '警告, description内容不能为空！',
@@ -734,7 +734,7 @@
         formData.append('colFamilyPut3', this.abtest1.colFamilyPut3);
         formData.append('rowKeyPut3', this.abtest1.abtestCore.row_key);
         formData.append('experiment_name', this.abtest1.abtestCore.experiment_name);
-        formData.append('description', this.description);
+        formData.append('description', this.abtest1.abtestCore.description);
         formData.append('abtestData', abtestData);
         formData.append('operator_name', this.abtest1.abtestCore.operator_name);
 

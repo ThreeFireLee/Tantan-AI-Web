@@ -44,6 +44,8 @@
                       <span style="margin-right: 40px">{{ props.row.ex_id }}</span>
                       <label style="font-weight: bolder">Hash ID: </label>
                       <span>{{ props.row.hash_id }}</span>
+                      <label style="font-weight: bolder; margin-left: 50px">Experiment Name: </label>
+                      <span>{{ props.row.name}}</span>
                     </el-form-item>
                     <br>
                     <el-form-item>
@@ -68,20 +70,20 @@
                 width="290">
               </el-table-column>
               <el-table-column
-                prop="name"
-                label="Experiment Name"
-                width="250">
+                prop="description"
+                label="Description"
+                width="330">
               </el-table-column>
               <el-table-column
                 prop="date"
                 sortable
                 label="Modified Date"
-                width="220">
+                width="180">
               </el-table-column>
               <el-table-column
                 prop="operator_name"
                 label="Operator"
-                width="180">
+                width="140">
               </el-table-column>
 
             </el-table>
@@ -131,11 +133,12 @@
           operator_name:'',
           rowKey:'',
           name: '',
-          content: ''
+          content: '',
+          description:''
         }],
         loading:true,
         currentPage:1,
-        pagesize:10,
+        pagesize:20,
         rowKey:''
       }
     },
@@ -160,7 +163,6 @@
 
 
       getRst(){
-
         this.loading = true;
         axios.post("/historyScan/AbSearch",
           {
@@ -182,8 +184,10 @@
               obj.name = objDeal.experiment_name;
               obj.ex_id = objDeal.experiment_id;
               obj.hash_id = objDeal.hash_id;
+              obj.description = objDeal.description;
               data[i] = obj
             }
+
             this.tableData = data;
             this.loading = false;
 
@@ -210,6 +214,7 @@
               obj.name = objDeal.experiment_name;
               obj.ex_id = objDeal.experiment_id;
               obj.hash_id = objDeal.hash_id;
+              obj.description = objDeal.description;
               data[i] = obj
             }
             this.tableData = data;
