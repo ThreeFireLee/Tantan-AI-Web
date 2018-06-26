@@ -259,9 +259,7 @@ router.post('/uploadABtest', function(req, res){
               console.log(t1);
 
               let fieldJ = JSON.stringify(fields);
-              // console.log(fieldJ);
-              // let fieldF = JSON.parse(fieldJ);
-              // console.log(fieldF.abtestData);
+
 
               //maintain experiment files
               fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), fieldJ, function (err) {
@@ -295,54 +293,93 @@ router.post('/uploadABtest', function(req, res){
                       + time.getDate() + " " + time.getHours() + ":"
                       + time.getMinutes() + ":" + time.getSeconds();
 
-                    if(last2 === undefined){
-                      console.log('no previous version');
-                      let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                    client
+                      .table('treatment_store')
+                      .scan({
+                        startRow: fields.rowKeyPut3,
+                        endRow: fields.rowKeyPut3,
+                        maxVersions: 2
+                      }, function(err, values){
+                        if (err === null) {
+                          values.sort(function(a, b) {
+                            return b.timestamp - a.timestamp;
+                          })
+                          if(values[1] == undefined){
+                            let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator: &nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description: &nbsp&nbsp</span>${fields.description}</p>
                                       <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
                                       <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
                                       <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
                                       <p>${fields.abtestData}</p>
                                       <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span>none</p>`
-                      sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
-                    }else{
-                      console.log('correct');
-                      fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",last2), 'utf8', (err, data) => {
-                        if (err) {
-                          console.log(err);
-                        }
-                        console.log(data);
-                        let obj = JSON.parse(data);
-                        //console.log(obj.abtestData);
-                        console.log(obj);
-                        if(obj.abtestData === undefined){
-                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
-                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
-                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
-                                      <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
-                                      <p>${fields.abtestData}</p>
-                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
-                                      <p>${obj.jsonInput}</p>`
-                          sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
-                        }else {
-                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
-                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
-                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
-                                      <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
-                                      <p>${fields.abtestData}</p>
-                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
-                                      <p>${obj.abtestData}</p>`
-                          sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                            sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
 
+
+                          }else {
+                            let previousContent = values[1].$;
+                            console.log(previousContent);
+                            let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator: &nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description: &nbsp&nbsp</span>${fields.description}</p>
+                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                                      <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                                      <p>${fields.abtestData}</p>
+                                      <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span>${previousContent}</p>`
+                            sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                          }
                         }
 
                       });
-                    }
+                    // if(last2 === undefined){
+                    //   console.log('no previous version');
+                    //   let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                    //                   <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                    //                   <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                    //                   <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                    //                   <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                    //                   <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                    //                   <p>${fields.abtestData}</p>
+                    //                   <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span>none</p>`
+                    //   sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                    // }else{
+                    //   console.log('correct');
+                    //   fs.readFile(path.join(__dirname, "./../models/ABTestUploadPro",last2), 'utf8', (err, data) => {
+                    //     if (err) {
+                    //       console.log(err);
+                    //     }
+                    //     console.log(data);
+                    //     let obj = JSON.parse(data);
+                    //     //console.log(obj.abtestData);
+                    //     console.log(obj);
+                    //     if(obj.abtestData === undefined){
+                    //       let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                    //                   <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                    //                   <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                    //                   <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                    //                   <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                    //                   <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                    //                   <p>${fields.abtestData}</p>
+                    //                   <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
+                    //                   <p>${obj.jsonInput}</p>`
+                    //       sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                    //     }else {
+                    //       let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                    //                   <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                    //                   <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                    //                   <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
+                    //                   <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
+                    //                   <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
+                    //                   <p>${fields.abtestData}</p>
+                    //                   <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
+                    //                   <p>${obj.abtestData}</p>`
+                    //       sendEmail('(Production A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                    //
+                    //     }
+                    //
+                    //   });
+                    // }
 
 
                   });
@@ -604,60 +641,6 @@ router.post('/uploadRollBack', function(req, res){
           });
         }
 
-        //Put to hbase
-        // client.table(obj.hbaseTablePut3)
-        //       .row(obj.rowKeyPut3)
-        //       .put(obj.colFamilyPut3 + ':content', obj.abtestData, function(err, success) {//JSON.stringify(obj)
-        //         this.get(obj.colFamilyPut3, function (err, cells) {
-        //           this.exists(function (err, exists) {
-        //             assert.ok(exists);
-        //             console.log(success);
-        //             if(success === true) {
-        //               let t1 = new Date().getTime();//timestamp
-        //
-        //               //maintain experiment files
-        //               fs.writeFile(path.join(__dirname, "./../models/ABTestUploadPro", t1.toString()), JSON.stringify(obj), function (err) {
-        //                 if (err) {
-        //                   console.log(err);
-        //                 } else {
-        //                   console.log('ABtest experiment backup file done!');
-        //                 }
-        //               });
-        //
-        //               //maintain name list
-        //               fs.appendFile(path.join(__dirname, "./../models/ABTestUploadPro/namelistPro",obj.hbaseTablePut3 +'_' + obj.rowKeyPut3 + '_namelist'), t1.toString() + '\n', function (err) {
-        //                 if (err) {
-        //                   console.log(err);
-        //                 } else {
-        //                   console.log('Name list done!');
-        //                 }
-        //               });
-        //               let time = new Date();   // 程序计时的月从0开始取值后+1
-        //               let m = time.getMonth() + 1;
-        //               let t = time.getFullYear() + "-" + m + "-"
-        //                 + time.getDate() + " " + time.getHours() + ":"
-        //                 + time.getMinutes() + ":" + time.getSeconds();
-        //               let emailContent = `<p>Roll Back Time:${t}</p>
-        //                         <p>Operator: ${fields.operator_name}</p>
-        //                         <p>A/B Testing Experiment Name:${obj.experiment_name}</p>
-        //                         <p>Row Key:${fields.rowKeyPut3}</p>
-        //                         <p>A/B Testing Content:${obj.abtestData}</p>`
-        //               sendEmail('(Production) Roll Back',emailContent);
-        //
-        //               res.json({
-        //                 status: '0',
-        //                 msg: '',
-        //               });
-        //             }else{
-        //               res.json({
-        //                 status:'1',
-        //                 msg:'',
-        //               });
-        //             }
-        //
-        //           });
-        //         });
-        //   });
       });
 
     });

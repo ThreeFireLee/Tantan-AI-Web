@@ -241,7 +241,7 @@ router.post('/uploadABtest', function(req, res){
 
   let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    console.log(fields);//这里就是post的XXX 的数据
+    console.log(fields);//这里就是post的数据
 
     //Insert to hbase
     client.table(fields.hbaseTablePut3)
@@ -275,7 +275,7 @@ router.post('/uploadABtest', function(req, res){
                     if (err) {
                       console.log(err);
                     }
-                    console.log(data);
+                    // console.log(data);
                     let arr = data.split(/[\s]*\n[\s]*/);
 
                     //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；
@@ -286,55 +286,47 @@ router.post('/uploadABtest', function(req, res){
                     let t = time.getFullYear() + "-" + m + "-"
                       + time.getDate() + " " + time.getHours() + ":"
                       + time.getMinutes() + ":" + time.getSeconds();
-                    if(last2 === undefined){
-                      console.log('no previous version');
-                      let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+
+
+                    client
+                      .table('treatment_store')
+                      .scan({
+                        startRow: fields.rowKeyPut3,
+                        endRow: fields.rowKeyPut3,
+                        maxVersions: 2
+                      }, function(err, values){
+                        if (err === null) {
+                          values.sort(function(a, b) {
+                            return b.timestamp - a.timestamp;
+                          })
+                          if(values[1] == undefined){
+                            let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
                                       <p><span style="font-weight: bolder">Operator: &nbsp&nbsp</span>${fields.operator_name}</p>
                                       <p><span style="font-weight: bolder">Description: &nbsp&nbsp</span>${fields.description}</p>
                                       <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
                                       <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
                                       <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
                                       <p>${fields.abtestData}</p>
-                                      <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span> none</p>`
-                      sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
-                    }else{
-                      console.log('correct');
-                      fs.readFile(path.join(__dirname, "./../models/ABTestUpload",last2), 'utf8', (err, data) => {
-                        if (err) {
-                          console.log(err);
-                        }
-                        console.log(data);
-                        let obj = JSON.parse(data);
-                        //console.log(obj.abtestData);
-                        console.log(obj);
-                        if(obj.abtestData === undefined){
-                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
-                                      <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
-                                      <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
-                                      <p><span style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</span></p>
-                                      <p>${fields.abtestData}</p>
-                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
-                                      <p>${obj.jsonInput}</p>`
-                          sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
-                        }else {
-                          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                      <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                      <p><span style="font-weight: bolder">Description:&nbsp&nbsp</span>${fields.description}</p>
+                                      <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span>none</p>`
+                            sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+
+
+                          }else {
+                            let previousContent = values[1].$;
+                            console.log(previousContent);
+                            let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                      <p><span style="font-weight: bolder">Operator: &nbsp&nbsp</span>${fields.operator_name}</p>
+                                      <p><span style="font-weight: bolder">Description: &nbsp&nbsp</span>${fields.description}</p>
                                       <p><span style="font-weight: bolder">A/B Testing Experiment Name:&nbsp&nbsp</span>${fields.experiment_name}</p>
                                       <p><span style="font-weight: bolder">Row Key:&nbsp&nbsp</span>${fields.rowKeyPut3}</p>
                                       <p style="font-weight: bolder">A/B Testing Content:&nbsp&nbsp</p>
                                       <p>${fields.abtestData}</p>
-                                      <p style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</p>
-                                      <p>${obj.abtestData}</p>`
-                          sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
-
+                                      <p><span style="font-weight: bolder">Previous A/B Content:&nbsp&nbsp</span>${previousContent}</p>`
+                            sendEmail('(Stage A/B Testing) ' + fields.rowKeyPut3 + " " + fields.description, emailContent);
+                          }
                         }
 
                       });
-                    }
-
 
                   });
                 }
