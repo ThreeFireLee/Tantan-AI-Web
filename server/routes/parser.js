@@ -142,7 +142,7 @@ router.get('/uploadHbase', function(req, res, next) {
 router.post('/uploadHbase', function(req, res){
 
   let form = new formidable.IncomingForm();
-  form.parse(req, function (err, fields, files) {
+  form.parse(req, function (err, fields) {
 
     console.log(fields);//这里就是post的XXX 的数据
 
