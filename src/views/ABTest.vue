@@ -648,6 +648,8 @@
           });
           return false;
         }
+
+
         //parse user_ids to array
         this.abtest1.abtestCore.whitelists = this.abtest1.abtestCore.whitelists.map(x =>({
           user_ids: x.user_ids.toString().split(',').filter(x => x.trim()).map(x => Number(x)),
@@ -755,26 +757,46 @@
           headers:{'Content-Type':'multipart/form-data'}
         };
 
+        axios.all([
 
-        axios.post("/parser/uploadABtest", formData
-          ,config
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status == 0){
+          axios.post("/parser/uploadABtest", formData,config),
+          axios.post("/redisParser/redisABtest", formData, config)
+
+        ])
+        .then(axios.spread((hbaseRst, RedisRst)=>{
+          let res1 = hbaseRst.data;
+          let res2 = RedisRst.data;
+          if(res1.status == 0){
             this.$notify({
               title: '提交成功',
-              message: '数据已写入',
+              message: 'Hbase写入成功',
               type: 'success'
             });
-          }else if(res.status == 1){
+          }else if(res1.status == 1){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未写入'
+              message: 'Hbase写入失败'
             });
           }
-          console.log(res);
+
+          if(res2.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: 'Redis写入成功',
+              type: 'success',
+              offset: 70
+            });
+          }else if(res2.status == 1){
+            this.$notify.error({
+              title: '提交失败',
+              message: 'Redis写入失败',
+              offset: 70
+            });
+          }
+
+          console.log(res1);
           console.log('Success! From node.js');
-        })
+        }))
           .catch(function(){
             console.log('FAILURE!!');
           });

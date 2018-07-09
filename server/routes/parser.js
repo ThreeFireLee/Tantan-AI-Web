@@ -20,6 +20,9 @@ let client = hbase({
   port:8010
 });
 
+
+
+
 router.get('/', function(req, res, next) {
     res.send('this is our parser');
 

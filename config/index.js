@@ -23,6 +23,9 @@ module.exports = {
       '/parserPro/*':{
           target:'http://localhost:3000'
       },
+      '/redisParser/*':{
+        target:'http://localhost:3000'
+      },
       '/users/*':{
           target:'http://localhost:3000'
       }
