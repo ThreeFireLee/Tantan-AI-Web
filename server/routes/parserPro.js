@@ -42,16 +42,16 @@ router.post('/upload', function(req, res){
   form.uploadDir = path.join(__dirname, './../models/ModelUploadPro');
 
   form.parse(req, function (err, fields, files) {
-    console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
+    // console.log(fields.hbaseTablePutPro);//这里就是post的XXX 的数据
   fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
         console.log(err);
       }
-      console.log(data);
+      // console.log(data);
    try
    {
      if (typeof JSON.parse(data) === "object") {
-       console.log('correct json format');
+       console.log('correct json format (hbase)');
      }
    }
    catch(err)
@@ -69,7 +69,7 @@ router.post('/upload', function(req, res){
    let myCol = client.table(fields.hbaseTablePutPro).row(fields.rowKeyPutPro);
    myCol.exists(fields.colFamilyPutPro,function(err,exists){
      if(exists){
-       console.log('Already exist');
+       console.log('Already exist in Hbase');
        res.json({
          status:'2',
          msg:'Cannot write! Model already exist',
@@ -137,7 +137,7 @@ router.post('/uploadHbase', function(req, res){
   let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
 
-    console.log(fields);//这里就是post的XXX 的数据
+    // console.log(fields);
 
     //test whether already exist
     let myCol = client.table(fields.hbaseTablePutPro2).row(fields.rowKeyPutPro2);
@@ -153,6 +153,8 @@ router.post('/uploadHbase', function(req, res){
               .row(fields.rowKeyPutPro2)
               .put(fields.colFamilyPutPro2 + ':model', fields.jsonInputPro, function(err, success) {
                 console.log(success);
+
+                if(success === true) {
                 let time = new Date();   // 程序计时的月从0开始取值后+1
                 let m = time.getMonth() + 1;
                 let t = time.getFullYear() + "-" + m + "-"
@@ -166,7 +168,7 @@ router.post('/uploadHbase', function(req, res){
                 sendEmail('(Production Model) ' + fields.rowKeyPutPro2,emailContent);
 
 
-                if(success === true) {
+
                   res.json({
                     status: '0',
                     msg: '',
@@ -281,7 +283,7 @@ router.post('/uploadABtest', function(req, res){
                     if (err) {
                       console.log(err);
                     }
-                    console.log(data);
+                    // console.log(data);
                     let arr = data.split(/[\s]*\n[\s]*/);
 
                     //取出数组倒数第二个数，因为最后有个空格，所以实际是length-3；

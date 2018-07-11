@@ -14,6 +14,7 @@ var goodsRouter = require('./routes/goods');
 var parserRouter = require('./routes/parser');
 var parserProRouter = require('./routes/parserPro');
 var redisParserRouter = require('./routes/redisParser');
+var redisParserProRouter = require('./routes/redisParserPro');
 var historyScan = require('./routes/historyScan');
 
 
@@ -39,6 +40,7 @@ app.use('/goods', goodsRouter);
 app.use('/parser', parserRouter);
 app.use('/parserPro', parserProRouter);
 app.use('/redisParser', redisParserRouter);
+app.use('/redisParserPro', redisParserProRouter);
 app.use('/historyScan', historyScan);
 
 // catch 404 and forward to error handler

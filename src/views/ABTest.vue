@@ -564,24 +564,47 @@
             type: 'success',
             message: 'Promote提交!'
           });
-        axios.post("/parserPro/uploadABtest", formData
-          ,config
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status == 0){
+
+          axios.all([
+
+            axios.post("/parserPro/uploadABtest", formData,config),
+            axios.post("/redisParserPro/redisABtest", formData, config)
+
+          ]).then(axios.spread((hbaseRst, RedisRst)=>{
+            let res1 = hbaseRst.data;
+            let res2 = RedisRst.data;
+          if(res1.status == 0){
             this.$notify({
               title: '提交成功',
-              message: '数据已传入Production',
+              message: '数据已传入Hbase Production',
               type: 'success'
             });
-          }else if(res.status == 1){
+          }else if(res1.status == 1){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未写入'
+              message: 'Hbase 数据未写入'
             });
           }
+
+            if(res2.status == 0){
+              this.$notify({
+                title: '提交成功',
+                message: '数据已传入Redis Production',
+                type: 'success',
+                offset: 70
+              });
+            }else if(res2.status == 1){
+              this.$notify.error({
+                title: '提交失败',
+                message: 'Redis 数据未写入',
+                offset: 70
+              });
+            }
+
+
+
           console.log('Success! From node.js');
-        })
+        }))
           .catch(function(){
             console.log('FAILURE!!');
           });

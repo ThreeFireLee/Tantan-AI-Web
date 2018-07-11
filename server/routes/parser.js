@@ -87,9 +87,6 @@ router.post('/upload', function(req, res){
         //  this
            .row(fields.rowKeyPut)
             .put(fields.colFamilyPut + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
-              this.get(fields.colFamilyPut, function (err, cells) {
-                this.exists(function (err, exists) {
-                  assert.ok(exists);
                   console.log(success);
                   if(success === true) {
 
@@ -116,8 +113,6 @@ router.post('/upload', function(req, res){
                     });
                   }
 
-                });
-              });
            });
         // });
     });
@@ -144,7 +139,7 @@ router.post('/uploadHbase', function(req, res){
   let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields) {
 
-    console.log(fields);//这里就是post的XXX 的数据
+    // console.log(fields);//这里就是post的XXX 的数据
 
       //Insert to hbase
       client.table(fields.hbaseTablePut2)

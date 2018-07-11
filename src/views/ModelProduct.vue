@@ -222,30 +222,52 @@
           headers:{'Content-Type':'multipart/form-data'}
         };
 
+        axios.all([
 
-        axios.post("/parserPro/upload", formData, config
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status==2){
-            this.$message.error('错误，Model Id重复！');
+          axios.post("/parserPro/upload", formData,config),
+          axios.post("/redisParserPro/redisModelFile", formData, config)
+
+        ]).then(axios.spread((hbaseRst, RedisRst)=>{
+          let res1 = hbaseRst.data;
+          let res2 = RedisRst.data;
+          if(res1.status==2){
+            this.$message.error('错误，Hbase内Model Id重复！');
           }
-          if(res.status == 0){
+          if(res1.status == 0){
             this.$notify({
               title: '提交成功',
-              message: '数据已写入',
+              message: 'Hbase数据已写入',
               type: 'success'
             });
-          }else if(res.status == 3){
+          }else if(res1.status == 3){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未写入'
+              message: 'Hbase数据未写入'
             });
           }
-          if(res.status==1){
+          if(res1.status==1 || res2.status == 1){
             this.$message.error('错误，非正确json格式！');
           }
 
-        }).catch(function(){
+          if(res2.status==2){
+            this.$message.error('错误，Redis内Model Id重复！');
+          }
+          if(res2.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: 'Redis数据已写入',
+              type: 'success',
+              offset: 70
+            });
+          }else if(res2.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: 'Redis数据未写入',
+              offset: 70
+            });
+          }
+
+        })).catch(function(){
 
             console.log('FAILURE!!');
           });
@@ -322,28 +344,49 @@
           headers:{'Content-Type':'multipart/form-data'}
         };
 
-
-        axios.post("/parserPro/uploadHbase", formData
-          ,config
-        ).then(rst =>{
-          var res = rst.data;
-          if(res.status==2){
-            this.$message.error('错误，Model Id重复！');
+        axios.all([
+          axios.post("/parserPro/uploadHbase", formData, config),
+          axios.post("/redisParserPro/redisModelTyping", formData, config)
+        ]).then(axios.spread((hbaseRst, RedisRst)=>{
+          let res1 = hbaseRst.data;
+          let res2 = RedisRst.data;
+          if(res1.status==2){
+            this.$message.error('错误，Hbase Model Id重复！');
           }
-          if(res.status == 0){
+          if(res1.status == 0){
             this.$notify({
               title: '提交成功',
-              message: '数据已写入',
+              message: 'Hbase数据已写入',
               type: 'success'
             });
-          }else if(res.status == 3){
+          }else if(res1.status == 3){
             this.$notify.error({
               title: '提交失败',
-              message: '数据未写入'
+              message: 'Hbase数据未写入'
             });
           }
+
+          if(res2.status==2){
+            this.$message.error('错误，Redis Model Id重复！');
+          }
+          if(res2.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: 'Redis数据已写入',
+              type: 'success',
+              offset: 70
+            });
+          }else if(res2.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: 'Redis数据未写入',
+              offset: 70
+            });
+          }
+
+
           console.log('Success! From node.js');
-        })
+        }))
           .catch(function(){
             console.log('FAILURE!!');
           });

@@ -251,7 +251,7 @@
                   message: 'Hbase写入成功',
                   type: 'success'
                 });
-              }else if(res1.status == 1 && res1.status == 2){
+              }else if(res1.status == 1 || res1.status == 2){
                 this.$notify.error({
                   title: '提交失败',
                   message: 'Hbase写入失败'
@@ -265,7 +265,7 @@
                   type: 'success',
                   offset: 70
                 });
-              }else if(res2.status == 1 && res2.status == 2){
+              }else if(res2.status == 1 || res2.status == 2){
                 this.$notify.error({
                   title: '提交失败',
                   message: 'Redis写入失败',
