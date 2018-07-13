@@ -8,8 +8,14 @@ let formidable = require('formidable');
 let fs = require('fs');
 
 
-let cluster = new redisIO({port: 4379, host: '127.0.0.1'});
-
+ // let cluster = new redisIO({port: 4380, host: '127.0.0.1'});
+var cluster = new redisIO.Cluster([{
+  port: 4379,
+  host: '127.0.0.1'
+}, {
+  port: 4380,
+  host: '127.0.0.1'
+}]);
 //retry 3 times when cache work not well
 // let cluster = redis.createClient('6379', '127.0.0.1', {
 //   retry_strategy: function (options) {
@@ -134,22 +140,22 @@ router.post('/redisModelTyping', function(req, res){
 
   form.parse(req, function (err, fields){
 
+        //
+        // cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput,cluster.print);
+        // cluster.get('105_' + fields.rowKeyPut2, function (err, result) {
+        //   console.log(result);
+        // });
 
-        cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput,cluster.print);
-        cluster.get('105_' + fields.rowKeyPut2, function (err, result) {
-          console.log(result);
-        });
-
-    // cluster.set('foos1', 'bar');
-    // cluster.get('foos1', function (err, result) {
-    //   console.log(result);
-    // });
+    cluster.set('foos2', 'bar2');
+    cluster.get('foos2', function (err, result) {
+      console.log(result);
+    });
 
 
 
-    // cluster.on("error", function (err) {
-      //   console.log("Error " + err);
-      // });
+    cluster.on("error", function (err) {
+        console.log("Error " + err);
+      });
 
       //Insert to redis
       // cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput, redis.print);//set "key" "val"
@@ -183,7 +189,7 @@ router.post('/redisModelTyping', function(req, res){
     //   });
 
 
-      if(redis.print){
+      if(cluster.print){
         cluster.quit();
         res.json({
           status: '0',
