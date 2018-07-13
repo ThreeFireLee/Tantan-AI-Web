@@ -17,7 +17,8 @@ let sendEmail = require('./stage-send-email.js');
 
 let client = hbase({
   host:'localhost',
-  port:8010
+   port:8010
+   // port: 8080
 });
 
 
@@ -39,6 +40,7 @@ router.get('/upload', function(req, res, next) {
 
 });
 
+//file upload
 router.post('/upload', function(req, res){
 
   let form = new formidable.IncomingForm();
@@ -88,6 +90,7 @@ router.post('/upload', function(req, res){
            .row(fields.rowKeyPut)
             .put(fields.colFamilyPut + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
                   console.log(success);
+                  // console.log(err);
                   if(success === true) {
 
                     let time = new Date();   // 程序计时的月从0开始取值后+1
@@ -142,37 +145,40 @@ router.post('/uploadHbase', function(req, res){
     // console.log(fields);//这里就是post的XXX 的数据
 
       //Insert to hbase
-      client.table(fields.hbaseTablePut2)
-            .row(fields.rowKeyPut2)
-            .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
-              console.log('insert with json columns');
-              console.log(success);
-            if(success === true) {
-              let time = new Date();   // 程序计时的月从0开始取值后+1
-              let m = time.getMonth() + 1;
-              let t = time.getFullYear() + "-" + m + "-"
-                + time.getDate() + " " + time.getHours() + ":"
-                + time.getMinutes() + ":" + time.getSeconds();
-              let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-                                  <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-                                  <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
-                                  <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
-                                  <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
-              sendEmail('(Stage Model)' + fields.rowKeyPut2,emailContent);
-              res.json({
+      // client.table(fields.hbaseTablePut2)
+      //       .row(fields.rowKeyPut2)
+      //       .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
+      //         console.log('insert with json columns');
+      //         console.log(success);
+      //       if(success === true) {
+      //         let time = new Date();   // 程序计时的月从0开始取值后+1
+      //         let m = time.getMonth() + 1;
+      //         let t = time.getFullYear() + "-" + m + "-"
+      //           + time.getDate() + " " + time.getHours() + ":"
+      //           + time.getMinutes() + ":" + time.getSeconds();
+      //         let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+      //                             <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+      //                             <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
+      //                             <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
+      //                             <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
+      //         sendEmail('(Stage Model)' + fields.rowKeyPut2,emailContent);
+      //         res.json({
+      //           status: '0',
+      //           msg: '',
+      //         });
+      //       }else{
+      //         res.json({
+      //           status:'1',
+      //           msg:'',
+      //         });
+      //       }
+      //
+      //
+      //       });
+    res.json({
                 status: '0',
                 msg: '',
               });
-            }else{
-              res.json({
-                status:'1',
-                msg:'',
-              });
-            }
-
-
-            });
-
 
   });
 

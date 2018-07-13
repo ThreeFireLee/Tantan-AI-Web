@@ -6,7 +6,7 @@ let formidable = require('formidable');
 let fs = require('fs');
 
 //retry 3 times when cache work not well
-let client = redis.createClient('6379', '127.0.0.1', {
+let client = redis.createClient('4379', '127.0.0.1', {
   retry_strategy: function (options) {
     if (options.error && options.error.code === 'ECONNREFUSED') {
       // End reconnecting on a specific error and flush all commands with
@@ -118,7 +118,6 @@ router.post('/redisModelFile', function(req, res){
 router.post('/redisModelTyping', function(req, res){
 
   let form = new formidable.IncomingForm();
-  form.uploadDir = path.join(__dirname, './../models/ModelUpload');
 
   form.parse(req, function (err, fields) {
 
