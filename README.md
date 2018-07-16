@@ -4,7 +4,7 @@ Supporting the data interaction of AI model and A/B testing
 > A Vue.js project for tantan AI team</br>
 > Design doc: https://docs.google.com/document/d/18XbWuYrFeIcPgE_iGP4FRaOEThqUDplCbOMUl0FZNXw/edit
 
-# Basic function:
+## Basic function:
 1. Model provision/retrieve
 2. A/B Testing deployment.
 3. Model/AB Testing history presentation
@@ -13,7 +13,7 @@ Supporting the data interaction of AI model and A/B testing
 6. Hbase and Redis A/B Testing comparison
 
 
-# Tech stack:
+## Tech stack:
 Vue.js/axios/Node.js/Express/Hbase/MongoDB/Redis/Zookeeper
 
 ## Build Setup
