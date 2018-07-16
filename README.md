@@ -1,7 +1,7 @@
 # TanTan-AI-Web
 Supporting the data interaction of AI model and A/B testing
 
-> A Vue.js project for tantan AI team
+> A Vue.js project for tantan AI team</br>
 > Design doc: https://docs.google.com/document/d/18XbWuYrFeIcPgE_iGP4FRaOEThqUDplCbOMUl0FZNXw/edit
 
 # Basic function:
