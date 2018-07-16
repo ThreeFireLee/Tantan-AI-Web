@@ -1,31 +1,45 @@
 let express = require('express');
 let router = express.Router();
 let redis   = require('redis');
+let redisIO = require('ioredis');
 let path = require('path');
 let formidable = require('formidable');
 let fs = require('fs');
 
 //retry 3 times when cache work not well
-let client = redis.createClient('4379', '127.0.0.1', {
-  retry_strategy: function (options) {
-    if (options.error && options.error.code === 'ECONNREFUSED') {
-      // End reconnecting on a specific error and flush all commands with
-      // a individual error
-      return new Error('The server refused the connection');
-    }
-    if (options.total_retry_time > 1000 * 60 * 60) {
-      // End reconnecting after a specific timeout and flush all commands
-      // with a individual error
-      return new Error('Retry time exhausted');
-    }
-    if (options.attempt > 10) {
-      // End reconnecting with built in error
-      return undefined;
-    }
-    // reconnect after
-    return Math.min(options.attempt * 100, 3000);
+// let client = redis.createClient('4379', '127.0.0.1', {
+//   retry_strategy: function (options) {
+//     if (options.error && options.error.code === 'ECONNREFUSED') {
+//       // End reconnecting on a specific error and flush all commands with
+//       // a individual error
+//       return new Error('The server refused the connection');
+//     }
+//     if (options.total_retry_time > 1000 * 60 * 60) {
+//       // End reconnecting after a specific timeout and flush all commands
+//       // with a individual error
+//       return new Error('Retry time exhausted');
+//     }
+//     if (options.attempt > 10) {
+//       // End reconnecting with built in error
+//       return undefined;
+//     }
+//     // reconnect after
+//     return Math.min(options.attempt * 100, 3000);
+//   }
+// });
+
+
+let cluster = new redisIO({
+  port: 8379,
+  host: '127.0.0.1',
+  password: 'redis-ms.user',
+  retryStrategy: function (times) {
+    var delay = Math.min(times * 50, 2000);
+    return delay;
   }
 });
+
+
 
 router.get('/', function(req, res, next) {
   res.send('this is our redis parser');
@@ -45,8 +59,6 @@ router.post('/redisModelFile', function(req, res){
   form.uploadDir = path.join(__dirname, './../models/ModelUploadPro');
 
   form.parse(req, function (err, fields, files) {
-
-    // console.log(fields.hbaseTablePut);//这里就是post的XXX 的数据
 
     fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
@@ -72,13 +84,13 @@ router.post('/redisModelFile', function(req, res){
       // console.log(obj);
 
 
-      client.on("error", function (err) {
+      cluster.on("error", function (err) {
         console.log("Error " + err);
       });
 
       console.log('105_' + fields.rowKeyPutPro);
 
-      client.get("105_" + fields.rowKeyPutPro,function(err,response){
+      cluster.get("105_" + fields.rowKeyPutPro,function(err,response){
         // console.log(err,response);
 
       if(response != null){
@@ -90,19 +102,24 @@ router.post('/redisModelFile', function(req, res){
       }else {
 
         //Insert to redis
-        client.set('105_' + fields.rowKeyPutPro, JSON.stringify(obj), redis.print);//set "key" "val"
+        cluster.set('105_' + fields.rowKeyPutPro, JSON.stringify(obj))
+                .then(function (result) {
+                  console.log(result);
+                  if(result){
+                    cluster.quit();
+                    res.json({
+                      status: '0',
+                      msg: '',
+                    });
+                  }else{
+                    cluster.quit();
+                    res.json({
+                      status:'1',
+                      msg:'',
+                    });
+                  }
+        });//set "key" "val"
 
-        if (redis.print) {
-          res.json({
-            status: '0',
-            msg: '',
-          });
-        } else {
-          res.json({
-            status: '3',
-            msg: '',
-          });
-        }
       }
       });
     });
@@ -121,13 +138,13 @@ router.post('/redisModelTyping', function(req, res){
 
   form.parse(req, function (err, fields) {
 
-    client.on("error", function (err) {
+    cluster.on("error", function (err) {
       console.log("Error " + err);
     });
 
 
 
-    client.get("105_" + fields.rowKeyPutPro2,function(err,response){
+    cluster.get("105_" + fields.rowKeyPutPro2,function(err,response){
       // console.log(err,response);
 
       if(response != null){
@@ -139,7 +156,7 @@ router.post('/redisModelTyping', function(req, res){
       }else {
 
         //Insert to redis
-        client.set('105_' + fields.rowKeyPutPro2, fields.jsonInputPro, redis.print);//set "key" "val"
+        cluster.set('105_' + fields.rowKeyPutPro2, fields.jsonInputPro);//set "key" "val"
 
         if (redis.print) {
           res.json({
@@ -190,12 +207,12 @@ router.post('/redisABtest', function(req, res){
     finalData = JSON.stringify(finalData);
     // console.log(finalData);
 
-    client.on("error", function (err) {
+    cluster.on("error", function (err) {
       console.log("Error " + err);
     });
 
     //Insert to redis
-    client.set('106_' + fields.rowKeyPut3, finalData, redis.print);//set "key" "val"
+    cluster.set('106_' + fields.rowKeyPut3, finalData);//set "key" "val"
     console.log(redis.print);
 
     if(redis.print){
@@ -222,12 +239,12 @@ router.post('/redisABSearch', function(req, res){
 
     let redisKey = req.body.rowKey;
 
-    client.on("error", function (err) {
+    cluster.on("error", function (err) {
       console.log("Error " + err);
     });
 
     //get from redis
-      client.get("106_" + redisKey,function(err,response){
+      cluster.get("106_" + redisKey,function(err,response){
           console.log(err,response); //will print lee
 
     if(response != null){

@@ -79,9 +79,9 @@ router.post('/upload', function(req, res){
        client.table(fields.hbaseTablePutPro)
              .row(fields.rowKeyPutPro)
              .put(fields.colFamilyPutPro + ':model', JSON.stringify(obj), function(err, success) {//JSON.stringify(obj)
-               this.get(fields.colFamilyPutPro, function (err, cells) {
-                 this.exists(function (err, exists) {
-                   assert.ok(exists);
+               // this.get(fields.colFamilyPutPro, function (err, cells) {
+               //   this.exists(function (err, exists) {
+               //     assert.ok(exists);
                    console.log(success);
                    if(success === true) {
 
@@ -108,8 +108,8 @@ router.post('/upload', function(req, res){
                      });
                    }
 
-                 });
-               });
+               //   });
+               // });
              });
      }
    });

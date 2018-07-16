@@ -2,20 +2,29 @@ let express = require('express');
 let router = express.Router();
 let redis   = require('redis');
 let redisIO = require('ioredis');
-let RedisClustr = require('redis-clustr');
 let path = require('path');
 let formidable = require('formidable');
 let fs = require('fs');
 
 
- // let cluster = new redisIO({port: 4380, host: '127.0.0.1'});
-var cluster = new redisIO.Cluster([{
-  port: 4379,
-  host: '127.0.0.1'
-}, {
-  port: 4380,
-  host: '127.0.0.1'
-}]);
+let cluster = new redisIO({
+    port: 8379,
+    host: '127.0.0.1',
+    password: 'redis-ms.user',
+    retryStrategy: function (times) {
+    var delay = Math.min(times * 50, 2000);
+    return delay;
+  }
+  });
+// let cluster = new redisIO.Cluster([{
+//   port: 8379,
+//   host: '127.0.0.1'
+//   // password: 'redis-ms.user'
+// }, {
+//   port: 8380,
+//   host: '127.0.0.1'
+//   // password: 'redis-ms.user'
+// }]);
 //retry 3 times when cache work not well
 // let cluster = redis.createClient('6379', '127.0.0.1', {
 //   retry_strategy: function (options) {
@@ -37,20 +46,7 @@ var cluster = new redisIO.Cluster([{
 //     return Math.min(options.attempt * 100, 3000);
 //   }
 // });
-//
-// let client = new RedisClustr({
-//   servers: [
-//     {
-//       host: '127.0.0.1',
-//       port: 4379
-//     }
-//   ]
-//   // slaves: 'share',
-//   // createClient: function(port, host) {
-//   //   // this is the default behaviour
-//   //   return redis.createClient(port, host);
-//   // }
-// });
+
 
 
 
@@ -75,8 +71,6 @@ router.post('/redisModel', function(req, res){
 
   form.parse(req, function (err, fields, files) {
 
-    // console.log(fields.hbaseTablePut);//这里就是post的XXX 的数据
-
     fs.readFile(files.file.path, 'utf8', (err, data) => {
       if (err) {
         console.log(err);
@@ -100,28 +94,31 @@ router.post('/redisModel', function(req, res){
       let obj = JSON.parse(data);
       // console.log(obj);
 
-      client.on("error", function (err) {
+      cluster.on("error", function (err) {
         console.log("Error " + err);
       });
 
       console.log(fields.rowKeyPut);
 
       //Insert to redis
-      client.set('105_' + fields.rowKeyPut, JSON.stringify(obj), redis.print);//set "key" "val"
-      console.log(redis.print);
+      cluster.set('105_' + fields.rowKeyPut, JSON.stringify(obj))
+        .then(function (result) {
+          console.log(result);
+          if(result){
+            cluster.quit();
+            res.json({
+              status: '0',
+              msg: '',
+            });
+          }else{
+            cluster.quit();
+            res.json({
+              status:'1',
+              msg:'',
+            });
+          }
+        });//set "key" "val"
 
-
-      if(redis.print){
-        res.json({
-          status: '0',
-          msg: '',
-        });
-      }else{
-        res.json({
-          status:'1',
-          msg:'',
-        });
-      }
 
 
     });
@@ -141,66 +138,33 @@ router.post('/redisModelTyping', function(req, res){
   form.parse(req, function (err, fields){
 
         //
-        // cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput,cluster.print);
-        // cluster.get('105_' + fields.rowKeyPut2, function (err, result) {
-        //   console.log(result);
-        // });
+        cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput)
+                .then(function (result) {
+                  console.log(result);
+                    if(result){
+                      cluster.quit();
+                      res.json({
+                        status: '0',
+                        msg: '',
+                      });
+                    }else{
+                      cluster.quit();
+                      res.json({
+                        status:'1',
+                        msg:'',
+                      });
+                    }
+                });
 
-    cluster.set('foos2', 'bar2');
-    cluster.get('foos2', function (err, result) {
-      console.log(result);
-    });
-
-
+        cluster.get('105_' + fields.rowKeyPut2, function (err, result) {
+          console.log(result);
+        });
 
     cluster.on("error", function (err) {
         console.log("Error " + err);
       });
 
-      //Insert to redis
-      // cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput, redis.print);//set "key" "val"
-      // cluster.set('105_' + fields.rowKeyPut2, fields.jsonInput).then(function (result) {
-      //   console.log('funciton done');
-      //   if(redis.print){
-      //     res.json({
-      //       status: '0',
-      //       msg: '',
-      //     });
-      //   }else{
-      //     res.json({
-      //       status:'1',
-      //       msg:'',
-      //     });
-      //   }
-      //   }
-      // );
-
     // cluster.disconnect();
-
-
-    // cluster.get('105_' + fields.rowKeyPut2).then(function (result) {
-    //     console.log(result);
-    //     if(result != null) {
-    //       res.json({
-    //         status: '0',
-    //         msg: '',
-    //       });
-    //     }
-    //   });
-
-
-      if(cluster.print){
-        cluster.quit();
-        res.json({
-          status: '0',
-          msg: '',
-        });
-      }else{
-        res.json({
-          status:'1',
-          msg:'',
-        });
-      }
 
 
   });
@@ -238,24 +202,28 @@ router.post('/redisABtest', function(req, res){
      finalData = JSON.stringify(finalData);
     // console.log(finalData);
 
-    client.on("error", function (err) {
+    cluster.on("error", function (err) {
       console.log("Error " + err);
     });
 
     //Insert to redis
-    // client.set('106_' + fields.rowKeyPut3, finalData, redis.print);//set "key" "val"
-    // redis.disconnect();
-    if(redis.print){
-      res.json({
-        status: '0',
-        msg: '',
-      });
-      }else{
-        res.json({
-          status:'1',
-          msg:'',
-        });
-    }
+     cluster.set('106_' + fields.rowKeyPut3, finalData).then(
+       function (result) {
+         console.log(result);
+         // cluster.disconnect();
+         if(result){
+           res.json({
+             status: '0',
+             msg: '',
+           });
+         }else{
+           res.json({
+             status:'1',
+             msg:'',
+           });
+         }
+       }
+     );//set "key" "val"
 
 
   });
