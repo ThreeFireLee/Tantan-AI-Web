@@ -96,7 +96,7 @@
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 40]"
                 :page-size="pagesize"
-                style="padding: 15px 0 50px 550px"
+                style="padding: 15px 0 50px 470px"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="tableData.length">
               </el-pagination>

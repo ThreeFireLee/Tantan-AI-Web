@@ -436,6 +436,7 @@
               let formData1 = new FormData();
 
               // let resTest = JSON.stringify(res);
+              formData1.append('operator_name', this.operator_name);
               formData1.append('rowKeyPut2', this.rowKeyPro);
               formData1.append('rstStage', rstShow);
               axios.post("/parser/uploadFromPtoS", formData1
