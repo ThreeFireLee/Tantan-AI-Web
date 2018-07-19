@@ -71,7 +71,7 @@
                       <!--&nbsp-->
               <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
               <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
-              <button v-on:click="submitJson($event)" class="btn-3 button-primary">Json Provision</button>
+              <button v-on:click="submitJson($event)" class="btn-3 button-primary">Stage Provision</button>
             </div>
             </form>
 
@@ -240,7 +240,7 @@
             axios.all([
 
               axios.post("/parser/upload", formData,config),
-              axios.post("/redisParser/redisModel", formData, config)
+              // axios.post("/redisParser/redisModel", formData, config)
 
             ]).then(axios.spread((hbaseRst, RedisRst)=>{
               let res1 = hbaseRst.data;
@@ -366,7 +366,7 @@
             // redisModelTyping
             axios.all([
               axios.post("/parser/uploadHbase", formData,config),
-              axios.post("/redisParser/redisModelTyping", formData, config)
+              // axios.post("/redisParser/redisModelTyping", formData, config)
             ]).then(axios.spread((hbaseRst, RedisRst)=>{
               let res1 = hbaseRst.data;
               let res2 = RedisRst.data;

@@ -142,39 +142,37 @@ router.post('/uploadHbase', function(req, res){
   let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields) {
 
-    // console.log(fields);//这里就是post的XXX 的数据
-
       //Insert to hbase
-      // client.table(fields.hbaseTablePut2)
-      //       .row(fields.rowKeyPut2)
-      //       .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
-      //         console.log('insert with json columns');
-      //         console.log(success);
-      //       if(success === true) {
-      //         let time = new Date();   // 程序计时的月从0开始取值后+1
-      //         let m = time.getMonth() + 1;
-      //         let t = time.getFullYear() + "-" + m + "-"
-      //           + time.getDate() + " " + time.getHours() + ":"
-      //           + time.getMinutes() + ":" + time.getSeconds();
-      //         let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
-      //                             <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
-      //                             <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
-      //                             <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
-      //                             <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
-      //         sendEmail('(Stage Model)' + fields.rowKeyPut2,emailContent);
-      //         res.json({
-      //           status: '0',
-      //           msg: '',
-      //         });
-      //       }else{
-      //         res.json({
-      //           status:'1',
-      //           msg:'',
-      //         });
-      //       }
-      //
-      //
-      //       });
+      client.table(fields.hbaseTablePut2)
+            .row(fields.rowKeyPut2)
+            .put(fields.colFamilyPut2 + ':model', fields.jsonInput, function(err, success) {
+              console.log('insert with json columns');
+              console.log(success);
+            if(success === true) {
+              let time = new Date();   // 程序计时的月从0开始取值后+1
+              let m = time.getMonth() + 1;
+              let t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+              let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                  <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                  <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
+                                  <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
+                                  <p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>`
+              sendEmail('(Stage Model)' + fields.rowKeyPut2,emailContent);
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+
+
+            });
     res.json({
                 status: '0',
                 msg: '',
@@ -185,6 +183,50 @@ router.post('/uploadHbase', function(req, res){
 
 });
 
+/*
+   Submit from production mode to stage mode
+ */
+router.post('/uploadFromPtoS', function(req, res){
+
+  let form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields) {
+
+    //Insert to hbase
+    client.table('mods_model_storage')
+      .row(fields.rowKeyPut2)
+      .put('f' + ':model', fields.rstStage, function(err, success) {
+        console.log('insert with json columns');
+        console.log(success);
+        if(success === true) {
+          let time = new Date();   // 程序计时的月从0开始取值后+1
+          let m = time.getMonth() + 1;
+          let t = time.getFullYear() + "-" + m + "-"
+            + time.getDate() + " " + time.getHours() + ":"
+            + time.getMinutes() + ":" + time.getSeconds();
+          let emailContent = `<p><span style="font-weight: bolder">Provision Time:&nbsp&nbsp</span>${t}</p>
+                                  <p><span style="font-weight: bolder">Operator:&nbsp&nbsp</span>${fields.operator_name}</p>
+                                  <p><span style="font-weight: bolder">Submission: &nbsp&nbsp</span>front-end entered</p>
+                                  <p><span style="font-weight: bolder">Model Id:&nbsp&nbsp</span>${fields.rowKeyPut2}</p>
+                                  <!--<p><span style="font-weight: bolder">Model Content:&nbsp&nbsp</span>${fields.jsonInput}</p>-->`
+          sendEmail('(Model Production to Stage) ' + fields.rowKeyPut2,emailContent);
+          res.json({
+            status: '0',
+            msg: '',
+          });
+        }else{
+          res.json({
+            status:'1',
+            msg:'',
+          });
+        }
+
+
+      });
+
+  });
+
+
+});
 
 
 /*

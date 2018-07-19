@@ -568,7 +568,7 @@
           axios.all([
 
             axios.post("/parserPro/uploadABtest", formData,config),
-            axios.post("/redisParserPro/redisABtest", formData, config)
+            // axios.post("/redisParserPro/redisABtest", formData, config)
 
           ]).then(axios.spread((hbaseRst, RedisRst)=>{
             let res1 = hbaseRst.data;
@@ -783,7 +783,7 @@
         axios.all([
 
           axios.post("/parser/uploadABtest", formData,config),
-          axios.post("/redisParser/redisABtest", formData, config)
+          // axios.post("/redisParser/redisABtest", formData, config)
 
         ])
         .then(axios.spread((hbaseRst, RedisRst)=>{

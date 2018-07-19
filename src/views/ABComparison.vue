@@ -76,50 +76,50 @@
     },
     methods:{
 
-      searchBoth(event){
-        event.preventDefault();
-
-        axios.all([
-          axios.post("/parser/hbaseABRetrieve",
-            {
-              rowKey:this.rowKey,
-              hbaseTable: this.hbaseTable,
-              colFamily: this.colFamily
-            },
-
-          ),
-          axios.post("/redisParserPro/redisABSearch",
-            {
-              rowKey:this.rowKey
-            }
-          )
-        ]).then(axios.spread((hbaseRes, redisRes) =>{
-      let res1 = hbaseRes.data;
-      let res2 = redisRes.data;
-      if(res1.status == 0) {
-        let initialRst = res1.result.ABRst;
-        this.hbaseRst = JSON.parse(initialRst);
-
-      }else{
-        this.$message.error('注意，hbase内无此row key！');
-        this.hbaseRst = "null";
-      }
-          if(res2.status == 0) {
-            //content is the redis version json since it has one more key and version
-            let initialRst = res2.result;
-            initialRst = JSON.parse(initialRst);
-            this.redisRst = initialRst.content;
-
-          }else{
-            this.$message.error('注意，Redis内无此row key！');
-            this.redisRst = "null";
-          }
-
-
-    })).catch(function(){
-          console.log('FAILURE!!');
-        });;
-      }
+    //   searchBoth(event){
+    //     event.preventDefault();
+    //
+    //     axios.all([
+    //       axios.post("/parser/hbaseABRetrieve",
+    //         {
+    //           rowKey:this.rowKey,
+    //           hbaseTable: this.hbaseTable,
+    //           colFamily: this.colFamily
+    //         },
+    //
+    //       ),
+    //       axios.post("/redisParserPro/redisABSearch",
+    //         {
+    //           rowKey:this.rowKey
+    //         }
+    //       )
+    //     ]).then(axios.spread((hbaseRes, redisRes) =>{
+    //   let res1 = hbaseRes.data;
+    //   let res2 = redisRes.data;
+    //   if(res1.status == 0) {
+    //     let initialRst = res1.result.ABRst;
+    //     this.hbaseRst = JSON.parse(initialRst);
+    //
+    //   }else{
+    //     this.$message.error('注意，hbase内无此row key！');
+    //     this.hbaseRst = "null";
+    //   }
+    //       if(res2.status == 0) {
+    //         //content is the redis version json since it has one more key and version
+    //         let initialRst = res2.result;
+    //         initialRst = JSON.parse(initialRst);
+    //         this.redisRst = initialRst.content;
+    //
+    //       }else{
+    //         this.$message.error('注意，Redis内无此row key！');
+    //         this.redisRst = "null";
+    //       }
+    //
+    //
+    // })).catch(function(){
+    //       console.log('FAILURE!!');
+    //     });;
+    //   }
 
     }
 

@@ -41,9 +41,12 @@
                   placeholder="Default value here"
                   v-model="colFamilyPro"
                   :disabled="true"
-                  style="width:250px"
+                  style="width:145px"
                   class="col-family-css">
                 </el-input>
+                <el-tooltip class="item" effect="dark" content="Stage Provision" placement="bottom">
+                <el-button type="primary"  v-on:click="submitStage($event)">Stage<i class="el-icon-upload el-icon--right"></i></el-button>
+                </el-tooltip>
                 <br>
                 <label class="the-submit">
                   <br>
@@ -67,7 +70,9 @@
                 <!--&nbsp-->
                 <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
                 <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
+                <el-tooltip class="item" effect="dark" content="Production Provision" placement="bottom">
                 <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision</button>
+                </el-tooltip>
               </div>
             </form>
 
@@ -225,7 +230,7 @@
         axios.all([
 
           axios.post("/parserPro/upload", formData,config),
-          axios.post("/redisParserPro/redisModelFile", formData, config)
+          // axios.post("/redisParserPro/redisModelFile", formData, config)
 
         ]).then(axios.spread((hbaseRst, RedisRst)=>{
           let res1 = hbaseRst.data;
@@ -346,7 +351,7 @@
 
         axios.all([
           axios.post("/parserPro/uploadHbase", formData, config),
-          axios.post("/redisParserPro/redisModelTyping", formData, config)
+          // axios.post("/redisParserPro/redisModelTyping", formData, config)
         ]).then(axios.spread((hbaseRst, RedisRst)=>{
           let res1 = hbaseRst.data;
           let res2 = RedisRst.data;
@@ -391,6 +396,76 @@
             console.log('FAILURE!!');
           });
       },
+
+      //submit current model in production to stage version
+      submitStage(event){
+        event.preventDefault();
+        if(this.operator_namePro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+
+        axios.post("/parserPro/hbase",
+          {
+            hbaseTablePro:this.hbaseTablePro,
+            rowKeyPro:this.rowKeyPro,
+            colFamilyPro:this.colFamilyPro
+          },
+
+        ).then(rst =>{
+          let res = rst.data;
+          if(res.status == 0) {
+            let rstShow = res.result.hbaseRst;
+            this.$confirm( '确定提交到Stage？', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(() => {
+
+              let formData1 = new FormData();
+
+              // let resTest = JSON.stringify(res);
+              formData1.append('rowKeyPut2', this.rowKeyPro);
+              formData1.append('rstStage', rstShow);
+              axios.post("/parser/uploadFromPtoS", formData1
+              ).then(rst2 =>{
+                let res2 = rst2.data;
+                if(res2.status == 0){
+                  this.$notify({
+                    title: '提交成功',
+                    message: '数据已提交到Stage',
+                    type: 'success'
+                  });
+                }else {
+                  this.$notify.error({
+                    title: '提交失败',
+                    message: '数据未提交到Stage'
+                  });
+                }
+              })
+
+            })
+          }else{
+            this.$message.error('错误，无此model id！');
+          }
+
+        });
+
+
+      },
+
+
       showFilterPop(){
         this.filterBy = true;
         this.overLayFlag = true;
