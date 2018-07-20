@@ -49,6 +49,7 @@
               <label class="the-submit">
                 <br>
                 <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
+                
               </label>
 
 
@@ -240,7 +241,7 @@
             axios.all([
 
               axios.post("/parser/upload", formData,config),
-              // axios.post("/redisParser/redisModel", formData, config)
+              axios.post("/redisParser/redisModel", formData, config)
 
             ]).then(axios.spread((hbaseRst, RedisRst)=>{
               let res1 = hbaseRst.data;

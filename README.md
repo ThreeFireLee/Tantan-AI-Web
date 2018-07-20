@@ -22,9 +22,6 @@ Vue.js/axios/Node.js/Express/Hbase/MongoDB/Redis/Zookeeper
 # install dependencies
 npm install
 
-#mongo DB start
-mongod -f /usr/local/etc/mongod.conf
-
 # serve with hot reload at localhost:8024
 npm run dev
 
@@ -36,6 +33,9 @@ npm run build
 
 # build for production and view the bundle analyzer report(optional)
 npm run build --report
+
+# mongo DB start（No need but mongoDB acceptable）
+mongod -f /usr/local/etc/mongod.conf
 ```
 
 For a detailed explanation on how vue work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

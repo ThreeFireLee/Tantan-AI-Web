@@ -11,9 +11,6 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/goods':{
-          target:'http://localhost:3000'
-      },
       '/historyScan/*':{
           target:'http://localhost:3000'
       },
@@ -28,9 +25,6 @@ module.exports = {
       },
       '/redisParserPro/*':{
         target:'http://localhost:3000'
-      },
-      '/users/*':{
-          target:'http://localhost:3000'
       }
 
     },

@@ -9,8 +9,6 @@ var logger = require('morgan');
 var app = express();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var goodsRouter = require('./routes/goods');
 var parserRouter = require('./routes/parser');
 var parserProRouter = require('./routes/parserPro');
 var redisParserRouter = require('./routes/redisParser');
@@ -35,8 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/goods', goodsRouter);
 app.use('/parser', parserRouter);
 app.use('/parserPro', parserProRouter);
 app.use('/redisParser', redisParserRouter);
