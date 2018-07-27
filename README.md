@@ -31,11 +31,10 @@ node server/bin/www
 # build for production with minification(optional)
 npm run build
 
-# build for production and view the bundle analyzer report(optional)
-npm run build --report
-
 # mongo DB start（No need but mongoDB acceptable）
 mongod -f /usr/local/etc/mongod.conf
 ```
 
+
 For a detailed explanation on how vue work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+For a detailed explanation on how node work, check out the [guide](https://nodejs.org/dist/latest-v10.x/docs/api/)

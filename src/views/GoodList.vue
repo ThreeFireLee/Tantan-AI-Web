@@ -49,7 +49,7 @@
               <label class="the-submit">
                 <br>
                 <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
-                
+
               </label>
 
 
@@ -90,6 +90,7 @@
               </el-dialog>
 
               <div class="show-hbase-data">
+                <!--used as the ab test json typing-->
                 <!--<el-input-->
                   <!--type="textarea"-->
                   <!--:autosize="{ minRows: 8}"-->
@@ -151,17 +152,6 @@
             this.getGoodList();
     },
         methods: {
-          getGoodList(){
-            axios.get("/goods").then(result =>{
-                var res = result.data;
-              if(res.status == "0"){
-                this.goodList = res.result.list;
-              }else{
-                this.goodList = [];
-              }
-            });
-          },
-
 
           //retrieve data from hbase
           onSubmit(event) {

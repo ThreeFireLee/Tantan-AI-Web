@@ -1,3 +1,9 @@
+/**
+ * @author Yan Li
+ * @company tantan
+ * @Description:
+ */
+
 const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
   //service: '163',
