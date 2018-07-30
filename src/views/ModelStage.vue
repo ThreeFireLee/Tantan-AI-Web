@@ -231,39 +231,41 @@
               // axios.post("/redisParser/redisModel", formData, config)
 
             ]).then(axios.spread((hbaseRst, RedisRst)=>{
-              let res1 = hbaseRst.data;
-              let res2 = RedisRst.data;
-              if(res1.status == 0){
-                this.$notify({
-                  title: '提交成功',
-                  message: 'Hbase写入成功',
-                  type: 'success'
-                });
-              }else if(res1.status == 1 || res1.status == 2){
-                this.$notify.error({
-                  title: '提交失败',
-                  message: 'Hbase写入失败'
-                });
-              }
+                let res1 = hbaseRst.data;
+                let res2 = RedisRst.data;
+                if (res1.status == 0) {
+                  this.$notify({
+                    title: '提交成功',
+                    message: 'Hbase写入成功',
+                    type: 'success'
+                  });
+                } else if (res1.status == 1 || res1.status == 2) {
+                  this.$notify.error({
+                    title: '提交失败',
+                    message: 'Hbase写入失败'
+                  });
+                }
 
-              if(res2.status == 0){
-                this.$notify({
-                  title: '提交成功',
-                  message: 'Redis写入成功',
-                  type: 'success',
-                  offset: 70
-                });
-              }else if(res2.status == 1 || res2.status == 2){
-                this.$notify.error({
-                  title: '提交失败',
-                  message: 'Redis写入失败',
-                  offset: 70
-                });
-              }
+                if(res2.status == 0){
+                  this.$notify({
+                    title: '提交成功',
+                    message: 'Redis写入成功',
+                    type: 'success',
+                    offset: 70
+                  });
+                }else if(res2.status == 1 || res2.status == 2){
+                  this.$notify.error({
+                    title: '提交失败',
+                    message: 'Redis写入失败',
+                    offset: 70
+                  });
+                }
 
-              console.log(res1);
-              console.log('Success! From node.js');
-            }))
+                console.log(res1);
+                console.log('Success! From node.js');
+              }))
+
+
               .catch(function(){
                       console.log('FAILURE!!');
                     });

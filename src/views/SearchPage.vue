@@ -121,7 +121,7 @@
           },
 
         ).then(rst =>{
-          var res = rst.data;
+          let res = rst.data;
           if(res.status == 0) {
             this.treatSeg = res.result.treatment_el;
             this.dialogVisible = true;

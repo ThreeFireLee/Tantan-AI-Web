@@ -14,7 +14,7 @@ let fs = require('fs');
 let assert = require('assert');
 let hbase = require('hbase');
 let config = require('../config/config');
-let sendEmail = require('./send-email.js');
+let sendEmail = require('./stage-send-email.js');
 
 // var multiparty = require('multiparty');
 

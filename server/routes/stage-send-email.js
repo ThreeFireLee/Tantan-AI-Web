@@ -19,7 +19,7 @@ const transport = nodemailer.createTransport({
 module.exports = function sendEmail(subject, message) {
   const mailOptions = {
     from: 'ai-operations@p1.com',
-    to:'liumeng@p1.com',
+    to:'liyan@p1.com',
     // to:'ai@p1.com',
     subject,
     html: message,

@@ -13,6 +13,9 @@ let formidable = require('formidable');
 let fs = require('fs');
 let config = require('../config/config');
 
+
+
+//not used
 //retry 3 times when cache work not well
 // let client = redis.createClient('4379', '127.0.0.1', {
 //   retry_strategy: function (options) {
@@ -36,15 +39,15 @@ let config = require('../config/config');
 // });
 
 
-let cluster = new redisIO({
-  port: config.redis_production_port,
-  host: config.redis_production_host,
-  password: config.redis_production_password,
-  retryStrategy: function (times) {
-    let delay = Math.min(times * 50, 2000);
-    return delay;
-  }
-});
+// let cluster = new redisIO({
+//   port: config.redis_production_port,
+//   host: config.redis_production_host,
+//   password: config.redis_production_password,
+//   retryStrategy: function (times) {
+//     let delay = Math.min(times * 50, 2000);
+//     return delay;
+//   }
+// });
 
 
 
