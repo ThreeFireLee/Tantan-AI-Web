@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"treatment_store","colFamilyPut3":"f","rowKeyPut3":"tantan-rec-male-mlc9990","experiment_name":"test","abtestData":"{\"experiment_name\":\"test\",\"experiment_id\":22222,\"hash_id\":\"222222\",\"whitelists\":[{\"user_ids\":[4],\"treatment\":\"adf\"}],\"ramp\":[{\"treatment\":\"1\",\"percentage\":100}]}","operator_name":"test"}

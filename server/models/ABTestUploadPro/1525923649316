@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"test","colFamilyPut3":"col","rowKeyPut3":"222","experiment_name":"tantan-rec-male-mlc0","abtestData":"{\"experiment_name\":\"tantan-rec-male-mlc0\",\"hash_id\":\"2222\",\"whitelists\":[{\"user_ids\":[20,20,10,10],\"treatment\":\"test1\"}],\"ramp\":[{\"treatment\":\"model_001_lr_like_mlc0\",\"percentage\":100}]}","operator_name":"","email_person":""}

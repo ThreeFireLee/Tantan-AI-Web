@@ -1,0 +1,68 @@
+{
+ 	"model_type": "LR"
+ 	"model_id": "mods_female_like_wo_weight_mlc0_123456",
+ 	"hbase_table_name": "mods_user_features",
+ 	"description": "This model is built for FEMALE with MLC type 0",
+	"feature_index_to_name_mapping": [
+		{"name": "1", "value": "age"},
+		{"name": "2", "value": "vip_status"},
+		{"name": "3", "value": "constellation"},
+		{"name": "4", "value": "city"}
+	],
+ 	"transformations": [
+ 		{
+ 			"name": "com.tantan.mods.l2.FeatureNameMappingProducer",
+ 			"description": "mapping feature indice to feature names"
+ 		}, {
+ 			"name": "com.tantan.mods.l2.FeatureCrossProducer",
+ 			"description": "x_vip_status",
+ 			"parameters": [
+ 				{
+ 					"name": "actorFeatureName",
+ 					"value": "vip_status"
+ 				}, {
+ 					"name": "receiverFeatureName",
+ 					"value": "vip_status"
+ 				}
+ 			]
+ 		}, {
+ 			"name": "com.tantan.mods.l2.FeatureCrossProducer",
+ 			"description": "x_constellation",
+ 			"parameters": [
+ 				{
+ 					"name": "actorFeatureName",
+ 					"value": "constellation"
+ 				}, {
+ 					"name": "receiverFeatureName",
+ 					"value": "constellation"
+ 				}
+ 			]
+ 		}, {
+ 			"name": "com.tantan.mods.l2.IsSameFeatureProducer",
+ 			"description": "is_same_city",
+ 			"parameters": [
+ 				{"name": "actorFeatureName", "value": "city"},
+ 				{"name": "receiverFeatureName", "value": "city"}
+ 			]
+ 		}
+ 	],
+ 	"weights": [
+ 		{
+ 			"description": "receiver_age",
+ 			"name": "age",
+ 			"value": 0.03
+ 		}, {
+ 			"description": "x_vip_status",
+ 			"name": "vip_status_vip_x_vip_status_ordinary",
+ 			"value": 0.2
+ 		}, {
+ 			"description": "x_constellation",
+ 			"name": "constellation_x_constellation_[pisces]_[virgo]",
+ 			"value": 0.07
+ 		}, {
+ 			"description": "is_same_city",
+ 			"name": "is_same_city",
+ 			"value": 0.4
+ 		}
+ 	]
+}

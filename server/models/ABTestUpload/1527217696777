@@ -1,0 +1,1 @@
+{"hbaseTablePut3":"test","colFamilyPut3":"f","rowKeyPut3":"1","experiment_name":"2","abtestData":"{\"experiment_name\":\"2\",\"experiment_id\":1,\"hash_id\":\"3\",\"whitelists\":[{\"user_ids\":[3],\"treatment\":\"3\"}],\"ramp\":[{\"treatment\":\"3\",\"percentage\":100}]}","operator_name":"1"}

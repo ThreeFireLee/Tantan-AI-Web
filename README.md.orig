@@ -1,0 +1,27 @@
+<<<<<<< HEAD
+# vue-project
+Side project support the data interaction of AI model and A/B testing with hbase
+
+> A Vue.js project
+
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# tantan-AI-Web
+Side project support the data interaction of AI model and A/B testing with hbase
+>>>>>>> 733a1dea06d0a38d78168c9f0d7ffe6ca5e6e157

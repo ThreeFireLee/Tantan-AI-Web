@@ -1,0 +1,358 @@
+<template>
+  <div>
+    <nav-header></nav-header>
+    <nav-bread-crumb>
+      <span>Model Production</span>
+    </nav-bread-crumb>
+    <div class="accessory-result-page accessory-page">
+      <div>
+        <!--<div class="filter-nav">-->
+        <div>
+        </div>
+        <div class="accessory-result">
+          <side-nav></side-nav>
+
+          <!-- main operation panel -->
+          <div>
+            <form action="" method="post" enctype="multipart/form-data">
+
+              <div class="model-quarter-div">
+                <!--retrieve data from hbase-->
+                <!--<form action="" method="post" enctype="multipart/form-data">-->
+                <label>Operator: </label>
+                <input type="text" name="operator_namePro" id="operator_namePro" v-model="operator_namePro" placeholder="operator name"class="input-light operator-name">
+                <br><br>
+                <lable for="hbaseTablePro">Table Name:  </lable>
+                <!--<input type="text" name="hbaseTablePro" id="hbaseTablePro" v-model="hbaseTablePro" placeholder="Production Default here" class="txt input-light table-name-css">-->
+                <el-input
+                  placeholder="Default value here"
+                  v-model="hbaseTablePro"
+                  :disabled="true"
+                  style="width:250px; height:41px"
+                  class="table-name-css">
+                </el-input>
+                <br>
+                <lable for="rowKeyPro">Model Id: </lable>
+                <input type="text" name="rowKeyPro" id="rowKeyPro" v-model="rowKeyPro" placeholder="Your Key" class="txt input-light row-key-css" >
+                <br>
+                <lable for="colFamilyPro">Column Family:</lable>
+                <!--<input type="text" name="colFamilyPro" id="colFamilyPro" v-model="colFamilyPro" placeholder="Production Default here" class="txt input-light col-family-css">-->
+                <el-input
+                  placeholder="Default value here"
+                  v-model="colFamilyPro"
+                  :disabled="true"
+                  style="width:250px"
+                  class="col-family-css">
+                </el-input>
+                <br>
+                <label class="the-submit">
+                  <br>
+                  <input type="file" id="file" ref="file" v-on:change="handleFileUpload($event)">
+                </label>
+                <br><br>
+              </div>
+
+              <div class="model-quarter-div">
+                <br>
+                <!--2. upload with json input-->
+
+                <lable for="jsonInputPro" >Your Json/Text:</lable>
+                <br><br>
+                <textarea type="text" id="jsonInputPro" name="jsonInputPro" v-model="jsonInputPro" class="adjusted-textarea-size input-light"></textarea>
+                <br><br>
+              </div>
+
+
+              <div>
+                <!--&nbsp-->
+                <button type="primary" @click="onSubmit($event)" class="btn-2 button-primary">Retrieve</button>
+                <button v-on:click="submitFile($event)" class="btn-3 button-primary">File Provision</button>
+                <button v-on:click="submitJson($event)" class="btn-3 button-primary">Provision</button>
+              </div>
+            </form>
+
+            <div>
+              <el-dialog
+                title="Model Content"
+                :visible.sync="dialogVisible"
+                width="70%"
+              >
+                <vue-json-pretty :data="searchRst"></vue-json-pretty>
+                <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+              </span>
+              </el-dialog>
+              <div class="show-hbase-data">
+                <br>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+    <!--<nav-footer></nav-footer>-->
+  </div>
+</template>
+
+<script>
+  import './../assets/css/base.css'
+  import './../assets/css/product.css'
+  import './../assets/css/login.css'
+  import NavHeader from '@/components/NavHeader.vue'  // @ means src file
+  import VueJsonPretty from 'vue-json-pretty'
+  import NavBreadCrumb from '@/components/NavBread.vue'
+  import axios from 'axios'
+  import SideNav from "../components/SideNav";
+
+  export default {
+    data(){
+      return{
+        goodList:[],
+        dialogVisible:false,
+        operator_namePro:'',
+        hbaseTablePro:'mods_model_storage',
+        rowKeyPro:'',
+        colFamilyPro:'f',
+        file:'',
+        jsonInputPro: '',
+
+        searchRst:'',
+
+        operationChose:'model',
+        filterBy:false,
+        overLayFlag:false
+      }
+    },
+    components: {
+      NavHeader:NavHeader,
+      SideNav:SideNav,
+      NavBreadCrumb:NavBreadCrumb,
+      VueJsonPretty
+    },
+
+    methods: {
+
+      //retrieve data from hbase
+      onSubmit(event) {
+        event.preventDefault();
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+
+        axios.post("/parserPro/hbase",
+          {
+            hbaseTablePro:this.hbaseTablePro,
+            rowKeyPro:this.rowKeyPro,
+            colFamilyPro:this.colFamilyPro
+          },
+
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status == 0) {
+            this.dialogVisible = true;
+            let rstShow = res.result.hbaseRst;
+            this.searchRst = JSON.parse(rstShow);//都是parserPror内的参数，比如这里的result和habseRst
+            // this.searchRst = rstShow;
+          }else{
+            this.$message.error('错误，无此model id！');
+          }
+
+        });
+      },
+
+      //submit from the file
+      submitFile(event){
+        event.preventDefault();
+        if(this.operator_namePro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.file == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请选择提交文件！',
+            type: 'warning'
+          });
+          return false;
+        }
+
+
+        let formData = new FormData();
+        formData.append('operator_namePro', this.operator_namePro);
+        formData.append('hbaseTablePutPro', this.hbaseTablePro);
+        formData.append('rowKeyPutPro', this.rowKeyPro);
+        formData.append('colFamilyPutPro', this.colFamilyPro);
+
+        console.log(formData);
+        formData.append('file', this.file);
+
+
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+
+
+        axios.post("/parserPro/upload", formData, config
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status==2){
+            this.$message.error('错误，Model Id重复！');
+          }
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
+          if(res.status==1){
+            this.$message.error('错误，非正确json格式！');
+          }
+
+        }).catch(function(){
+
+            console.log('FAILURE!!');
+          });
+      },
+
+      handleFileUpload(event){
+        event.preventDefault();
+        this.file = this.$refs.file.files[0];
+        let file_name = this.file.name.toString();
+        // file_name = file_name.substring(0, file_name.indexOf('.'));
+        if(this.rowKeyPro == ""){
+          this.rowKeyPro = file_name;
+        }
+      },
+
+      //submit from typing
+      submitJson(event){
+        event.preventDefault();
+        if(this.rowKeyPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告,row key 不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.operator_namePro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 请填写操作人',
+            type: 'warning'
+          });
+          return false;
+        }
+        if(this.jsonInputPro == ""){
+          this.$message({
+            showClose: true,
+            message: '警告, 提交json内容不能为空！',
+            type: 'warning'
+          });
+          return false;
+        }
+
+        let formData = new FormData();
+        formData.append('hbaseTablePutPro2', this.hbaseTablePro);
+        formData.append('rowKeyPutPro2', this.rowKeyPro);
+        formData.append('colFamilyPutPro2', this.colFamilyPro);
+        formData.append('operator_namePro', this.operator_namePro);
+
+        let jsonTest = this.jsonInputPro;
+        //get rid of break line symbols
+        jsonTest = jsonTest.replace(/\ +/g,"");
+        jsonTest = jsonTest.replace(/\t/g,"");
+        jsonTest = jsonTest.replace(/\r\n/g,"");
+        jsonTest = jsonTest.replace(/\n/g,"");
+
+        //json format test
+        try
+        {
+          if (typeof JSON.parse(jsonTest) == "object") {
+            //formData.append('jsonInput', jsonTest);
+            console.log(jsonTest);
+          }
+        }
+        catch(err)
+        {
+          this.$message.error('错误，非正确json格式！' + err);
+          return false;//如果报错，则防止程序继续执行
+        }
+
+
+        formData.append('jsonInputPro', jsonTest);
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+
+
+        axios.post("/parserPro/uploadHbase", formData
+          ,config
+        ).then(rst =>{
+          var res = rst.data;
+          if(res.status==2){
+            this.$message.error('错误，Model Id重复！');
+          }
+          if(res.status == 0){
+            this.$notify({
+              title: '提交成功',
+              message: '数据已写入',
+              type: 'success'
+            });
+          }else if(res.status == 3){
+            this.$notify.error({
+              title: '提交失败',
+              message: '数据未写入'
+            });
+          }
+          console.log('Success! From node.js');
+        })
+          .catch(function(){
+            console.log('FAILURE!!');
+          });
+      },
+      showFilterPop(){
+        this.filterBy = true;
+        this.overLayFlag = true;
+      },
+      closePop(){
+        this.filterBy = false;
+        this.overLayFlag = false;
+      },
+
+
+
+
+    }
+
+
+  }
+
+</script>
+
+
