@@ -6,19 +6,20 @@
 
 let express = require('express');
 let router = express.Router();
-let redis   = require('redis');
+// let redis   = require('redis');
 let redisIO = require('ioredis');
 let path = require('path');
 let formidable = require('formidable');
 let fs = require('fs');
+let config = require('../config/config');
 
 
 let cluster = new redisIO({
-    port: 8379,
-    host: '127.0.0.1',
-    password: 'redis-ms.user',
+    port: config.redis_stage_port,
+    host: config.redis_stage_host,
+    password: config.redis_stage_password,
     retryStrategy: function (times) {
-    var delay = Math.min(times * 50, 2000);
+    let delay = Math.min(times * 50, 2000);
     return delay;
   }
   });

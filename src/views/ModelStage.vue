@@ -148,9 +148,6 @@
           NavBreadCrumb:NavBreadCrumb,
           VueJsonPretty
         },
-        mounted: function(){
-            this.getGoodList();
-    },
         methods: {
 
           //retrieve data from hbase
@@ -231,7 +228,7 @@
             axios.all([
 
               axios.post("/parser/upload", formData,config),
-              axios.post("/redisParser/redisModel", formData, config)
+              // axios.post("/redisParser/redisModel", formData, config)
 
             ]).then(axios.spread((hbaseRst, RedisRst)=>{
               let res1 = hbaseRst.data;

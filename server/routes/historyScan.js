@@ -6,19 +6,15 @@
 
 let express = require('express');
 let router = express.Router();
-let path = require('path');
-let formidable = require('formidable');
-let fs = require('fs');
-let assert = require('assert');
 // let md5 = require('js-md5');
 let hbase = require('hbase');
 let bigInt = require("big-integer");
-var crypto = require('crypto');
-
+let crypto = require('crypto');
+let config = require('../config/config');
 
 let client = hbase({
-  host:'localhost',
-  port:8010
+  host: config.production_host,
+  port:config.production_port
 });
 
 router.get('/', function(req, res, next) {
@@ -205,6 +201,7 @@ router.post("/ABTestUserId", function (req,res,next) {
 
         let max_md5 = bigInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
         console.log(max_md5);
+
         let rst = bigInt(digest,16).times(TEN_K_DIVIDER).divide(max_md5) / 10.0;
 
         console.log(rst);

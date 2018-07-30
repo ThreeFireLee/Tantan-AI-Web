@@ -13,13 +13,14 @@ let formidable = require('formidable');
 let fs = require('fs');
 let assert = require('assert');
 let hbase = require('hbase');
-let sendEmail = require('./stage-send-email.js');
+let config = require('../config/config');
+let sendEmail = require('./send-email.js');
 
 // var multiparty = require('multiparty');
 
 var client = hbase({
-  host:'localhost',
-  port:8010
+  host: config.production_host,
+  port: config.production_port
  });
 
 router.get('/', function(req, res, next) {

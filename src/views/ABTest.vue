@@ -190,6 +190,7 @@
 
       }
     },
+
     components: {
       SideNav:SideNav,
       NavHeader:NavHeader,
@@ -315,6 +316,7 @@
         });
       },
 
+      //submit ab test with json directly, currently not in use!
       submitABwithJson(event){
         event.preventDefault();
         if(this.abtest1.abtestCore.row_key == ""){
@@ -782,8 +784,8 @@
 
         axios.all([
 
-          axios.post("/parser/uploadABtest", formData,config),
-          // axios.post("/redisParser/redisABtest", formData, config)
+          axios.post("/parser/uploadABtest", formData,config),  //to hbase
+          // axios.post("/redisParser/redisABtest", formData, config) //to redis
 
         ])
         .then(axios.spread((hbaseRst, RedisRst)=>{

@@ -6,11 +6,12 @@
 
 let express = require('express');
 let router = express.Router();
-let redis   = require('redis');
+// let redis   = require('redis');
 let redisIO = require('ioredis');
 let path = require('path');
 let formidable = require('formidable');
 let fs = require('fs');
+let config = require('../config/config');
 
 //retry 3 times when cache work not well
 // let client = redis.createClient('4379', '127.0.0.1', {
@@ -36,11 +37,11 @@ let fs = require('fs');
 
 
 let cluster = new redisIO({
-  port: 8379,
-  host: '127.0.0.1',
-  password: 'redis-ms.user',
+  port: config.redis_production_port,
+  host: config.redis_production_host,
+  password: config.redis_production_password,
   retryStrategy: function (times) {
-    var delay = Math.min(times * 50, 2000);
+    let delay = Math.min(times * 50, 2000);
     return delay;
   }
 });
@@ -162,19 +163,23 @@ router.post('/redisModelTyping', function(req, res){
       }else {
 
         //Insert to redis
-        cluster.set('105_' + fields.rowKeyPutPro2, fields.jsonInputPro);//set "key" "val"
-
-        if (redis.print) {
-          res.json({
-            status: '0',
-            msg: '',
-          });
-        } else {
-          res.json({
-            status: '3',
-            msg: '',
-          });
-        }
+        cluster.set('105_' + fields.rowKeyPutPro2, fields.jsonInputPro)
+          .then(function (result) {
+            console.log(result);
+            if(result){
+              cluster.quit();
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              cluster.quit();
+              res.json({
+                status:'3',
+                msg:'',
+              });
+            }
+          });//set "key" "val"
       }
     });
   });
@@ -218,20 +223,23 @@ router.post('/redisABtest', function(req, res){
     });
 
     //Insert to redis
-    cluster.set('106_' + fields.rowKeyPut3, finalData);//set "key" "val"
-    console.log(redis.print);
-
-    if(redis.print){
-      res.json({
-        status: '0',
-        msg: '',
-      });
-    }else{
-      res.json({
-        status:'1',
-        msg:'',
-      });
-    }
+    cluster.set('106_' + fields.rowKeyPut3, finalData)
+        .then(function (result) {
+            console.log(result);
+            if(result){
+              cluster.quit();
+              res.json({
+                status: '0',
+                msg: '',
+              });
+            }else{
+              cluster.quit();
+              res.json({
+                status:'1',
+                msg:'',
+              });
+            }
+          });//set "key" "val"
 
 
   });

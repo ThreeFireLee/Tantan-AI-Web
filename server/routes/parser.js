@@ -1,10 +1,10 @@
 /*
 *
-* Node.js Router for stage.
 *
 * @author Yan Li
 * @company tantan
 * @Description:
+*  Node.js Router for stage.
 *
 * */
 
@@ -15,14 +15,16 @@ let formidable = require('formidable');
 let fs = require('fs');
 let assert = require('assert');
 let  hbase = require('hbase');
+let config = require('../config/config');
 let sendEmail = require('./stage-send-email.js');
 
-// var multiparty = require('multiparty');
 
 let client = hbase({
-  host:'localhost',
-   port:8010
-   // port: 8080
+  // host:'localhost',
+  //  port:8010
+  host: config.stage_host,
+  port: config.stage_port
+
 });
 
 

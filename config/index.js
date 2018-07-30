@@ -13,7 +13,7 @@ const path = require('path')
 module.exports = {
   dev: {
 
-    // Paths
+    // Paths and routes transform
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {

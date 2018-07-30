@@ -75,7 +75,13 @@
       VueJsonPretty
     },
     methods:{
-      //make the comparison between data from redis and hbase
+      /*
+
+     make the comparison between data from redis and hbase
+
+      */
+
+
     //   searchBoth(event){
     //     event.preventDefault();
     //

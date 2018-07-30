@@ -601,7 +601,7 @@
 
       },
 
-      //submit with the abtest data（type）
+      //submit with the abtest data（type directly）
       submitWhiteList(event){
         event.preventDefault();
         if(this.abtestPro.abtestCore.experiment_id == ""){
@@ -793,7 +793,7 @@
           });
       },
 
-
+      //rollback function
       submitRollBack(event){
         event.preventDefault();
         if(this.abtestPro.abtestCore.operator_name == ""){
